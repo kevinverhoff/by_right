@@ -40,19 +40,43 @@ st.markdown(f"""
     }}
     @media (max-width: 640px) {{
         .main-title {{
-            font-size: 1.8rem !important;
+            font-size: 1.5rem !important;
+        }}
+        .header-logo {{
+            height: 2rem !important;
         }}
     }}
     </style>
     """, unsafe_allow_html=True)
 
+import base64
+
 # Header
-header_col1, header_col2 = st.columns([1, 4])
-with header_col1:
-    if os.path.exists("ByRIGHT-small.png"):
-        st.image("ByRIGHT-small.png", width=80)
-with header_col2:
-    st.markdown('<h1 class="main-title">By Right County Dashboard</h1>', unsafe_allow_html=True)
+LOGO_URL = "https://raw.githubusercontent.com/kevinverhoff/by_right/main/jobs-housing/ByRIGHT-small.png"
+logo_path = "ByRIGHT-small.png"
+
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def get_logo_html(path, url):
+    if os.path.exists(path):
+        binary_data = get_base64_of_bin_file(path)
+        return f'data:image/png;base64,{binary_data}'
+    return url
+
+display_logo = get_logo_html(logo_path, LOGO_URL)
+
+st.markdown(
+    f"""
+    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+        <img src="{display_logo}" class="header-logo" style="height: 3rem; width: auto; object-fit: contain;">
+        <h1 class="main-title" style="margin: 0; line-height: 1;">By Right County Dashboard</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown("---")
 
