@@ -80,6 +80,23 @@ if metric_category in ["Commuter Flows", "Demographics"]:
 filtered = filtered.dropna(subset=["metric"])
 
 # -----------------------
+# SUMMARY
+# -----------------------
+if not filtered.empty:
+    m1, m2 = st.columns(2)
+    if metric_category == "Housing vs Jobs":
+        m1.metric("Reg. Weighted Ratio", f"{filtered['housing_units'].sum() / filtered['jobs'].sum():.2f}")
+    elif metric_category == "Demographics":
+        pop_total = filtered["B01001_001E"].sum()
+        avg = (filtered["metric"] * filtered["B01001_001E"]).sum() / pop_total
+        m1.metric(f"Regional {view_mode}", f"{avg:.1f}" if "Age" in view_mode else f"{avg:.1%}")
+    else:
+        if "Ratio" in view_mode: m1.metric("Reg. Commuter Ratio", f"{filtered['in_commuters'].sum() / filtered['out_commuters'].sum():.2f}")
+        elif "Share" in view_mode: m1.metric("Reg. Commuter Intensity", f"{filtered['in_commuters'].sum() / filtered['lodes_total_jobs'].sum():.1%}")
+        else: m1.metric("Avg In-Commute", f"{filtered['in_commuters'].mean():,.0f}")
+st.markdown("---")
+
+# -----------------------
 # MAP
 # -----------------------
 if not filtered.empty:
@@ -123,44 +140,30 @@ if not filtered.empty:
             "in_commuters": "In-Commuters", "out_commuters": "Out-Commuters", "lodes_total_jobs": "Total Jobs"
         }
 
-    # Merge main labels with hover labels
-    all_labels = {**hover_labels, "metric": view_mode}
-
-    fig = px.choropleth(filtered, geojson=geo, locations="fips", color="metric", labels=all_labels, 
+    fig = px.choropleth(filtered, geojson=geo, locations="fips", color="metric", 
+                        labels={**hover_labels, "metric": view_mode}, 
                         color_continuous_scale="Viridis" if metric_category=="Housing vs Jobs" else ("Magma" if metric_category=="Demographics" else "RdBu"), 
-                        hover_data=hover_data, **color_args)
-
-
+                        hover_data=hover_data)
     fig.update_traces(marker_line_color="rgba(255,255,255,0.35)", marker_line_width=0.4)
-    
-    # State borders
     state_abbrs = filtered["state_abbr"].unique()
     state_features = [f for f in states_geo["features"] if f["id"] in state_abbrs]
     fig.add_trace(go.Choropleth(geojson={"type": "FeatureCollection", "features": state_features}, locations=[f["id"] for f in state_features], z=[1]*len(state_features), showscale=False, colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], marker_line_color="white", marker_line_width=3, hoverinfo="skip"))
     
-    # Highlights
     if highlight_county != "None":
         h_fips = filtered.loc[filtered["full_name"] == highlight_county, "fips"].iloc[0]
-        h_val = filtered.loc[filtered["full_name"] == highlight_county, "metric"].iloc[0]
-        filtered["diff"] = (filtered["metric"] - h_val).abs()
-        peers = filtered.sort_values("diff").head(5)["fips"].tolist()[1:]
-        
         fig.add_trace(go.Choropleth(geojson=geo, locations=[h_fips], z=[1], showscale=False, colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], marker_line_color="yellow", marker_line_width=4, hoverinfo="skip"))
+        
+        filtered["diff"] = (filtered["metric"] - filtered.loc[filtered["full_name"] == highlight_county, "metric"].iloc[0]).abs()
+        peers = filtered.sort_values("diff").head(5)["fips"].tolist()[1:]
         fig.add_trace(go.Choropleth(geojson=geo, locations=peers, z=[1]*len(peers), showscale=False, colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], marker_line_color="cyan", marker_line_width=3, hoverinfo="skip"))
         
     fig.update_geos(fitbounds="locations", visible=False)
     fig.update_layout(height=500, margin=dict(l=0,r=0,t=0,b=0))
     st.plotly_chart(fig, width="stretch")
     
-    # Legend
-    st.markdown("""
-        <div style="display: flex; gap: 20px; font-size: 0.9em; margin-bottom: 10px;">
-            <div style="border: 2px solid yellow; padding: 2px 10px; border-radius: 4px;">Yellow = Highlight County</div>
-            <div style="border: 2px solid cyan; padding: 2px 10px; border-radius: 4px;">Cyan = Similar Counties</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # Distribution
+    # -----------------------
+    # DISTRIBUTION
+    # -----------------------
     st.subheader("Statistical Distribution")
     fig_dist = go.Figure()
     fig_dist.add_trace(go.Histogram(x=filtered["metric"], histnorm="probability density", marker_color="gray", opacity=0.3))
@@ -170,7 +173,40 @@ if not filtered.empty:
         fig_dist.add_trace(go.Scatter(x=x, y=kde(x), line=dict(width=3, color="#33683A")))
     except: pass
     if highlight_county != "None":
-        h_val = filtered.loc[filtered["full_name"] == highlight_county, "metric"].mean()
-        fig_dist.add_vline(x=h_val, line_color="yellow", line_width=3, line_dash="dash")
+        fig_dist.add_vline(x=filtered.loc[filtered["full_name"] == highlight_county, "metric"].mean(), line_color="yellow", line_width=3, line_dash="dash")
     fig_dist.update_layout(xaxis_title=view_mode, yaxis_title="Density", height=300, template="plotly_white")
     st.plotly_chart(fig_dist, width="stretch")
+
+    # -----------------------
+    # COMPARISON TABLE
+    # -----------------------
+    if highlight_county != "None":
+        st.markdown("---")
+        st.subheader("Highlighted County Profile & Comps")
+        h_fips = filtered.loc[filtered["full_name"] == highlight_county, "fips"].iloc[0]
+        h_val = filtered.loc[filtered["full_name"] == highlight_county, "metric"].iloc[0]
+        filtered["diff"] = (filtered["metric"] - h_val).abs()
+        peers = filtered.sort_values("diff").head(5)["fips"].tolist()
+        comp = df[df["fips"].isin(peers)].sort_values("year", ascending=False).groupby("fips").first().loc[peers].copy()
+        
+        display = comp[["full_name", "housing_per_job", "people_per_housing", "jobs_per_working_age", "commuter_ratio", "in_commuter_share", "resident_retention", "avg_age", "pct_under18", "pct_18_22", "pct_23_34", "pct_over65"]].T
+        display.columns = display.iloc[0]
+        fmt = {
+            "housing_per_job":      lambda x: f"{x:.2f}",
+            "people_per_housing":   lambda x: f"{x:.2f}",
+            "jobs_per_working_age": lambda x: f"{x:.2f}",
+            "commuter_ratio":       lambda x: f"{x:.2f}",
+            "in_commuter_share":    lambda x: f"{x*100:.1f}%",
+            "resident_retention":   lambda x: f"{x*100:.1f}%",
+            "avg_age":              lambda x: f"{x:.1f}",
+            "pct_under18":          lambda x: f"{x*100:.1f}%",
+            "pct_18_22":            lambda x: f"{x*100:.1f}%",
+            "pct_23_34":            lambda x: f"{x*100:.1f}%",
+            "pct_over65":           lambda x: f"{x*100:.1f}%",
+        }
+
+        for row, func in fmt.items():
+            display.loc[row] = display.loc[row].apply(func)
+        display = display.drop("full_name")
+        display.index = ["Housing/Job", "People/House", "Jobs/Work-Age", "In/Out Ratio", "In-Commuter %", "Retention %", "Avg Age", "% < 18", "% 18-22", "% 23-34", "% > 65"]
+        st.table(display)
