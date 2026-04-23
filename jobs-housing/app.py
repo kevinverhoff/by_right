@@ -12,7 +12,7 @@ import os
 # -----------------------
 st.set_page_config(
     page_title="By Right County Dashboard",
-    page_icon="ByRIGHT-small.png",
+    page_icon="https://raw.githubusercontent.com/kevinverhoff/by_right/main/jobs-housing/ByRIGHT-small.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
