@@ -49,8 +49,11 @@ with col2:
 st.markdown("---")
 
 # -----------------------
-# DATA LOAD
+# DATA LOAD (GitHub Hosted)
 # -----------------------
+JH_URL = "https://github.com/kevinverhoff/by_right/raw/main/jobs-housing/county_jobs_housing.parquet"
+LODES_URL = "https://github.com/kevinverhoff/by_right/raw/main/jobs-housing/lodes_commuting.parquet"
+
 @st.cache_data
 def load_geo_data():
     url = "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json"
@@ -61,26 +64,34 @@ def load_states_geojson():
     url = "https://raw.githubusercontent.com/python-visualization/folium/master/examples/data/us-states.json"
     return requests.get(url).json()
 
-def get_data_hash():
-    jh_mtime = os.path.getmtime("county_jobs_housing.parquet") if os.path.exists("county_jobs_housing.parquet") else 0
-    l_mtime = os.path.getmtime("lodes_commuting.parquet") if os.path.exists("lodes_commuting.parquet") else 0
-    return f"{jh_mtime}_{l_mtime}"
-
 @st.cache_data(ttl=3600)
-def load_data(data_hash):
-    if not os.path.exists("county_jobs_housing.parquet"):
-        return pd.DataFrame()
-    df_jh = pd.read_parquet("county_jobs_housing.parquet")
+def load_data():
+    # Try GitHub first for Cloud compatibility, fallback to local
     try:
-        df_lodes = pd.read_parquet("lodes_commuting.parquet")
+        df_jh = pd.read_parquet(JH_URL)
+    except Exception:
+        df_jh = pd.read_parquet("county_jobs_housing.parquet")
+    
+    try:
+        df_lodes = pd.read_parquet(LODES_URL)
         df_lodes = df_lodes.rename(columns={
             "county_name": "county_name_lodes",
             "state_name": "state_name_lodes",
             "full_name": "full_name_lodes",
             "state": "state_fips_lodes"
         })
-    except FileNotFoundError:
-        df_lodes = pd.DataFrame(columns=['fips', 'year', 'in_commuters', 'out_commuters', 'net_commute', 'lodes_total_jobs', 'internal_workers'])
+    except Exception:
+        try:
+            df_lodes = pd.read_parquet("lodes_commuting.parquet")
+            df_lodes = df_lodes.rename(columns={
+                "county_name": "county_name_lodes",
+                "state_name": "state_name_lodes",
+                "full_name": "full_name_lodes",
+                "state": "state_fips_lodes"
+            })
+        except Exception:
+            df_lodes = pd.DataFrame(columns=['fips', 'year', 'in_commuters', 'out_commuters', 'net_commute', 'lodes_total_jobs', 'internal_workers'])
+
     df = pd.merge(df_jh, df_lodes, on=["fips", "year"], how="outer")
     if "county_name_lodes" in df.columns:
         df["county_name"] = df["county_name"].fillna(df["county_name_lodes"])
@@ -93,9 +104,10 @@ def load_data(data_hash):
     df["resident_retention"] = df["internal_workers"] / df["total_residents_working"].replace(0, np.nan)
     return df
 
-df = load_data(get_data_hash())
+df = load_data()
 counties_geojson = load_geo_data()
 states_geojson = load_states_geojson()
+
 if df.empty:
     st.error("No data found. Please run the scrapers first.")
     st.stop()
@@ -254,16 +266,13 @@ if not filtered.empty:
     elif "Absolute" in view_mode or (metric_category == "Commuter Flows" and main_metric_col == "net_commute"):
         limit = max(abs(filtered["metric"].min()), abs(filtered["metric"].max()), 1)
         color_args = {"range_color": [-limit, limit]}
-    
     fig_map = px.choropleth(filtered, geojson=counties_geojson, locations="fips", color="metric", color_continuous_scale=color_scale, labels=labels_map, hover_data=hover_data_config, **color_args)
     fig_map.update_traces(marker_line_color="rgba(255,255,255,0.35)", marker_line_width=0.4)
-    
-    # State borders
     valid_states = df.dropna(subset=["state_name", "state"])
     if not valid_states.empty:
         state_lookup = valid_states.groupby("state_name")["state"].first()
         selected_state_fips = [state_lookup[s] for s in selected_state_names if s in state_lookup]
-        fig_map.add_trace(go.Choropleth(geojson={"type": "FeatureCollection", "features": [f for f in states_geojson["features"] if f["id"] in selected_state_fips]}, locations=[f["id"] for f in states_geojson["features"] if f["id"] in selected_state_fips], z=[1]*len(selected_state_fips), showscale=False, colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], marker_line_color="white", marker_line_width=2, hoverinfo="skip"))
+        fig_map.add_trace(go.Choropleth(geojson={"type": "FeatureCollection", "features": [f for f in states_geojson["features"] if f["id"] in selected_state_fips]}, locations=[f["id"] for f in filtered_states_geojson["features"] if f["id"] in selected_state_fips] if 'filtered_states_geojson' in locals() else [f["id"] for f in states_geojson["features"] if f["id"] in selected_state_fips], z=[1]*len(selected_state_fips), showscale=False, colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], marker_line_color="white", marker_line_width=2, hoverinfo="skip"))
     
     # Restored Yellow Highlight
     if highlight_county != "None":
