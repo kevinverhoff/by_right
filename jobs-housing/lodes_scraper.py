@@ -138,48 +138,69 @@ def main():
     existing = load_existing()
     todo = get_missing(existing)
 
-    print(f"Fetching {len(todo)} combinations")
-
-    all_new = []
-    
-    # Get names once to apply to new data
-    names = fetch_county_names()
-
-    for state, year in todo:
-        print(f"Fetching {state}-{year}")
-
-        df = load_lodes_od(state, year)
-
-        if df is None or df.empty:
-            continue
-
-        out = lodes_to_county(df, state, year)
-        
-        # Merge names and state info
-        if not names.empty:
-            out = pd.merge(out, names, on="fips", how="left")
-            out["state_name"] = out["state"].map(STATE_FIPS_TO_NAME)
-            out["full_name"] = out["county_name"] + ", " + out["state_name"]
-            
-        all_new.append(out)
-
-    if not all_new:
-        print("No new data.")
+    if not todo:
+        print("No new data to fetch.")
         return
 
-    new_df = pd.concat(all_new, ignore_index=True)
+    print(f"Fetching {len(todo)} combinations")
 
+    all_new_results = []
+    
+    for state, year in todo:
+        print(f"Fetching {state}-{year}")
+        df = load_lodes_od(state, year)
+        if df is None or df.empty:
+            continue
+        
+        # This returns counts for all FIPS found in the file (Work or Home)
+        out = lodes_to_county(df, state, year)
+        all_new_results.append(out)
+
+    if not all_new_results:
+        print("No new data successfully fetched.")
+        return
+
+    # 1. Combine everything
+    new_df = pd.concat(all_new_results, ignore_index=True)
+    
+    # 2. Aggregate by FIPS and Year
+    # This is critical: marion_fips might have out_commuters in the IN file, IL file, and OH file.
+    # Summing them gives the true total out-commuters across our tracked region.
+    print("Aggregating regional flows...")
+    agg_df = new_df.groupby(["fips", "year"], as_index=False).agg({
+        "lodes_total_jobs": "sum",
+        "in_commuters": "sum",
+        "out_commuters": "sum",
+        "internal_workers": "sum"
+    })
+    
+    # 3. Recalculate net_commute
+    agg_df["net_commute"] = agg_df["in_commuters"] - agg_df["out_commuters"]
+    
+    # 4. Re-apply names and state info
+    print("Fetching and joining names...")
+    names = fetch_county_names()
+    if not names.empty:
+        agg_df = pd.merge(agg_df, names, on="fips", how="left")
+        agg_df["state_name"] = agg_df["state"].map(STATE_FIPS_TO_NAME)
+        agg_df["full_name"] = agg_df["county_name"] + ", " + agg_df["state_name"]
+        
+        # Add state_abbr back (derived from FIPS for consistency)
+        INV_STATE_FIPS = {v: k for k, v in STATE_FIPS.items()}
+        agg_df["state_abbr"] = agg_df["fips"].str[:2].map(INV_STATE_FIPS)
+
+    # 5. Merge with existing
     final = (
-        pd.concat([existing, new_df], ignore_index=True)
-        if not existing.empty else new_df
+        pd.concat([existing, agg_df], ignore_index=True)
+        if not existing.empty else agg_df
     )
 
-    final = final.drop_duplicates(subset=["fips", "state_abbr", "year"])
-    final = final.sort_values(["state_abbr", "year", "fips"])
+    final = final.drop_duplicates(subset=["fips", "year"])
+    final = final.sort_values(["year", "fips"])
 
     final.to_parquet(OUTPUT_FILE, index=False)
 
-    print("LODES parquet updated with names and state info.")
+    print("LODES parquet updated with aggregated regional flows.")
 
 
 if __name__ == "__main__":

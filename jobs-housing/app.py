@@ -223,9 +223,19 @@ if not filtered.empty:
         avg = (filtered["metric"] * filtered["B01001_001E"]).sum() / pop_total
         m1.metric(f"Regional {view_mode}", f"{avg:.1f}" if "Age" in view_mode else f"{avg:.1%}")
     else:
-        if "In-Commuter" in view_mode: m1.metric("Reg. In-Commuter Share", f"{filtered['in_commuters'].sum() / filtered['lodes_total_jobs'].sum():.1%}")
-        elif "Retention" in view_mode: m1.metric("Reg. Resident Retention", f"{filtered['internal_workers'].sum() / filtered['total_residents_working'].sum():.1%}")
+        if "In-Commuter" in view_mode: 
+            m1.metric("Reg. In-Commuter Share", f"{filtered['in_commuters'].sum() / filtered['lodes_total_jobs'].sum():.1%}")
+        elif "Retention" in view_mode: 
+            m1.metric("Reg. Resident Retention", f"{filtered['internal_workers'].sum() / filtered['total_residents_working'].sum():.1%}")
+        elif "Ratio" in view_mode:
+            # Regional Ratio = Total In / Total Out
+            total_in = filtered['in_commuters'].sum()
+            total_out = filtered['out_commuters'].sum()
+            reg_ratio = total_in / total_out if total_out > 0 else np.nan
+            m1.metric("Reg. Commuter Ratio", f"{reg_ratio:.2f}")
+            m2.metric("Total Net Flow", f"{total_in - total_out:,.0f}")
         else:
+            # Absolute Net Flow mode
             m1.metric("Avg In-Commute", f"{filtered['in_commuters'].mean():,.0f}")
             m2.metric("Avg Out-Commute", f"{filtered['out_commuters'].mean():,.0f}")
 
