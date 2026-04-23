@@ -57,79 +57,37 @@ def load_lodes_od(state_abbr: str, year: int):
 # Convert OD → county flows
 # -----------------------
 def lodes_to_county(df, state_abbr, year):
+    # This DF contains everyone working in 'state_abbr'
     df = df.copy()
     df["jobs"] = df["S000"]
-
-    # Ensure FIPS are 5 digits
     df["home_fips"] = df["h_geocode"].astype(str).str.zfill(15).str[:5]
     df["work_fips"] = df["w_geocode"].astype(str).str.zfill(15).str[:5]
 
-    # 1. Total Jobs located in the county (Denominator for job share)
+    # 1. TOTAL JOBS: Count by Workplace (all people working in these counties)
     total_jobs_in_county = df.groupby("work_fips")["jobs"].sum()
 
-    # 2. In-commuters: Work in county, but live ELSEWHERE
+    # 2. IN-COMMUTERS: Work in county, live elsewhere (anywhere in US)
     in_mask = df["work_fips"] != df["home_fips"]
     in_commuters = df[in_mask].groupby("work_fips")["jobs"].sum()
 
-    # 3. Out-commuters: Live in county, but work ELSEWHERE
-    out_commuters = df[in_mask].groupby("home_fips")["jobs"].sum()
-
-    # 4. Internal Workers: Live and Work in the same county
+    # 3. INTERNAL: Live and work in the same county
     internal_mask = df["work_fips"] == df["home_fips"]
     internal_workers = df[internal_mask].groupby("work_fips")["jobs"].sum()
 
-    # Combine
+    # 4. POTENTIAL OUT-COMMUTERS: Residents of these counties working in THIS state
+    # We will aggregate this across all state files to get the true total.
+    out_commuters = df[in_mask].groupby("home_fips")["jobs"].sum()
+
     result = pd.DataFrame({
         "lodes_total_jobs": total_jobs_in_county,
         "in_commuters": in_commuters,
-        "out_commuters": out_commuters,
-        "internal_workers": internal_workers
+        "internal_workers": internal_workers,
+        "out_commuters": out_commuters
     }).fillna(0)
 
-    result["net_commute"] = result["in_commuters"] - result["out_commuters"]
     result = result.reset_index().rename(columns={"index": "fips"})
-
-    result["state_abbr"] = state_abbr
     result["year"] = year
-
     return result
-
-# -----------------------
-# Names
-# -----------------------
-def fetch_county_names():
-    rows = []
-    # Use 2022 as a stable year for names
-    for abbr, config in STATE_CONFIG.items():
-        fips = config["fips"]
-        url = f"https://api.census.gov/data/2022/acs/acs5"
-        params = {"get": "NAME", "for": "county:*", "in": f"state:{fips}", "key": API_KEY}
-        r = requests.get(url, params=params)
-        if r.status_code == 200:
-            data = r.json()
-            df = pd.DataFrame(data[1:], columns=data[0])
-            rows.append(df)
-    
-    if not rows:
-        return pd.DataFrame()
-    
-    names_df = pd.concat(rows, ignore_index=True)
-    # "Adams County, Indiana" -> "Adams"
-    names_df["county_name"] = names_df["NAME"].str.split(",").str[0].str.replace(" County", "")
-    names_df["fips"] = names_df["state"].str.zfill(2) + names_df["county"].str.zfill(3)
-    return names_df[["fips", "county_name", "state"]]
-
-
-# -----------------------
-# Missing logic
-# -----------------------
-def get_missing(existing):
-    if existing.empty:
-        return [(s, y) for s in STATES for y in YEARS]
-
-    done = set(zip(existing["state_abbr"], existing["year"]))
-    return [(s, y) for s in STATES for y in YEARS if (s, y) not in done]
-
 
 # -----------------------
 # MAIN
@@ -137,70 +95,57 @@ def get_missing(existing):
 def main():
     existing = load_existing()
     todo = get_missing(existing)
-
-    if not todo:
-        print("No new data to fetch.")
-        return
+    if not todo: return
 
     print(f"Fetching {len(todo)} combinations")
-
-    all_new_results = []
+    all_raw_flows = []
     
     for state, year in todo:
         print(f"Fetching {state}-{year}")
         df = load_lodes_od(state, year)
-        if df is None or df.empty:
-            continue
+        if df is None or df.empty: continue
         
-        # This returns counts for all FIPS found in the file (Work or Home)
+        # Get flows from this state's perspective
         out = lodes_to_county(df, state, year)
-        all_new_results.append(out)
+        all_raw_flows.append(out)
 
-    if not all_new_results:
-        print("No new data successfully fetched.")
-        return
+    if not all_raw_flows: return
 
     # 1. Combine everything
-    new_df = pd.concat(all_new_results, ignore_index=True)
+    new_df = pd.concat(all_raw_flows, ignore_index=True)
     
     # 2. Aggregate by FIPS and Year
-    # This is critical: marion_fips might have out_commuters in the IN file, IL file, and OH file.
-    # Summing them gives the true total out-commuters across our tracked region.
+    # For a county in Indiana:
+    # 'lodes_total_jobs' will be captured correctly in the IN file (where it is work_fips).
+    # 'in_commuters' will be captured correctly in the IN file (where it is work_fips).
+    # 'out_commuters' will be summed across IN, IL, KY, MI, OH files (where it is home_fips).
     print("Aggregating regional flows...")
     agg_df = new_df.groupby(["fips", "year"], as_index=False).agg({
-        "lodes_total_jobs": "sum",
-        "in_commuters": "sum",
-        "out_commuters": "sum",
-        "internal_workers": "sum"
+        "lodes_total_jobs": "max", # Total jobs in the county is specific to that county's workplace records
+        "in_commuters": "max",     # In-commuters to a county is specific to that county's workplace records
+        "internal_workers": "max", # Internal is specific
+        "out_commuters": "sum"     # SUM: A resident of Marion, IN might work in Hamilton, IN OR Cook, IL.
     })
     
-    # 3. Recalculate net_commute
     agg_df["net_commute"] = agg_df["in_commuters"] - agg_df["out_commuters"]
     
-    # 4. Re-apply names and state info
+    # 3. Filter to only include counties that belong to our 5 states
+    # (Otherwise the 'sum' captures out-commuters to counties we don't care about)
+    INV_STATE_FIPS = {v: k for k, v in STATE_FIPS.items()}
+    agg_df["state_abbr"] = agg_df["fips"].str[:2].map(INV_STATE_FIPS)
+    agg_df = agg_df.dropna(subset=["state_abbr"])
+
     print("Fetching and joining names...")
     names = fetch_county_names()
     if not names.empty:
         agg_df = pd.merge(agg_df, names, on="fips", how="left")
         agg_df["state_name"] = agg_df["state"].map(STATE_FIPS_TO_NAME)
         agg_df["full_name"] = agg_df["county_name"] + ", " + agg_df["state_name"]
-        
-        # Add state_abbr back (derived from FIPS for consistency)
-        INV_STATE_FIPS = {v: k for k, v in STATE_FIPS.items()}
-        agg_df["state_abbr"] = agg_df["fips"].str[:2].map(INV_STATE_FIPS)
 
-    # 5. Merge with existing
-    final = (
-        pd.concat([existing, agg_df], ignore_index=True)
-        if not existing.empty else agg_df
-    )
-
+    final = pd.concat([existing, agg_df], ignore_index=True) if not existing.empty else agg_df
     final = final.drop_duplicates(subset=["fips", "year"])
-    final = final.sort_values(["year", "fips"])
-
     final.to_parquet(OUTPUT_FILE, index=False)
-
-    print("LODES parquet updated with aggregated regional flows.")
+    print("LODES updated with true cross-state out-commuter sums.")
 
 
 if __name__ == "__main__":
