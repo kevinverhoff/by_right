@@ -178,7 +178,7 @@ highlight_county = st.sidebar.selectbox("Highlight County", ["None"] + sorted(df
 st.sidebar.markdown("---")
 st.sidebar.title("Geography")
 state_names = sorted(df.dropna(subset=[main_metric_col, "state_name"])["state_name"].unique())
-selected_state_names = st.sidebar.multiselect("States", state_names, default=state_names)
+selected_state_names = st.sidebar.multiselect("States", state_names, default=[s for s in ["Indiana"] if s in state_names] if "Indiana" in state_names else state_names)
 
 st.sidebar.markdown("---")
 st.sidebar.title("Time")
