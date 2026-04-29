@@ -70,6 +70,9 @@ selected_states = st.sidebar.multiselect("States", states, default=[s for s in [
 years = sorted(df.dropna(subset=[main_metric_col])["year"].unique())
 selected_years = st.sidebar.multiselect("Years", years, default=[max(years)] if years else [])
 
+st.sidebar.markdown("---")
+st.sidebar.markdown(f'<a href="https://www.buymeacoffee.com/wZyLoMV" target="_blank" style="display: inline-block; padding: 12px 20px; background-color: #ffdd00; color: black; text-align: center; border-radius: 5px; text-decoration: none; font-weight: bold; width: 100%;">☕ Buy me a coffee (I\'ll use it to keep this site going)</a>', unsafe_allow_html=True)
+
 # -----------------------
 # FILTER
 # -----------------------
