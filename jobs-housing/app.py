@@ -180,6 +180,21 @@ if not filtered.empty:
     st.plotly_chart(fig, width="stretch")
     
     # -----------------------
+    # RANKINGS / LEADERBOARD
+    # -----------------------
+    st.subheader(f"Rankings: {view_mode}")
+    r1, r2 = st.columns(2)
+    top_10 = filtered.sort_values("metric", ascending=False).head(10)[["full_name", "metric", "rank"]]
+    bot_10 = filtered.sort_values("metric", ascending=True).head(10)[["full_name", "metric", "rank"]]
+    
+    with r1:
+        st.write("**Highest**")
+        st.dataframe(top_10, column_config={"full_name": "County", "metric": view_mode, "rank": "Rank"}, hide_index=True)
+    with r2:
+        st.write("**Lowest**")
+        st.dataframe(bot_10, column_config={"full_name": "County", "metric": view_mode, "rank": "Rank"}, hide_index=True)
+    
+    # -----------------------
     # DISTRIBUTION
     # -----------------------
     st.subheader("Statistical Distribution")
