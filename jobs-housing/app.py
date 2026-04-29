@@ -99,7 +99,7 @@ if not filtered.empty:
     if metric_category == "Housing vs Jobs":
         if view_mode == "Housing Units per Job":
             val = filtered['housing_units'].sum() / filtered['jobs'].sum()
-            m1.metric("Reg. Weighted Ratio", f"{val:.2f}")
+            m1.metric("Avg. Housing Units per Job", f"{val:.2f}")
         elif view_mode == "People per Housing Unit":
             val = filtered['B01001_001E'].sum() / filtered['housing_units'].sum()
             m1.metric("Reg. People/Housing", f"{val:.2f}")
