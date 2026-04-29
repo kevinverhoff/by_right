@@ -189,7 +189,8 @@ if not filtered.empty:
         if not h_row.empty:
             rank_val = h_row["rank"].iloc[0]
             metric_val = h_row["metric"].iloc[0]
-            st.info(f"**{highlight_county}** is ranked **{get_ordinal(rank_val)}** highest with a value of **{metric_val:.3f if metric_val < 10 else f'{metric_val:,.1f}'}**")
+            val_str = f"{metric_val:.3f}" if metric_val < 10 else f"{metric_val:,.1f}"
+            st.info(f"**{highlight_county}** is ranked **{get_ordinal(rank_val)}** highest with a value of **{val_str}**")
 
     r1, r2 = st.columns(2)
     top_10 = filtered.sort_values("metric", ascending=False).head(10)[["full_name", "metric", "rank"]]
