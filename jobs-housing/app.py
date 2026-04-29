@@ -97,7 +97,18 @@ if not filtered.empty:
 if not filtered.empty:
     m1, m2 = st.columns(2)
     if metric_category == "Housing vs Jobs":
-        m1.metric("Reg. Weighted Ratio", f"{filtered['housing_units'].sum() / filtered['jobs'].sum():.2f}")
+        if view_mode == "Housing Units per Job":
+            val = filtered['housing_units'].sum() / filtered['jobs'].sum()
+            m1.metric("Reg. Weighted Ratio", f"{val:.2f}")
+        elif view_mode == "People per Housing Unit":
+            val = filtered['B01001_001E'].sum() / filtered['housing_units'].sum()
+            m1.metric("Reg. People/Housing", f"{val:.2f}")
+        elif view_mode == "Jobs per Capita":
+            val = filtered['jobs'].sum() / filtered['B01001_001E'].sum()
+            m1.metric("Reg. Jobs per Capita", f"{val:.2f}")
+        else: # Jobs per Working Age Adult
+            val = filtered['jobs'].sum() / filtered['count_working_age'].sum()
+            m1.metric("Reg. Jobs/Work-Age", f"{val:.2f}")
     elif metric_category == "Demographics":
         pop_total = filtered["B01001_001E"].sum()
         avg = (filtered["metric"] * filtered["B01001_001E"]).sum() / pop_total
