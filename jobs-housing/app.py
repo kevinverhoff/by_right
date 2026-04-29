@@ -79,6 +79,15 @@ if metric_category in ["Commuter Flows", "Demographics"]:
     filtered = filtered.groupby(["fips", "state", "state_name", "county_name", "full_name", "state_abbr"], as_index=False).mean(numeric_only=True)
 filtered = filtered.dropna(subset=["metric"])
 
+# Add ranking
+if not filtered.empty:
+    filtered["rank"] = filtered["metric"].rank(ascending=False, method="min").astype(int)
+    n_counties = len(filtered)
+    def get_ordinal(n):
+        if 11 <= (n % 100) <= 13: return f"{n}th"
+        return f"{n}{ {1:'st', 2:'nd', 3:'rd'}.get(n % 10, 'th') }"
+    filtered["ranking_info"] = filtered["rank"].apply(lambda x: f"{get_ordinal(x)} highest (out of {n_counties} counties) in {view_mode}")
+
 # -----------------------
 # SUMMARY
 # -----------------------
@@ -114,30 +123,36 @@ if not filtered.empty:
         hover_data = {
             "full_name": True,
             "housing_per_job": ":.3f", "people_per_housing": ":.2f", 
-            "jobs_per_capita": ":.2f", "jobs_per_working_age": ":.2f"
+            "jobs_per_capita": ":.2f", "jobs_per_working_age": ":.2f",
+            "ranking_info": True
         }
         hover_labels = {
             "full_name": "County", "housing_per_job": "Housing Units per Job",
             "people_per_housing": "People per Housing Unit", "jobs_per_capita": "Jobs per Capita",
-            "jobs_per_working_age": "Jobs per Working Age Adult"
+            "jobs_per_working_age": "Jobs per Working Age Adult",
+            "ranking_info": "Rank"
         }
     elif metric_category == "Demographics":
         hover_data = {
             "full_name": True, "B01001_001E": ":,.0f", "avg_age": ":.1f", 
-            "pct_under18": ":.1%", "pct_over65": ":.1%", "pct_working_age": ":.1%"
+            "pct_under18": ":.1%", "pct_over65": ":.1%", "pct_working_age": ":.1%",
+            "ranking_info": True
         }
         hover_labels = {
             "full_name": "County", "B01001_001E": "Total Population", "avg_age": "Average Age",
-            "pct_under18": "% Under 18", "pct_over65": "% Over 65", "pct_working_age": "% Working Age"
+            "pct_under18": "% Under 18", "pct_over65": "% Over 65", "pct_working_age": "% Working Age",
+            "ranking_info": "Rank"
         }
     else: # Commuter Flows
         hover_data = {
             "full_name": True, "net_commute": ":,.0f", 
-            "in_commuters": ":,.0f", "out_commuters": ":,.0f", "lodes_total_jobs": ":,.0f"
+            "in_commuters": ":,.0f", "out_commuters": ":,.0f", "lodes_total_jobs": ":,.0f",
+            "ranking_info": True
         }
         hover_labels = {
             "full_name": "County", "net_commute": "Net Commuters",
-            "in_commuters": "In-Commuters", "out_commuters": "Out-Commuters", "lodes_total_jobs": "Total Jobs"
+            "in_commuters": "In-Commuters", "out_commuters": "Out-Commuters", "lodes_total_jobs": "Total Jobs",
+            "ranking_info": "Rank"
         }
 
     fig = px.choropleth(filtered, geojson=geo, locations="fips", color="metric", 
