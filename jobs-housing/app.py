@@ -50,18 +50,28 @@ states_geo = requests.get("https://raw.githubusercontent.com/python-visualizatio
 # -----------------------
 # SIDEBAR
 # -----------------------
-metric_category = st.sidebar.radio("Category", ["Housing vs Jobs", "Commuter Flows", "Demographics"])
-view_mode = st.sidebar.selectbox("View Mode", {
-    "Housing vs Jobs": ["Housing Units per Job", "People per Housing Unit", "Jobs per Capita", "Jobs per Working Age Adult"],
-    "Commuter Flows": ["Absolute (Net Flow)", "Commuter Ratio (In/Out)", "In-Commuter Job Share (% of Jobs)", "Resident Retention Share (% of Residents)"],
-    "Demographics": ["Average Age", "% Residents Under 18", "% Residents 18-22", "% Residents 23-34", "% Residents 35-49", "% Residents 50-64", "% Residents Over 65", "% Working Age (18-64)"]
-}[metric_category])
+all_metrics_mapping = {
+    "Housing Units per Job": {"col": "housing_per_job", "cat": "Housing vs Jobs"},
+    "People per Housing Unit": {"col": "people_per_housing", "cat": "Housing vs Jobs"},
+    "Jobs per Capita": {"col": "jobs_per_capita", "cat": "Housing vs Jobs"},
+    "Jobs per Working Age Adult": {"col": "jobs_per_working_age", "cat": "Housing vs Jobs"},
+    "Absolute (Net Flow)": {"col": "net_commute", "cat": "Commuter Flows"},
+    "Commuter Ratio (In/Out)": {"col": "commuter_ratio", "cat": "Commuter Flows"},
+    "In-Commuter Job Share (% of Jobs)": {"col": "in_commuter_share", "cat": "Commuter Flows"},
+    "Resident Retention Share (% of Residents)": {"col": "resident_retention", "cat": "Commuter Flows"},
+    "Average Age": {"col": "avg_age", "cat": "Demographics"},
+    "% Residents Under 18": {"col": "pct_under18", "cat": "Demographics"},
+    "% Residents 18-22": {"col": "pct_18_22", "cat": "Demographics"},
+    "% Residents 23-34": {"col": "pct_23_34", "cat": "Demographics"},
+    "% Residents 35-49": {"col": "pct_35_49", "cat": "Demographics"},
+    "% Residents 50-64": {"col": "pct_50_64", "cat": "Demographics"},
+    "% Residents Over 65": {"col": "pct_over65", "cat": "Demographics"},
+    "% Working Age (18-64)": {"col": "pct_working_age", "cat": "Demographics"}
+}
 
-main_metric_col = {
-    "Housing Units per Job": "housing_per_job", "People per Housing Unit": "people_per_housing", "Jobs per Capita": "jobs_per_capita", "Jobs per Working Age Adult": "jobs_per_working_age",
-    "Average Age": "avg_age", "% Residents Under 18": "pct_under18", "% Residents 18-22": "pct_18_22", "% Residents 23-34": "pct_23_34", "% Residents 35-49": "pct_35_49", "% Residents 50-64": "pct_50_64", "% Residents Over 65": "pct_over65", "% Working Age (18-64)": "pct_working_age",
-    "Absolute (Net Flow)": "net_commute", "Commuter Ratio (In/Out)": "commuter_ratio", "In-Commuter Job Share (% of Jobs)": "in_commuter_share", "Resident Retention Share (% of Residents)": "resident_retention"
-}[view_mode]
+view_mode = st.sidebar.selectbox("Metric", list(all_metrics_mapping.keys()))
+main_metric_col = all_metrics_mapping[view_mode]["col"]
+metric_category = all_metrics_mapping[view_mode]["cat"]
 
 all_counties = sorted(df.dropna(subset=[main_metric_col])["full_name"].unique())
 highlight_county = st.sidebar.selectbox("Highlight County", ["None"] + all_counties)
