@@ -183,6 +183,14 @@ if not filtered.empty:
     # RANKINGS / LEADERBOARD
     # -----------------------
     st.subheader(f"Rankings: {view_mode}")
+    
+    if highlight_county != "None":
+        h_row = filtered[filtered["full_name"] == highlight_county]
+        if not h_row.empty:
+            rank_val = h_row["rank"].iloc[0]
+            metric_val = h_row["metric"].iloc[0]
+            st.info(f"**{highlight_county}** is ranked **{get_ordinal(rank_val)}** highest with a value of **{metric_val:.3f if metric_val < 10 else f'{metric_val:,.1f}'}**")
+
     r1, r2 = st.columns(2)
     top_10 = filtered.sort_values("metric", ascending=False).head(10)[["full_name", "metric", "rank"]]
     bot_10 = filtered.sort_values("metric", ascending=True).head(10)[["full_name", "metric", "rank"]]
