@@ -1,0 +1,18 @@
+{
+    "Housing Units per Job": "The number of available housing units divided by the total number of jobs in the county. A lower ratio often suggests a housing shortage relative to the workforce.",
+    "People per Housing Unit": "Total population divided by the total number of housing units. Higher values can indicate overcrowding or a lack of available housing supply.",
+    "Jobs per Capita": "Total number of jobs divided by the total population. This measures the concentration of employment opportunities relative to the number of residents.",
+    "Jobs per Working Age Adult": "Total jobs divided by the population aged 18-64. This provides a clearer picture of job availability for the core workforce.",
+    "Absolute (Net Flow)": "The net difference between workers coming into the county and residents leaving the county for work. A positive number means the county is a net employment hub.",
+    "Commuter Ratio (In/Out)": "The ratio of in-commuters to out-commuters. A ratio above 1.0 indicates that more people commute in than commute out.",
+    "In-Commuter Job Share (% of Jobs)": "The percentage of jobs in the county that are filled by people living outside the county.",
+    "Resident Retention Share (% of Residents)": "The percentage of employed residents who both live and work within the county.",
+    "Average Age": "The weighted average age of the county's residents.",
+    "% Residents Under 18": "The proportion of the population that is under 18 years old.",
+    "% Residents 18-22": "The proportion of the population that is in the college-age bracket (18-22).",
+    "% Residents 23-34": "The proportion of the population that is in the young professional age bracket (23-34).",
+    "% Residents 35-49": "The proportion of the population in the mid-career age bracket (35-49).",
+    "% Residents 50-64": "The proportion of the population in the late-career/pre-retirement age bracket (50-64).",
+    "% Residents Over 65": "The proportion of the population that is 65 years or older.",
+    "% Working Age (18-64)": "The proportion of the population that falls within the traditional working age range of 18-64."
+}

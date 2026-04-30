@@ -6,6 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from scipy.stats import gaussian_kde
 import os
+import json
 
 # -----------------------
 # Page config
@@ -41,9 +42,15 @@ def load_data():
     df["people_per_housing"] = df["B01001_001E"] / df["housing_units"].replace(0, np.nan)
     df["jobs_per_capita"] = df["jobs"] / df["B01001_001E"].replace(0, np.nan)
     df["jobs_per_working_age"] = df["jobs"] / df["count_working_age"].replace(0, np.nan)
-    return df
+    
+    # Load definitions
+    defs = {}
+    if os.path.exists("metric_definitions.json"):
+        with open("metric_definitions.json", "r") as f:
+            defs = json.load(f)
+    return df, defs
 
-df = load_data()
+df, metric_defs = load_data()
 geo = requests.get("https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json").json()
 states_geo = requests.get("https://raw.githubusercontent.com/python-visualization/folium/master/examples/data/us-states.json").json()
 
@@ -72,6 +79,9 @@ all_metrics_mapping = {
 view_mode = st.sidebar.selectbox("Metric", list(all_metrics_mapping.keys()))
 main_metric_col = all_metrics_mapping[view_mode]["col"]
 metric_category = all_metrics_mapping[view_mode]["cat"]
+
+if view_mode in metric_defs:
+    st.sidebar.caption(metric_defs[view_mode])
 
 all_counties = sorted(df.dropna(subset=[main_metric_col])["full_name"].unique())
 highlight_county = st.sidebar.selectbox("Highlight County", ["None"] + all_counties)
