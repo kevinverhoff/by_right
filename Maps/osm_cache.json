@@ -1,0 +1,5036 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-05-31T22:37:44Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "way",
+  "id": 17515776,
+  "bounds": {
+    "minlat": 39.6440428,
+    "minlon": -86.8658713,
+    "maxlat": 39.6520555,
+    "maxlon": -86.8654026
+  },
+  "nodes": [
+    181445683,
+    11415146239,
+    181445686,
+    11415347702,
+    11415146196,
+    11415342641,
+    11415146259,
+    11415342633,
+    181445689,
+    7773386761,
+    181445691,
+    181445694,
+    8656033577,
+    8656033572,
+    181445695,
+    181445697,
+    181445699,
+    181445701,
+    8677638910,
+    181445703,
+    181445705,
+    181445707,
+    181484230,
+    181445709,
+    181445711,
+    181445713,
+    2489015720,
+    181445715
+  ],
+  "geometry": [
+    { "lat": 39.6440428, "lon": -86.8654168 },
+    { "lat": 39.6443906, "lon": -86.8654095 },
+    { "lat": 39.6447182, "lon": -86.8654026 },
+    { "lat": 39.6448265, "lon": -86.8654291 },
+    { "lat": 39.6448364, "lon": -86.8654315 },
+    { "lat": 39.6450692, "lon": -86.8654347 },
+    { "lat": 39.6451346, "lon": -86.8654356 },
+    { "lat": 39.6452163, "lon": -86.8654367 },
+    { "lat": 39.6454952, "lon": -86.8654404 },
+    { "lat": 39.6458446, "lon": -86.8654588 },
+    { "lat": 39.6462140, "lon": -86.8654697 },
+    { "lat": 39.6474770, "lon": -86.8654721 },
+    { "lat": 39.6476052, "lon": -86.8654798 },
+    { "lat": 39.6478767, "lon": -86.8654868 },
+    { "lat": 39.6479916, "lon": -86.8654908 },
+    { "lat": 39.6485148, "lon": -86.8654933 },
+    { "lat": 39.6488244, "lon": -86.8654987 },
+    { "lat": 39.6491757, "lon": -86.8655069 },
+    { "lat": 39.6496894, "lon": -86.8654999 },
+    { "lat": 39.6497973, "lon": -86.8654984 },
+    { "lat": 39.6499976, "lon": -86.8655145 },
+    { "lat": 39.6501608, "lon": -86.8655440 },
+    { "lat": 39.6502034, "lon": -86.8655529 },
+    { "lat": 39.6503590, "lon": -86.8655896 },
+    { "lat": 39.6509156, "lon": -86.8656942 },
+    { "lat": 39.6513534, "lon": -86.8657854 },
+    { "lat": 39.6517416, "lon": -86.8658444 },
+    { "lat": 39.6520555, "lon": -86.8658713 }
+  ],
+  "tags": {
+    "NHS": "yes",
+    "access": "customers",
+    "destination": "local businesses",
+    "highway": "primary",
+    "lanes": "2",
+    "name": "North Jackson Street",
+    "ref": "US 231",
+    "temporary": "yes",
+    "tiger:cfcc": "A27",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "United States Highway 231",
+    "tiger:name_base_1": "Jackson",
+    "tiger:name_direction_prefix_1": "N",
+    "tiger:name_type_1": "St",
+    "tiger:reviewed": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 17515778,
+  "bounds": {
+    "minlat": 39.6439943,
+    "minlon": -86.8644933,
+    "maxlat": 39.6440418,
+    "maxlon": -86.8591602
+  },
+  "nodes": [
+    181445762,
+    7563748011,
+    6431860809,
+    181445764,
+    6431860805,
+    181445766,
+    181445768,
+    181445771,
+    11415347731,
+    11415146231,
+    6874214231,
+    181445774
+  ],
+  "geometry": [
+    { "lat": 39.6440012, "lon": -86.8591602 },
+    { "lat": 39.6439943, "lon": -86.8598628 },
+    { "lat": 39.6439957, "lon": -86.8605722 },
+    { "lat": 39.6439959, "lon": -86.8606678 },
+    { "lat": 39.6439958, "lon": -86.8607599 },
+    { "lat": 39.6439947, "lon": -86.8616285 },
+    { "lat": 39.6439954, "lon": -86.8625475 },
+    { "lat": 39.6439982, "lon": -86.8634904 },
+    { "lat": 39.6439990, "lon": -86.8635837 },
+    { "lat": 39.6440021, "lon": -86.8639579 },
+    { "lat": 39.6440071, "lon": -86.8643806 },
+    { "lat": 39.6440418, "lon": -86.8644933 }
+  ],
+  "tags": {
+    "NHS": "yes",
+    "hgv": "designated",
+    "hgv:national_network": "yes",
+    "highway": "primary",
+    "lanes": "2",
+    "name": "East Washington Street",
+    "ref": "US 231",
+    "source:hgv:national_network": "https://hepgis-usdot.hub.arcgis.com/apps/usdot::national-network-conventional-combination-trucks-map/explore",
+    "tiger:cfcc": "A21",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "United States Highway 231",
+    "tiger:name_base_1": "Washington",
+    "tiger:name_direction_prefix_1": "W",
+    "tiger:name_type_1": "St",
+    "tiger:reviewed": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 17515785,
+  "bounds": {
+    "minlat": 39.6439982,
+    "minlon": -86.8634904,
+    "maxlat": 39.6474825,
+    "maxlon": -86.8634501
+  },
+  "nodes": [
+    181445771,
+    6848301235,
+    7773386764,
+    11415342659,
+    11415347737,
+    181445842,
+    11415146261,
+    181445844,
+    7563748021,
+    181445846,
+    181445848
+  ],
+  "geometry": [
+    { "lat": 39.6439982, "lon": -86.8634904 },
+    { "lat": 39.6440759, "lon": -86.8634858 },
+    { "lat": 39.6443864, "lon": -86.8634890 },
+    { "lat": 39.6445916, "lon": -86.8634880 },
+    { "lat": 39.6446920, "lon": -86.8634875 },
+    { "lat": 39.6447659, "lon": -86.8634871 },
+    { "lat": 39.6451429, "lon": -86.8634844 },
+    { "lat": 39.6455040, "lon": -86.8634820 },
+    { "lat": 39.6458592, "lon": -86.8634661 },
+    { "lat": 39.6462125, "lon": -86.8634710 },
+    { "lat": 39.6474825, "lon": -86.8634501 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North Vine Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Vine",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17515901,
+  "bounds": {
+    "minlat": 39.6488225,
+    "minlon": -86.8664050,
+    "maxlat": 39.6488410,
+    "maxlon": -86.8644709
+  },
+  "nodes": [
+    181447226,
+    181445699,
+    8677638892,
+    181466875,
+    181461064
+  ],
+  "geometry": [
+    { "lat": 39.6488410, "lon": -86.8644709 },
+    { "lat": 39.6488244, "lon": -86.8654987 },
+    { "lat": 39.6488242, "lon": -86.8655801 },
+    { "lat": 39.6488234, "lon": -86.8659920 },
+    { "lat": 39.6488225, "lon": -86.8664050 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West New York Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "New York",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 17517406,
+  "bounds": {
+    "minlat": 39.6485158,
+    "minlon": -86.8664077,
+    "maxlat": 39.6488225,
+    "maxlon": -86.8664050
+  },
+  "nodes": [
+    181461064,
+    181461067
+  ],
+  "geometry": [
+    { "lat": 39.6488225, "lon": -86.8664050 },
+    { "lat": 39.6485158, "lon": -86.8664077 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Monon Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Monon",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 17517446,
+  "bounds": {
+    "minlat": 39.6359721,
+    "minlon": -86.8598955,
+    "maxlat": 39.6390447,
+    "maxlon": -86.8598124
+  },
+  "nodes": [
+    181461556,
+    7191051503,
+    13105100766,
+    13105100779,
+    7191051496,
+    181461558,
+    7191051491,
+    8476416761,
+    8476416763,
+    8476416768,
+    6431860837,
+    181461561
+  ],
+  "geometry": [
+    { "lat": 39.6359721, "lon": -86.8598124 },
+    { "lat": 39.6360260, "lon": -86.8598468 },
+    { "lat": 39.6369002, "lon": -86.8598810 },
+    { "lat": 39.6374674, "lon": -86.8598731 },
+    { "lat": 39.6378980, "lon": -86.8598670 },
+    { "lat": 39.6379570, "lon": -86.8598687 },
+    { "lat": 39.6380131, "lon": -86.8598701 },
+    { "lat": 39.6385318, "lon": -86.8598829 },
+    { "lat": 39.6386887, "lon": -86.8598867 },
+    { "lat": 39.6388730, "lon": -86.8598913 },
+    { "lat": 39.6389917, "lon": -86.8598942 },
+    { "lat": 39.6390447, "lon": -86.8598955 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Central Avenue",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Central",
+    "tiger:name_type": "Ave",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517489,
+  "bounds": {
+    "minlat": 39.6428789,
+    "minlon": -86.8583825,
+    "maxlat": 39.6429057,
+    "maxlon": -86.8518549
+  },
+  "nodes": [
+    3574715453,
+    181461978,
+    8049043475,
+    8191799197,
+    8191799181,
+    6874214514,
+    181461980
+  ],
+  "geometry": [
+    { "lat": 39.6428789, "lon": -86.8518549 },
+    { "lat": 39.6428864, "lon": -86.8536845 },
+    { "lat": 39.6428889, "lon": -86.8543010 },
+    { "lat": 39.6428984, "lon": -86.8566116 },
+    { "lat": 39.6428988, "lon": -86.8567018 },
+    { "lat": 39.6429053, "lon": -86.8582797 },
+    { "lat": 39.6429057, "lon": -86.8583825 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Walnut Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Walnut",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517492,
+  "bounds": {
+    "minlat": 39.6431747,
+    "minlon": -86.8606797,
+    "maxlat": 39.6432166,
+    "maxlon": -86.8586171
+  },
+  "nodes": [
+    2489022555,
+    6431860810,
+    11415147229,
+    181461989,
+    6874214493,
+    181461987
+  ],
+  "geometry": [
+    { "lat": 39.6431758, "lon": -86.8606797 },
+    { "lat": 39.6431776, "lon": -86.8605890 },
+    { "lat": 39.6431747, "lon": -86.8599476 },
+    { "lat": 39.6431893, "lon": -86.8594216 },
+    { "lat": 39.6432128, "lon": -86.8587033 },
+    { "lat": 39.6432166, "lon": -86.8586171 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Walnut Street",
+    "oneway": "yes",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Walnut",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517505,
+  "bounds": {
+    "minlat": 39.6465217,
+    "minlon": -86.8591046,
+    "maxlat": 39.6498525,
+    "maxlon": -86.8569119
+  },
+  "nodes": [
+    181462113,
+    181462115,
+    181462118,
+    181462120,
+    181462124,
+    181462126,
+    181457897
+  ],
+  "geometry": [
+    { "lat": 39.6465217, "lon": -86.8569119 },
+    { "lat": 39.6466634, "lon": -86.8575876 },
+    { "lat": 39.6468968, "lon": -86.8580693 },
+    { "lat": 39.6472097, "lon": -86.8585263 },
+    { "lat": 39.6475470, "lon": -86.8588390 },
+    { "lat": 39.6481388, "lon": -86.8590963 },
+    { "lat": 39.6498525, "lon": -86.8591046 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Hillsdale Avenue",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Hillsdale",
+    "tiger:name_type": "Ave",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517549,
+  "bounds": {
+    "minlat": 39.6475576,
+    "minlon": -86.8732581,
+    "maxlat": 39.6523694,
+    "maxlon": -86.8712840
+  },
+  "nodes": [
+    181462538,
+    2489017794,
+    181462541,
+    181449015,
+    181462548,
+    181462554,
+    181462556,
+    2489017792,
+    2489017784,
+    181462558,
+    181462560,
+    181462564
+  ],
+  "geometry": [
+    { "lat": 39.6475576, "lon": -86.8712840 },
+    { "lat": 39.6476045, "lon": -86.8713952 },
+    { "lat": 39.6477104, "lon": -86.8714395 },
+    { "lat": 39.6487802, "lon": -86.8714288 },
+    { "lat": 39.6498210, "lon": -86.8714395 },
+    { "lat": 39.6512006, "lon": -86.8714342 },
+    { "lat": 39.6514649, "lon": -86.8714342 },
+    { "lat": 39.6516177, "lon": -86.8714449 },
+    { "lat": 39.6517416, "lon": -86.8715575 },
+    { "lat": 39.6518697, "lon": -86.8719277 },
+    { "lat": 39.6523323, "lon": -86.8730381 },
+    { "lat": 39.6523694, "lon": -86.8732581 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Rockville Road",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Rockville",
+    "tiger:name_type": "Rd",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517562,
+  "bounds": {
+    "minlat": 39.6439968,
+    "minlon": -86.8673626,
+    "maxlat": 39.6535383,
+    "maxlon": -86.8673357
+  },
+  "nodes": [
+    181462781,
+    181462783,
+    7773386756,
+    181462790,
+    7773386759,
+    181462793,
+    181462795,
+    181462798,
+    181462801,
+    181484239,
+    181462804,
+    181462807,
+    181462810,
+    181462813,
+    181462815,
+    181450524,
+    7191051680,
+    181462817,
+    181449898,
+    8313588525,
+    181462824,
+    7773800791,
+    181455854
+  ],
+  "geometry": [
+    { "lat": 39.6439968, "lon": -86.8673390 },
+    { "lat": 39.6447578, "lon": -86.8673392 },
+    { "lat": 39.6451453, "lon": -86.8673391 },
+    { "lat": 39.6454928, "lon": -86.8673391 },
+    { "lat": 39.6458430, "lon": -86.8673391 },
+    { "lat": 39.6462195, "lon": -86.8673392 },
+    { "lat": 39.6474657, "lon": -86.8673357 },
+    { "lat": 39.6479799, "lon": -86.8673411 },
+    { "lat": 39.6485169, "lon": -86.8673357 },
+    { "lat": 39.6488602, "lon": -86.8673396 },
+    { "lat": 39.6490160, "lon": -86.8673395 },
+    { "lat": 39.6491100, "lon": -86.8673395 },
+    { "lat": 39.6494540, "lon": -86.8673396 },
+    { "lat": 39.6497510, "lon": -86.8673396 },
+    { "lat": 39.6498882, "lon": -86.8673438 },
+    { "lat": 39.6506560, "lon": -86.8673397 },
+    { "lat": 39.6508007, "lon": -86.8673374 },
+    { "lat": 39.6509084, "lon": -86.8673357 },
+    { "lat": 39.6511930, "lon": -86.8673397 },
+    { "lat": 39.6513567, "lon": -86.8673397 },
+    { "lat": 39.6520520, "lon": -86.8673398 },
+    { "lat": 39.6525305, "lon": -86.8673471 },
+    { "lat": 39.6535383, "lon": -86.8673626 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North Madison Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Madison",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517579,
+  "bounds": {
+    "minlat": 39.6462140,
+    "minlon": -86.8691789,
+    "maxlat": 39.6462381,
+    "maxlon": -86.8644623
+  },
+  "nodes": [
+    181463077,
+    181445691,
+    8677638884,
+    181463080,
+    181462793,
+    7773386762,
+    181463083,
+    1798443161,
+    181463086
+  ],
+  "geometry": [
+    { "lat": 39.6462195, "lon": -86.8644623 },
+    { "lat": 39.6462140, "lon": -86.8654697 },
+    { "lat": 39.6462153, "lon": -86.8655443 },
+    { "lat": 39.6462197, "lon": -86.8663894 },
+    { "lat": 39.6462195, "lon": -86.8673392 },
+    { "lat": 39.6462174, "lon": -86.8678109 },
+    { "lat": 39.6462154, "lon": -86.8682756 },
+    { "lat": 39.6462164, "lon": -86.8683801 },
+    { "lat": 39.6462381, "lon": -86.8691789 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Liberty Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Liberty",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517781,
+  "bounds": {
+    "minlat": 39.6466251,
+    "minlon": -86.8613337,
+    "maxlat": 39.6476218,
+    "maxlon": -86.8598390
+  },
+  "nodes": [
+    181465146,
+    181465149,
+    181465151,
+    181465154,
+    181465157,
+    181465160
+  ],
+  "geometry": [
+    { "lat": 39.6466251, "lon": -86.8598390 },
+    { "lat": 39.6471478, "lon": -86.8599363 },
+    { "lat": 39.6472544, "lon": -86.8600809 },
+    { "lat": 39.6472077, "lon": -86.8608472 },
+    { "lat": 39.6472701, "lon": -86.8610202 },
+    { "lat": 39.6476218, "lon": -86.8613337 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Cassada Drive",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Cassada",
+    "tiger:name_type": "Dr",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517838,
+  "bounds": {
+    "minlat": 39.6474752,
+    "minlon": -86.8661175,
+    "maxlat": 39.6474849,
+    "maxlon": -86.8625653
+  },
+  "nodes": [
+    181466142,
+    181445848,
+    181466144,
+    8656033579,
+    181445694,
+    8677638889,
+    2489022554
+  ],
+  "geometry": [
+    { "lat": 39.6474849, "lon": -86.8625653 },
+    { "lat": 39.6474825, "lon": -86.8634501 },
+    { "lat": 39.6474797, "lon": -86.8644740 },
+    { "lat": 39.6474778, "lon": -86.8651809 },
+    { "lat": 39.6474770, "lon": -86.8654721 },
+    { "lat": 39.6474767, "lon": -86.8655630 },
+    { "lat": 39.6474752, "lon": -86.8661175 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Jacobs Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Jacobs",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517884,
+  "bounds": {
+    "minlat": 39.6439908,
+    "minlon": -86.8682756,
+    "maxlat": 39.6462154,
+    "maxlon": -86.8682681
+  },
+  "nodes": [
+    181460444,
+    181466545,
+    181466546,
+    7773386758,
+    181463083
+  ],
+  "geometry": [
+    { "lat": 39.6439908, "lon": -86.8682681 },
+    { "lat": 39.6447542, "lon": -86.8682706 },
+    { "lat": 39.6454882, "lon": -86.8682731 },
+    { "lat": 39.6458430, "lon": -86.8682743 },
+    { "lat": 39.6462154, "lon": -86.8682756 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North Jefferson Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Jefferson",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517927,
+  "bounds": {
+    "minlat": 39.6488234,
+    "minlon": -86.8659920,
+    "maxlat": 39.6491798,
+    "maxlon": -86.8659893
+  },
+  "nodes": [
+    181466875,
+    181459851
+  ],
+  "geometry": [
+    { "lat": 39.6488234, "lon": -86.8659920 },
+    { "lat": 39.6491798, "lon": -86.8659893 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Iowa Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Iowa",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17517951,
+  "bounds": {
+    "minlat": 39.6447663,
+    "minlon": -86.8591148,
+    "maxlat": 39.6457494,
+    "maxlon": -86.8581277
+  },
+  "nodes": [
+    181467069,
+    181467070,
+    2489022557,
+    181467071,
+    2489022558,
+    181467072
+  ],
+  "geometry": [
+    { "lat": 39.6447663, "lon": -86.8581277 },
+    { "lat": 39.6455098, "lon": -86.8581492 },
+    { "lat": 39.6456420, "lon": -86.8582135 },
+    { "lat": 39.6456792, "lon": -86.8583798 },
+    { "lat": 39.6456833, "lon": -86.8589807 },
+    { "lat": 39.6457494, "lon": -86.8591148 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Paradise Lane",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Paradise",
+    "tiger:name_type": "Ln",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518138,
+  "bounds": {
+    "minlat": 39.6462015,
+    "minlon": -86.8644623,
+    "maxlat": 39.6462195,
+    "maxlon": -86.8619152
+  },
+  "nodes": [
+    181463077,
+    181445846,
+    181469390,
+    181469393
+  ],
+  "geometry": [
+    { "lat": 39.6462195, "lon": -86.8644623 },
+    { "lat": 39.6462125, "lon": -86.8634710 },
+    { "lat": 39.6462061, "lon": -86.8625677 },
+    { "lat": 39.6462015, "lon": -86.8619152 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Liberty Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Liberty",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518140,
+  "bounds": {
+    "minlat": 39.6330096,
+    "minlon": -86.8583875,
+    "maxlat": 39.6390379,
+    "maxlon": -86.8583658
+  },
+  "nodes": [
+    181469423,
+    181464402,
+    7563747962,
+    7191051687,
+    181469429,
+    7191051688,
+    7191051513,
+    181469432,
+    7191051502,
+    181469435,
+    7191051495,
+    181469439,
+    7191051490,
+    7563748000,
+    6431860838,
+    181469442
+  ],
+  "geometry": [
+    { "lat": 39.6330096, "lon": -86.8583664 },
+    { "lat": 39.6340495, "lon": -86.8583828 },
+    { "lat": 39.6345337, "lon": -86.8583747 },
+    { "lat": 39.6349626, "lon": -86.8583674 },
+    { "lat": 39.6350018, "lon": -86.8583669 },
+    { "lat": 39.6350557, "lon": -86.8583658 },
+    { "lat": 39.6359146, "lon": -86.8583862 },
+    { "lat": 39.6359777, "lon": -86.8583875 },
+    { "lat": 39.6360332, "lon": -86.8583873 },
+    { "lat": 39.6369271, "lon": -86.8583797 },
+    { "lat": 39.6379014, "lon": -86.8583846 },
+    { "lat": 39.6379620, "lon": -86.8583846 },
+    { "lat": 39.6380131, "lon": -86.8583838 },
+    { "lat": 39.6384932, "lon": -86.8583763 },
+    { "lat": 39.6389871, "lon": -86.8583686 },
+    { "lat": 39.6390379, "lon": -86.8583678 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Crown Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Crown",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518149,
+  "bounds": {
+    "minlat": 39.6432347,
+    "minlon": -86.8692270,
+    "maxlat": 39.6439848,
+    "maxlon": -86.8691910
+  },
+  "nodes": [
+    181469614,
+    7773386755,
+    181469623
+  ],
+  "geometry": [
+    { "lat": 39.6432347, "lon": -86.8692270 },
+    { "lat": 39.6436063, "lon": -86.8692092 },
+    { "lat": 39.6439848, "lon": -86.8691910 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "South Gillespie Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Gillespie",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518158,
+  "bounds": {
+    "minlat": 39.6432604,
+    "minlon": -86.8654364,
+    "maxlat": 39.6432619,
+    "maxlon": -86.8644550
+  },
+  "nodes": [
+    181462003,
+    6874214259,
+    10033924817,
+    181469728
+  ],
+  "geometry": [
+    { "lat": 39.6432619, "lon": -86.8644550 },
+    { "lat": 39.6432614, "lon": -86.8645395 },
+    { "lat": 39.6432606, "lon": -86.8653356 },
+    { "lat": 39.6432604, "lon": -86.8654364 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "West Walnut Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Walnut",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518168,
+  "bounds": {
+    "minlat": 39.6401974,
+    "minlon": -86.8644620,
+    "maxlat": 39.6402411,
+    "maxlon": -86.8626485
+  },
+  "nodes": [
+    11050110831,
+    11050110830,
+    6431861341,
+    11050110856,
+    6874214238,
+    181469861
+  ],
+  "geometry": [
+    { "lat": 39.6402411, "lon": -86.8626485 },
+    { "lat": 39.6401974, "lon": -86.8627263 },
+    { "lat": 39.6402034, "lon": -86.8634817 },
+    { "lat": 39.6402065, "lon": -86.8639022 },
+    { "lat": 39.6402100, "lon": -86.8643612 },
+    { "lat": 39.6402085, "lon": -86.8644620 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Larrabee Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Larrabee",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518184,
+  "bounds": {
+    "minlat": 39.6491063,
+    "minlon": -86.8633110,
+    "maxlat": 39.6498839,
+    "maxlon": -86.8625652
+  },
+  "nodes": [
+    181469967,
+    181469969,
+    181469971,
+    181469973
+  ],
+  "geometry": [
+    { "lat": 39.6491104, "lon": -86.8625652 },
+    { "lat": 39.6491063, "lon": -86.8632159 },
+    { "lat": 39.6493070, "lon": -86.8633110 },
+    { "lat": 39.6498839, "lon": -86.8633103 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Moores Court",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Moores",
+    "tiger:name_type": "Ct",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518673,
+  "bounds": {
+    "minlat": 39.6432300,
+    "minlon": -86.8850315,
+    "maxlat": 39.6450117,
+    "maxlon": -86.8704750
+  },
+  "nodes": [
+    181469737,
+    181484259,
+    8656035689,
+    181473162,
+    8656035682,
+    181450454,
+    8036421997,
+    181473165,
+    181473170,
+    181456376,
+    11415347695,
+    181473177,
+    7605225353,
+    8025294578,
+    8025294563,
+    7742399209,
+    8025332086,
+    8025332101,
+    181473190,
+    11415347696,
+    11415347697,
+    181473194,
+    7304751305,
+    7773386737,
+    181473198,
+    181464774
+  ],
+  "geometry": [
+    { "lat": 39.6432300, "lon": -86.8704750 },
+    { "lat": 39.6432331, "lon": -86.8707515 },
+    { "lat": 39.6432382, "lon": -86.8708978 },
+    { "lat": 39.6432370, "lon": -86.8709624 },
+    { "lat": 39.6432414, "lon": -86.8715642 },
+    { "lat": 39.6432449, "lon": -86.8737583 },
+    { "lat": 39.6432553, "lon": -86.8746191 },
+    { "lat": 39.6432402, "lon": -86.8762512 },
+    { "lat": 39.6432376, "lon": -86.8766220 },
+    { "lat": 39.6432484, "lon": -86.8768248 },
+    { "lat": 39.6432705, "lon": -86.8771018 },
+    { "lat": 39.6433178, "lon": -86.8773695 },
+    { "lat": 39.6436326, "lon": -86.8785574 },
+    { "lat": 39.6437329, "lon": -86.8789029 },
+    { "lat": 39.6437767, "lon": -86.8790755 },
+    { "lat": 39.6441045, "lon": -86.8803140 },
+    { "lat": 39.6442028, "lon": -86.8807055 },
+    { "lat": 39.6443685, "lon": -86.8813202 },
+    { "lat": 39.6444521, "lon": -86.8816049 },
+    { "lat": 39.6445970, "lon": -86.8821701 },
+    { "lat": 39.6446770, "lon": -86.8825057 },
+    { "lat": 39.6447463, "lon": -86.8828459 },
+    { "lat": 39.6447765, "lon": -86.8831068 },
+    { "lat": 39.6448755, "lon": -86.8839607 },
+    { "lat": 39.6448822, "lon": -86.8840184 },
+    { "lat": 39.6450117, "lon": -86.8850315 }
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "name": "West County Road 125 South",
+    "name_1": "Northwest Walnut",
+    "surface": "paved",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "County Road 125",
+    "tiger:name_base_1": "Walnut",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_direction_prefix_1": "NW",
+    "tiger:name_direction_suffix": "S",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518771,
+  "bounds": {
+    "minlat": 39.6425269,
+    "minlon": -86.8673412,
+    "maxlat": 39.6425408,
+    "maxlon": -86.8644588
+  },
+  "nodes": [
+    181473953,
+    6874214266,
+    10033916913,
+    181473956,
+    8677638879,
+    181473958,
+    181473959
+  ],
+  "geometry": [
+    { "lat": 39.6425408, "lon": -86.8644588 },
+    { "lat": 39.6425398, "lon": -86.8645345 },
+    { "lat": 39.6425348, "lon": -86.8653417 },
+    { "lat": 39.6425351, "lon": -86.8654445 },
+    { "lat": 39.6425350, "lon": -86.8655353 },
+    { "lat": 39.6425341, "lon": -86.8663954 },
+    { "lat": 39.6425269, "lon": -86.8673412 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Poplar Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Poplar",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518774,
+  "bounds": {
+    "minlat": 39.6498566,
+    "minlon": -86.8625627,
+    "maxlat": 39.6511777,
+    "maxlon": -86.8624760
+  },
+  "nodes": [
+    181473971,
+    181447978
+  ],
+  "geometry": [
+    { "lat": 39.6498566, "lon": -86.8625627 },
+    { "lat": 39.6511777, "lon": -86.8624760 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "College Avenue",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "College",
+    "tiger:name_type": "Ave",
+    "tiger:reviewed": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 17518873,
+  "bounds": {
+    "minlat": 39.6439848,
+    "minlon": -86.8692581,
+    "maxlat": 39.6475328,
+    "maxlon": -86.8691789
+  },
+  "nodes": [
+    181469623,
+    181474731,
+    13027297658,
+    181474733,
+    13027297657,
+    181463086,
+    181474736,
+    181474739,
+    181474742
+  ],
+  "geometry": [
+    { "lat": 39.6439848, "lon": -86.8691910 },
+    { "lat": 39.6447500, "lon": -86.8691980 },
+    { "lat": 39.6454979, "lon": -86.8692295 },
+    { "lat": 39.6455439, "lon": -86.8692314 },
+    { "lat": 39.6456873, "lon": -86.8692385 },
+    { "lat": 39.6462381, "lon": -86.8691789 },
+    { "lat": 39.6462892, "lon": -86.8692192 },
+    { "lat": 39.6463719, "lon": -86.8692581 },
+    { "lat": 39.6475328, "lon": -86.8692133 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North Gillespie Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Gillespie",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518936,
+  "bounds": {
+    "minlat": 39.6439959,
+    "minlon": -86.8606682,
+    "maxlat": 39.6462523,
+    "maxlon": -86.8606611
+  },
+  "nodes": [
+    181445764,
+    6848301238,
+    12885472279,
+    181471121,
+    181475136,
+    181469396
+  ],
+  "geometry": [
+    { "lat": 39.6439959, "lon": -86.8606678 },
+    { "lat": 39.6441034, "lon": -86.8606670 },
+    { "lat": 39.6441816, "lon": -86.8606665 },
+    { "lat": 39.6447580, "lon": -86.8606624 },
+    { "lat": 39.6454706, "lon": -86.8606682 },
+    { "lat": 39.6462523, "lon": -86.8606611 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North Locust Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Locust",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17518997,
+  "bounds": {
+    "minlat": 39.6402085,
+    "minlon": -86.8654381,
+    "maxlat": 39.6402154,
+    "maxlon": -86.8644620
+  },
+  "nodes": [
+    181469861,
+    6874214261,
+    7773371572,
+    13796238568,
+    181475518
+  ],
+  "geometry": [
+    { "lat": 39.6402085, "lon": -86.8644620 },
+    { "lat": 39.6402091, "lon": -86.8645483 },
+    { "lat": 39.6402118, "lon": -86.8649297 },
+    { "lat": 39.6402147, "lon": -86.8653392 },
+    { "lat": 39.6402154, "lon": -86.8654381 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Larabee Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Larabee",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519016,
+  "bounds": {
+    "minlat": 39.6390148,
+    "minlon": -86.8644588,
+    "maxlat": 39.6390711,
+    "maxlon": -86.8556270
+  },
+  "nodes": [
+    1798533269,
+    10863905544,
+    10863905543,
+    181463864,
+    7861027021,
+    7563748003,
+    181469442,
+    7087426660,
+    7087426653,
+    8476416767,
+    181461561,
+    6431860813,
+    181475700,
+    6431860794,
+    6848285072,
+    6848285065,
+    13105100404,
+    6874214240,
+    181475704
+  ],
+  "geometry": [
+    { "lat": 39.6390148, "lon": -86.8556270 },
+    { "lat": 39.6390156, "lon": -86.8557295 },
+    { "lat": 39.6390161, "lon": -86.8557988 },
+    { "lat": 39.6390245, "lon": -86.8568722 },
+    { "lat": 39.6390309, "lon": -86.8575909 },
+    { "lat": 39.6390359, "lon": -86.8581476 },
+    { "lat": 39.6390379, "lon": -86.8583678 },
+    { "lat": 39.6390391, "lon": -86.8586456 },
+    { "lat": 39.6390403, "lon": -86.8589031 },
+    { "lat": 39.6390414, "lon": -86.8591528 },
+    { "lat": 39.6390447, "lon": -86.8598955 },
+    { "lat": 39.6390464, "lon": -86.8605795 },
+    { "lat": 39.6390503, "lon": -86.8606755 },
+    { "lat": 39.6390581, "lon": -86.8607495 },
+    { "lat": 39.6390604, "lon": -86.8610398 },
+    { "lat": 39.6390708, "lon": -86.8625480 },
+    { "lat": 39.6390682, "lon": -86.8639231 },
+    { "lat": 39.6390705, "lon": -86.8643611 },
+    { "lat": 39.6390711, "lon": -86.8644588 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "East Hanna Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Hanna",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St"
+  }
+},
+{
+  "type": "way",
+  "id": 17519151,
+  "bounds": {
+    "minlat": 39.6403587,
+    "minlon": -86.8606725,
+    "maxlat": 39.6403652,
+    "maxlon": -86.8506363
+  },
+  "nodes": [
+    181476670,
+    7190966283,
+    7694261453,
+    7694261458,
+    181476674,
+    181448290,
+    8332698576,
+    9732807339,
+    6874214518,
+    181476679,
+    6874214497,
+    7861027015,
+    7563748001,
+    7087426656,
+    6874214468,
+    6431860812,
+    181476689
+  ],
+  "geometry": [
+    { "lat": 39.6403587, "lon": -86.8506363 },
+    { "lat": 39.6403587, "lon": -86.8506848 },
+    { "lat": 39.6403594, "lon": -86.8517447 },
+    { "lat": 39.6403596, "lon": -86.8520869 },
+    { "lat": 39.6403607, "lon": -86.8536980 },
+    { "lat": 39.6403608, "lon": -86.8539189 },
+    { "lat": 39.6403619, "lon": -86.8555516 },
+    { "lat": 39.6403622, "lon": -86.8560326 },
+    { "lat": 39.6403625, "lon": -86.8564834 },
+    { "lat": 39.6403626, "lon": -86.8566372 },
+    { "lat": 39.6403626, "lon": -86.8567002 },
+    { "lat": 39.6403632, "lon": -86.8576174 },
+    { "lat": 39.6403636, "lon": -86.8581723 },
+    { "lat": 39.6403641, "lon": -86.8589115 },
+    { "lat": 39.6403646, "lon": -86.8596829 },
+    { "lat": 39.6403652, "lon": -86.8605959 },
+    { "lat": 39.6403652, "lon": -86.8606725 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "lanes": "2",
+    "maxspeed": "20 mph",
+    "name": "Anderson Street",
+    "oneway": "no",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Anderson",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519270,
+  "bounds": {
+    "minlat": 39.6323315,
+    "minlon": -86.8606865,
+    "maxlat": 39.6439959,
+    "maxlon": -86.8605795
+  },
+  "nodes": [
+    181459742,
+    181473291,
+    181464409,
+    11050110460,
+    6250277231,
+    181462105,
+    6250277232,
+    11050110452,
+    10850320899,
+    181471273,
+    13105100520,
+    181477690,
+    11050110640,
+    181469853,
+    6431860836,
+    181475700,
+    6431860831,
+    181476689,
+    11050111062,
+    181475675,
+    6431861172,
+    11050111012,
+    6874214170,
+    181477694,
+    6874214201,
+    7563748008,
+    181477697,
+    2489022555,
+    2489022556,
+    7563748014,
+    6848301198,
+    181445764
+  ],
+  "geometry": [
+    { "lat": 39.6323315, "lon": -86.8605827 },
+    { "lat": 39.6330214, "lon": -86.8605795 },
+    { "lat": 39.6340516, "lon": -86.8605795 },
+    { "lat": 39.6349042, "lon": -86.8605941 },
+    { "lat": 39.6349858, "lon": -86.8605955 },
+    { "lat": 39.6350090, "lon": -86.8605959 },
+    { "lat": 39.6350985, "lon": -86.8605987 },
+    { "lat": 39.6351886, "lon": -86.8605992 },
+    { "lat": 39.6354341, "lon": -86.8606037 },
+    { "lat": 39.6359722, "lon": -86.8606136 },
+    { "lat": 39.6364428, "lon": -86.8606237 },
+    { "lat": 39.6372716, "lon": -86.8606415 },
+    { "lat": 39.6373312, "lon": -86.8606419 },
+    { "lat": 39.6379584, "lon": -86.8606458 },
+    { "lat": 39.6389740, "lon": -86.8606747 },
+    { "lat": 39.6390503, "lon": -86.8606755 },
+    { "lat": 39.6391054, "lon": -86.8606770 },
+    { "lat": 39.6403652, "lon": -86.8606725 },
+    { "lat": 39.6408703, "lon": -86.8606674 },
+    { "lat": 39.6410827, "lon": -86.8606653 },
+    { "lat": 39.6411032, "lon": -86.8606652 },
+    { "lat": 39.6416095, "lon": -86.8606621 },
+    { "lat": 39.6417732, "lon": -86.8606611 },
+    { "lat": 39.6418169, "lon": -86.8606608 },
+    { "lat": 39.6418726, "lon": -86.8606616 },
+    { "lat": 39.6423503, "lon": -86.8606656 },
+    { "lat": 39.6425448, "lon": -86.8606672 },
+    { "lat": 39.6431758, "lon": -86.8606797 },
+    { "lat": 39.6432503, "lon": -86.8606865 },
+    { "lat": 39.6435827, "lon": -86.8606782 },
+    { "lat": 39.6439493, "lon": -86.8606690 },
+    { "lat": 39.6439959, "lon": -86.8606678 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "South Locust Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Locust",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519276,
+  "bounds": {
+    "minlat": 39.6418140,
+    "minlon": -86.8634935,
+    "maxlat": 39.6439982,
+    "maxlon": -86.8634904
+  },
+  "nodes": [
+    181477754,
+    6874214206,
+    8474136411,
+    11050110192,
+    181477756,
+    8474136402,
+    181461999,
+    9328047403,
+    9328047399,
+    8570150109,
+    6848301194,
+    181445771
+  ],
+  "geometry": [
+    { "lat": 39.6418140, "lon": -86.8634935 },
+    { "lat": 39.6418784, "lon": -86.8634934 },
+    { "lat": 39.6421917, "lon": -86.8634929 },
+    { "lat": 39.6422487, "lon": -86.8634928 },
+    { "lat": 39.6425410, "lon": -86.8634924 },
+    { "lat": 39.6429024, "lon": -86.8634919 },
+    { "lat": 39.6432590, "lon": -86.8634914 },
+    { "lat": 39.6433962, "lon": -86.8634912 },
+    { "lat": 39.6435329, "lon": -86.8634911 },
+    { "lat": 39.6436238, "lon": -86.8634909 },
+    { "lat": 39.6439380, "lon": -86.8634905 },
+    { "lat": 39.6439982, "lon": -86.8634904 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "South Vine Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Vine",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519299,
+  "bounds": {
+    "minlat": 39.6498210,
+    "minlon": -86.8714395,
+    "maxlat": 39.6503590,
+    "maxlon": -86.8655896
+  },
+  "nodes": [
+    181462548,
+    181478003,
+    181478006,
+    181462815,
+    181445709
+  ],
+  "geometry": [
+    { "lat": 39.6498210, "lon": -86.8714395 },
+    { "lat": 39.6498770, "lon": -86.8684330 },
+    { "lat": 39.6498437, "lon": -86.8679288 },
+    { "lat": 39.6498882, "lon": -86.8673438 },
+    { "lat": 39.6503590, "lon": -86.8655896 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Elizabeth Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Elizabeth",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519408,
+  "bounds": {
+    "minlat": 39.6425403,
+    "minlon": -86.8640580,
+    "maxlat": 39.6425448,
+    "maxlon": -86.8606672
+  },
+  "nodes": [
+    181477697,
+    6431860803,
+    181478724,
+    181475862,
+    11050110163,
+    11415347683,
+    181477756,
+    11050110191,
+    8474136404
+  ],
+  "geometry": [
+    { "lat": 39.6425448, "lon": -86.8606672 },
+    { "lat": 39.6425446, "lon": -86.8607654 },
+    { "lat": 39.6425435, "lon": -86.8616106 },
+    { "lat": 39.6425423, "lon": -86.8625493 },
+    { "lat": 39.6425417, "lon": -86.8629684 },
+    { "lat": 39.6425416, "lon": -86.8630618 },
+    { "lat": 39.6425410, "lon": -86.8634924 },
+    { "lat": 39.6425404, "lon": -86.8639677 },
+    { "lat": 39.6425403, "lon": -86.8640580 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Poplar Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Poplar",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519458,
+  "bounds": {
+    "minlat": 39.6439954,
+    "minlon": -86.8625677,
+    "maxlat": 39.6498566,
+    "maxlon": -86.8625475
+  },
+  "nodes": [
+    181445768,
+    6848301236,
+    7773386765,
+    181471126,
+    181479230,
+    7563748020,
+    181469390,
+    181479233,
+    181466142,
+    181469967,
+    181473971
+  ],
+  "geometry": [
+    { "lat": 39.6439954, "lon": -86.8625475 },
+    { "lat": 39.6440814, "lon": -86.8625483 },
+    { "lat": 39.6443883, "lon": -86.8625511 },
+    { "lat": 39.6447669, "lon": -86.8625546 },
+    { "lat": 39.6455074, "lon": -86.8625522 },
+    { "lat": 39.6458544, "lon": -86.8625542 },
+    { "lat": 39.6462061, "lon": -86.8625677 },
+    { "lat": 39.6467196, "lon": -86.8625565 },
+    { "lat": 39.6474849, "lon": -86.8625653 },
+    { "lat": 39.6491104, "lon": -86.8625652 },
+    { "lat": 39.6498566, "lon": -86.8625627 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North College Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "College",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519464,
+  "bounds": {
+    "minlat": 39.6187778,
+    "minlon": -86.8591602,
+    "maxlat": 39.6440012,
+    "maxlon": -86.8439973
+  },
+  "nodes": [
+    181445752,
+    8028598664,
+    8081129577,
+    181479273,
+    8041732926,
+    181472705,
+    8076767875,
+    8041732927,
+    181479277,
+    181466080,
+    181479280,
+    8049121752,
+    1798473676,
+    7755934415,
+    10781790813,
+    181479283,
+    181474128,
+    8080180538,
+    181479286,
+    181479289,
+    7765054208,
+    12639671750,
+    12639671758,
+    1798473673,
+    181479292,
+    2489038525,
+    181479295,
+    7218490377,
+    7218490370,
+    181462384,
+    7218490358,
+    12639656837,
+    181462049,
+    12639656842,
+    8050263915,
+    8050263919,
+    181479298,
+    10991835419,
+    181462023,
+    181479300,
+    181458505,
+    181472399,
+    7563747990,
+    181464577,
+    1798533327,
+    8461632355,
+    181479302,
+    181476658,
+    181475185,
+    8065487594,
+    1798533243,
+    11415147227,
+    1798533255,
+    181479305,
+    8065463681,
+    181449867,
+    7192437283,
+    181448334,
+    1798533269,
+    6874214435,
+    181476679,
+    6874214541,
+    9732807344,
+    181479309,
+    6874214182,
+    181479312,
+    6874214198,
+    181479315,
+    181461980,
+    181461987,
+    7563748015,
+    6848301202,
+    181445762
+  ],
+  "geometry": [
+    { "lat": 39.6187778, "lon": -86.8439973 },
+    { "lat": 39.6191701, "lon": -86.8443459 },
+    { "lat": 39.6193989, "lon": -86.8445335 },
+    { "lat": 39.6201380, "lon": -86.8451395 },
+    { "lat": 39.6206478, "lon": -86.8454155 },
+    { "lat": 39.6220470, "lon": -86.8459333 },
+    { "lat": 39.6225679, "lon": -86.8461416 },
+    { "lat": 39.6226254, "lon": -86.8461646 },
+    { "lat": 39.6231526, "lon": -86.8464036 },
+    { "lat": 39.6240819, "lon": -86.8469905 },
+    { "lat": 39.6251323, "lon": -86.8477012 },
+    { "lat": 39.6252618, "lon": -86.8477813 },
+    { "lat": 39.6261919, "lon": -86.8483564 },
+    { "lat": 39.6262134, "lon": -86.8483720 },
+    { "lat": 39.6266656, "lon": -86.8486647 },
+    { "lat": 39.6270009, "lon": -86.8488816 },
+    { "lat": 39.6275957, "lon": -86.8492904 },
+    { "lat": 39.6278288, "lon": -86.8494448 },
+    { "lat": 39.6286242, "lon": -86.8499719 },
+    { "lat": 39.6293210, "lon": -86.8504559 },
+    { "lat": 39.6293589, "lon": -86.8504796 },
+    { "lat": 39.6294864, "lon": -86.8505592 },
+    { "lat": 39.6296442, "lon": -86.8506578 },
+    { "lat": 39.6296914, "lon": -86.8506873 },
+    { "lat": 39.6301804, "lon": -86.8509387 },
+    { "lat": 39.6305037, "lon": -86.8510688 },
+    { "lat": 39.6307670, "lon": -86.8511747 },
+    { "lat": 39.6312130, "lon": -86.8513614 },
+    { "lat": 39.6313544, "lon": -86.8514207 },
+    { "lat": 39.6315696, "lon": -86.8515107 },
+    { "lat": 39.6320762, "lon": -86.8517420 },
+    { "lat": 39.6324169, "lon": -86.8518975 },
+    { "lat": 39.6325023, "lon": -86.8519365 },
+    { "lat": 39.6327386, "lon": -86.8520384 },
+    { "lat": 39.6328849, "lon": -86.8521016 },
+    { "lat": 39.6332483, "lon": -86.8522585 },
+    { "lat": 39.6335440, "lon": -86.8523861 },
+    { "lat": 39.6335591, "lon": -86.8523932 },
+    { "lat": 39.6340297, "lon": -86.8526138 },
+    { "lat": 39.6345590, "lon": -86.8528667 },
+    { "lat": 39.6348590, "lon": -86.8529968 },
+    { "lat": 39.6353633, "lon": -86.8532308 },
+    { "lat": 39.6357379, "lon": -86.8534051 },
+    { "lat": 39.6361630, "lon": -86.8536030 },
+    { "lat": 39.6364210, "lon": -86.8537286 },
+    { "lat": 39.6365777, "lon": -86.8537946 },
+    { "lat": 39.6366645, "lon": -86.8538312 },
+    { "lat": 39.6369186, "lon": -86.8539424 },
+    { "lat": 39.6371948, "lon": -86.8540687 },
+    { "lat": 39.6372640, "lon": -86.8540974 },
+    { "lat": 39.6375056, "lon": -86.8542175 },
+    { "lat": 39.6376206, "lon": -86.8543033 },
+    { "lat": 39.6377356, "lon": -86.8544074 },
+    { "lat": 39.6379508, "lon": -86.8546237 },
+    { "lat": 39.6380193, "lon": -86.8546919 },
+    { "lat": 39.6386236, "lon": -86.8552965 },
+    { "lat": 39.6386609, "lon": -86.8553308 },
+    { "lat": 39.6386872, "lon": -86.8553570 },
+    { "lat": 39.6390148, "lon": -86.8556270 },
+    { "lat": 39.6403178, "lon": -86.8566043 },
+    { "lat": 39.6403626, "lon": -86.8566372 },
+    { "lat": 39.6404402, "lon": -86.8566882 },
+    { "lat": 39.6409438, "lon": -86.8570196 },
+    { "lat": 39.6411160, "lon": -86.8571329 },
+    { "lat": 39.6417712, "lon": -86.8575971 },
+    { "lat": 39.6418183, "lon": -86.8576304 },
+    { "lat": 39.6418776, "lon": -86.8576668 },
+    { "lat": 39.6424246, "lon": -86.8580488 },
+    { "lat": 39.6429057, "lon": -86.8583825 },
+    { "lat": 39.6432166, "lon": -86.8586171 },
+    { "lat": 39.6435808, "lon": -86.8588769 },
+    { "lat": 39.6439580, "lon": -86.8591433 },
+    { "lat": 39.6440012, "lon": -86.8591602 }
+  ],
+  "tags": {
+    "NHS": "yes",
+    "hgv": "designated",
+    "hgv:national_network": "yes",
+    "highway": "primary",
+    "lanes": "2",
+    "name": "South Bloomington Street",
+    "ref": "US 231",
+    "source:hgv:national_network": "https://hepgis-usdot.hub.arcgis.com/apps/usdot::national-network-conventional-combination-trucks-map/explore",
+    "tiger:cfcc": "A21",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Bloomington",
+    "tiger:name_base_1": "United States Highway 231",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_direction_prefix_1": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519474,
+  "bounds": {
+    "minlat": 39.6454707,
+    "minlon": -86.8692295,
+    "maxlat": 39.6455005,
+    "maxlon": -86.8644503
+  },
+  "nodes": [
+    181479373,
+    181445689,
+    8677638883,
+    181479375,
+    181462790,
+    181466546,
+    2489017799,
+    13027297659,
+    13027297658
+  ],
+  "geometry": [
+    { "lat": 39.6455005, "lon": -86.8644503 },
+    { "lat": 39.6454952, "lon": -86.8654404 },
+    { "lat": 39.6454952, "lon": -86.8655413 },
+    { "lat": 39.6454977, "lon": -86.8663895 },
+    { "lat": 39.6454928, "lon": -86.8673391 },
+    { "lat": 39.6454882, "lon": -86.8682731 },
+    { "lat": 39.6454707, "lon": -86.8690810 },
+    { "lat": 39.6454849, "lon": -86.8691674 },
+    { "lat": 39.6454979, "lon": -86.8692295 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Columbia Street",
+    "name_1": "West County Road 125 South",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Columbia",
+    "tiger:name_base_1": "County Road 125",
+    "tiger:name_direction_prefix_1": "W",
+    "tiger:name_direction_suffix_1": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519540,
+  "bounds": {
+    "minlat": 39.6479799,
+    "minlon": -86.8673411,
+    "maxlat": 39.6480053,
+    "maxlon": -86.8644767
+  },
+  "nodes": [
+    181479964,
+    8656033574,
+    181445695,
+    8677638890,
+    7563748022,
+    181462798
+  ],
+  "geometry": [
+    { "lat": 39.6480053, "lon": -86.8644767 },
+    { "lat": 39.6479935, "lon": -86.8651883 },
+    { "lat": 39.6479916, "lon": -86.8654908 },
+    { "lat": 39.6479912, "lon": -86.8655644 },
+    { "lat": 39.6479858, "lon": -86.8664149 },
+    { "lat": 39.6479799, "lon": -86.8673411 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Daggy Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Daggy",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519781,
+  "bounds": {
+    "minlat": 39.6462164,
+    "minlon": -86.8683801,
+    "maxlat": 39.6474718,
+    "maxlon": -86.8683791
+  },
+  "nodes": [
+    1798443161,
+    181481607
+  ],
+  "geometry": [
+    { "lat": 39.6462164, "lon": -86.8683801 },
+    { "lat": 39.6474718, "lon": -86.8683791 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Johnson Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Johnson",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519821,
+  "bounds": {
+    "minlat": 39.6280209,
+    "minlon": -86.8737127,
+    "maxlat": 39.6440428,
+    "maxlon": -86.8654168
+  },
+  "nodes": [
+    181475512,
+    181481947,
+    181481949,
+    7150492364,
+    181471644,
+    181481951,
+    181481953,
+    181481954,
+    8065667746,
+    181468338,
+    8474606917,
+    181461585,
+    8075156621,
+    8075115815,
+    8075156624,
+    8075115809,
+    181481957,
+    6416767283,
+    181481959,
+    181481961,
+    181481962,
+    181481964,
+    11050110676,
+    181481967,
+    11050110674,
+    6431860828,
+    8677638825,
+    181475518,
+    8597171578,
+    181481970,
+    6874214213,
+    181481972,
+    6874214208,
+    181473956,
+    7773386767,
+    9328029704,
+    9328029699,
+    11415347721,
+    181469728,
+    11415347716,
+    11415347678,
+    7773386751,
+    11415146258,
+    181445683
+  ],
+  "geometry": [
+    { "lat": 39.6280209, "lon": -86.8737127 },
+    { "lat": 39.6282167, "lon": -86.8734448 },
+    { "lat": 39.6286066, "lon": -86.8730523 },
+    { "lat": 39.6300425, "lon": -86.8720131 },
+    { "lat": 39.6307815, "lon": -86.8714803 },
+    { "lat": 39.6317786, "lon": -86.8707711 },
+    { "lat": 39.6330426, "lon": -86.8697084 },
+    { "lat": 39.6341311, "lon": -86.8687847 },
+    { "lat": 39.6342842, "lon": -86.8686471 },
+    { "lat": 39.6346293, "lon": -86.8683370 },
+    { "lat": 39.6351629, "lon": -86.8678878 },
+    { "lat": 39.6361207, "lon": -86.8670815 },
+    { "lat": 39.6362568, "lon": -86.8669587 },
+    { "lat": 39.6365852, "lon": -86.8666622 },
+    { "lat": 39.6367180, "lon": -86.8665424 },
+    { "lat": 39.6369068, "lon": -86.8663721 },
+    { "lat": 39.6370620, "lon": -86.8662320 },
+    { "lat": 39.6376949, "lon": -86.8657039 },
+    { "lat": 39.6377500, "lon": -86.8656579 },
+    { "lat": 39.6379264, "lon": -86.8655105 },
+    { "lat": 39.6381268, "lon": -86.8654338 },
+    { "lat": 39.6383501, "lon": -86.8654303 },
+    { "lat": 39.6390080, "lon": -86.8654395 },
+    { "lat": 39.6390552, "lon": -86.8654365 },
+    { "lat": 39.6391089, "lon": -86.8654377 },
+    { "lat": 39.6391361, "lon": -86.8654368 },
+    { "lat": 39.6396874, "lon": -86.8654372 },
+    { "lat": 39.6402154, "lon": -86.8654381 },
+    { "lat": 39.6403382, "lon": -86.8654389 },
+    { "lat": 39.6410913, "lon": -86.8654308 },
+    { "lat": 39.6417598, "lon": -86.8654444 },
+    { "lat": 39.6418164, "lon": -86.8654456 },
+    { "lat": 39.6418743, "lon": -86.8654473 },
+    { "lat": 39.6425351, "lon": -86.8654445 },
+    { "lat": 39.6429047, "lon": -86.8654367 },
+    { "lat": 39.6429895, "lon": -86.8654374 },
+    { "lat": 39.6431170, "lon": -86.8654354 },
+    { "lat": 39.6431994, "lon": -86.8654360 },
+    { "lat": 39.6432604, "lon": -86.8654364 },
+    { "lat": 39.6433161, "lon": -86.8654375 },
+    { "lat": 39.6434673, "lon": -86.8654405 },
+    { "lat": 39.6436210, "lon": -86.8654417 },
+    { "lat": 39.6439315, "lon": -86.8654536 },
+    { "lat": 39.6440428, "lon": -86.8654168 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "name": "South Jackson Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Jackson",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519881,
+  "bounds": {
+    "minlat": 39.6485148,
+    "minlon": -86.8673357,
+    "maxlat": 39.6485169,
+    "maxlon": -86.8654933
+  },
+  "nodes": [
+    181445697,
+    8677638891,
+    181461067,
+    181462801
+  ],
+  "geometry": [
+    { "lat": 39.6485148, "lon": -86.8654933 },
+    { "lat": 39.6485149, "lon": -86.8655772 },
+    { "lat": 39.6485158, "lon": -86.8664077 },
+    { "lat": 39.6485169, "lon": -86.8673357 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Green Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Green",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17519935,
+  "bounds": {
+    "minlat": 39.6411724,
+    "minlon": -86.8616180,
+    "maxlat": 39.6418164,
+    "maxlon": -86.8615937
+  },
+  "nodes": [
+    6431861171,
+    11050110943,
+    6874214178,
+    181482651
+  ],
+  "geometry": [
+    { "lat": 39.6411724, "lon": -86.8615937 },
+    { "lat": 39.6412936, "lon": -86.8615983 },
+    { "lat": 39.6417676, "lon": -86.8616162 },
+    { "lat": 39.6418164, "lon": -86.8616180 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "lanes": "1",
+    "name": "South Spring Street",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Spring",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520067,
+  "bounds": {
+    "minlat": 39.6439848,
+    "minlon": -86.8691910,
+    "maxlat": 39.6440428,
+    "maxlon": -86.8654168
+  },
+  "nodes": [
+    181445683,
+    8677638887,
+    11415147255,
+    181483463,
+    8474685750,
+    181462781,
+    181460444,
+    181469623
+  ],
+  "geometry": [
+    { "lat": 39.6440428, "lon": -86.8654168 },
+    { "lat": 39.6440083, "lon": -86.8655488 },
+    { "lat": 39.6440059, "lon": -86.8659291 },
+    { "lat": 39.6440029, "lon": -86.8663916 },
+    { "lat": 39.6440014, "lon": -86.8666351 },
+    { "lat": 39.6439968, "lon": -86.8673390 },
+    { "lat": 39.6439908, "lon": -86.8682681 },
+    { "lat": 39.6439848, "lon": -86.8691910 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "maxspeed": "30 mph",
+    "maxspeed:type": "sign",
+    "name": "West Washington Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Washington",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520070,
+  "bounds": {
+    "minlat": 39.6467196,
+    "minlon": -86.8625565,
+    "maxlat": 39.6498393,
+    "maxlon": -86.8606549
+  },
+  "nodes": [
+    181479233,
+    181465160,
+    181483475,
+    181483478,
+    181483483
+  ],
+  "geometry": [
+    { "lat": 39.6467196, "lon": -86.8625565 },
+    { "lat": 39.6476218, "lon": -86.8613337 },
+    { "lat": 39.6480646, "lon": -86.8607016 },
+    { "lat": 39.6482557, "lon": -86.8606549 },
+    { "lat": 39.6498393, "lon": -86.8606940 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Melrose Avenue",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Melrose",
+    "tiger:name_type": "Ave",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520184,
+  "bounds": {
+    "minlat": 39.6317741,
+    "minlon": -86.8647780,
+    "maxlat": 39.6390711,
+    "maxlon": -86.8644555
+  },
+  "nodes": [
+    181484371,
+    181484373,
+    181450501,
+    181473297,
+    181476714,
+    181468336,
+    181462097,
+    181467173,
+    8075156632,
+    8075156639,
+    181484377,
+    8461521194,
+    181484380,
+    6848285070,
+    13105100402,
+    6431860834,
+    181475704
+  ],
+  "geometry": [
+    { "lat": 39.6317741, "lon": -86.8647780 },
+    { "lat": 39.6318427, "lon": -86.8647077 },
+    { "lat": 39.6321400, "lon": -86.8647032 },
+    { "lat": 39.6330365, "lon": -86.8647018 },
+    { "lat": 39.6337423, "lon": -86.8647155 },
+    { "lat": 39.6346087, "lon": -86.8646970 },
+    { "lat": 39.6351273, "lon": -86.8647125 },
+    { "lat": 39.6361703, "lon": -86.8647072 },
+    { "lat": 39.6369191, "lon": -86.8647086 },
+    { "lat": 39.6371027, "lon": -86.8647090 },
+    { "lat": 39.6372666, "lon": -86.8647093 },
+    { "lat": 39.6380039, "lon": -86.8645989 },
+    { "lat": 39.6381610, "lon": -86.8645760 },
+    { "lat": 39.6382298, "lon": -86.8645665 },
+    { "lat": 39.6385273, "lon": -86.8645240 },
+    { "lat": 39.6390266, "lon": -86.8644555 },
+    { "lat": 39.6390711, "lon": -86.8644588 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "South Indiana Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Indiana",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520217,
+  "bounds": {
+    "minlat": 39.6440029,
+    "minlon": -86.8663916,
+    "maxlat": 39.6462197,
+    "maxlon": -86.8663859
+  },
+  "nodes": [
+    181483463,
+    181484648,
+    7773386757,
+    181479375,
+    7773386760,
+    181463080
+  ],
+  "geometry": [
+    { "lat": 39.6440029, "lon": -86.8663916 },
+    { "lat": 39.6447618, "lon": -86.8663859 },
+    { "lat": 39.6451298, "lon": -86.8663877 },
+    { "lat": 39.6454977, "lon": -86.8663895 },
+    { "lat": 39.6458539, "lon": -86.8663895 },
+    { "lat": 39.6462197, "lon": -86.8663894 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North Market Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Market",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520328,
+  "bounds": {
+    "minlat": 39.6447747,
+    "minlon": -86.8644866,
+    "maxlat": 39.6498528,
+    "maxlon": -86.8644407
+  },
+  "nodes": [
+    181471129,
+    11415146253,
+    11415146260,
+    11415342623,
+    181479373,
+    8677638904,
+    181463077,
+    181466144,
+    181479964,
+    181447226,
+    181485337
+  ],
+  "geometry": [
+    { "lat": 39.6447747, "lon": -86.8644407 },
+    { "lat": 39.6448312, "lon": -86.8644409 },
+    { "lat": 39.6451368, "lon": -86.8644417 },
+    { "lat": 39.6453022, "lon": -86.8644422 },
+    { "lat": 39.6455005, "lon": -86.8644503 },
+    { "lat": 39.6458520, "lon": -86.8644543 },
+    { "lat": 39.6462195, "lon": -86.8644623 },
+    { "lat": 39.6474797, "lon": -86.8644740 },
+    { "lat": 39.6480053, "lon": -86.8644767 },
+    { "lat": 39.6488410, "lon": -86.8644709 },
+    { "lat": 39.6498528, "lon": -86.8644866 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "North Indiana Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Indiana",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520397,
+  "bounds": {
+    "minlat": 39.6418136,
+    "minlon": -86.8673423,
+    "maxlat": 39.6418184,
+    "maxlon": -86.8644651
+  },
+  "nodes": [
+    181484386,
+    6874214264,
+    10033916911,
+    181481972,
+    8677638877,
+    181485749,
+    11050110801,
+    181485750
+  ],
+  "geometry": [
+    { "lat": 39.6418143, "lon": -86.8644651 },
+    { "lat": 39.6418136, "lon": -86.8645442 },
+    { "lat": 39.6418162, "lon": -86.8653401 },
+    { "lat": 39.6418164, "lon": -86.8654456 },
+    { "lat": 39.6418162, "lon": -86.8655343 },
+    { "lat": 39.6418141, "lon": -86.8663929 },
+    { "lat": 39.6418180, "lon": -86.8672564 },
+    { "lat": 39.6418184, "lon": -86.8673423 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Seminary Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Seminary",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520418,
+  "bounds": {
+    "minlat": 39.6410889,
+    "minlon": -86.8688814,
+    "maxlat": 39.6411010,
+    "maxlon": -86.8644673
+  },
+  "nodes": [
+    181484383,
+    6874214262,
+    7773371571,
+    13796238571,
+    181481970,
+    8677638875,
+    181485835,
+    181485837,
+    181460432,
+    181469610
+  ],
+  "geometry": [
+    { "lat": 39.6410902, "lon": -86.8644673 },
+    { "lat": 39.6410889, "lon": -86.8645530 },
+    { "lat": 39.6410899, "lon": -86.8649367 },
+    { "lat": 39.6410910, "lon": -86.8653399 },
+    { "lat": 39.6410913, "lon": -86.8654308 },
+    { "lat": 39.6410916, "lon": -86.8655353 },
+    { "lat": 39.6410939, "lon": -86.8663940 },
+    { "lat": 39.6410964, "lon": -86.8673427 },
+    { "lat": 39.6411010, "lon": -86.8682940 },
+    { "lat": 39.6410977, "lon": -86.8688814 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Hill Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Hill",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520433,
+  "bounds": {
+    "minlat": 39.6455005,
+    "minlon": -86.8644503,
+    "maxlat": 39.6455074,
+    "maxlon": -86.8625522
+  },
+  "nodes": [
+    181479230,
+    3586248618,
+    8677638900,
+    8677638899,
+    8677638898,
+    181445844,
+    8677638902,
+    11415342621,
+    181479373
+  ],
+  "geometry": [
+    { "lat": 39.6455074, "lon": -86.8625522 },
+    { "lat": 39.6455065, "lon": -86.8627854 },
+    { "lat": 39.6455061, "lon": -86.8629103 },
+    { "lat": 39.6455053, "lon": -86.8631418 },
+    { "lat": 39.6455046, "lon": -86.8633127 },
+    { "lat": 39.6455040, "lon": -86.8634820 },
+    { "lat": 39.6455033, "lon": -86.8636741 },
+    { "lat": 39.6455025, "lon": -86.8638900 },
+    { "lat": 39.6455005, "lon": -86.8644503 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "East Columbia Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Columbia",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520435,
+  "bounds": {
+    "minlat": 39.6454706,
+    "minlon": -86.8610728,
+    "maxlat": 39.6454747,
+    "maxlon": -86.8606682
+  },
+  "nodes": [
+    181475136,
+    181485931
+  ],
+  "geometry": [
+    { "lat": 39.6454706, "lon": -86.8606682 },
+    { "lat": 39.6454747, "lon": -86.8610728 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Columbia Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Columbia",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520513,
+  "bounds": {
+    "minlat": 39.6390552,
+    "minlon": -86.8687273,
+    "maxlat": 39.6390916,
+    "maxlon": -86.8644588
+  },
+  "nodes": [
+    181475704,
+    6874214260,
+    7773371574,
+    181481967,
+    8677638874,
+    13105100672,
+    13105100667,
+    181486542,
+    4764661408,
+    11050110729,
+    181486552
+  ],
+  "geometry": [
+    { "lat": 39.6390711, "lon": -86.8644588 },
+    { "lat": 39.6390715, "lon": -86.8645395 },
+    { "lat": 39.6390701, "lon": -86.8649277 },
+    { "lat": 39.6390552, "lon": -86.8654365 },
+    { "lat": 39.6390558, "lon": -86.8655322 },
+    { "lat": 39.6390580, "lon": -86.8658754 },
+    { "lat": 39.6390615, "lon": -86.8664379 },
+    { "lat": 39.6390672, "lon": -86.8673465 },
+    { "lat": 39.6390639, "lon": -86.8685143 },
+    { "lat": 39.6390668, "lon": -86.8685368 },
+    { "lat": 39.6390916, "lon": -86.8687273 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "West Hanna Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Hanna",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St"
+  }
+},
+{
+  "type": "way",
+  "id": 17520532,
+  "bounds": {
+    "minlat": 39.6472040,
+    "minlon": -86.8578590,
+    "maxlat": 39.6498731,
+    "maxlon": -86.8569150
+  },
+  "nodes": [
+    181464437,
+    1798449039,
+    1798449033,
+    181486680,
+    181486681,
+    1798448993,
+    1798449038,
+    181456070,
+    181486682,
+    181456081,
+    181486684
+  ],
+  "geometry": [
+    { "lat": 39.6472040, "lon": -86.8569150 },
+    { "lat": 39.6474911, "lon": -86.8573129 },
+    { "lat": 39.6476974, "lon": -86.8574550 },
+    { "lat": 39.6481125, "lon": -86.8576143 },
+    { "lat": 39.6483554, "lon": -86.8576583 },
+    { "lat": 39.6487298, "lon": -86.8576361 },
+    { "lat": 39.6489717, "lon": -86.8575921 },
+    { "lat": 39.6492645, "lon": -86.8576540 },
+    { "lat": 39.6494853, "lon": -86.8577152 },
+    { "lat": 39.6497783, "lon": -86.8578267 },
+    { "lat": 39.6498731, "lon": -86.8578590 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Greenwood Avenue",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Greenwood",
+    "tiger:name_type": "Ave",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520549,
+  "bounds": {
+    "minlat": 39.6418183,
+    "minlon": -86.8576304,
+    "maxlat": 39.6418215,
+    "maxlon": -86.8506022
+  },
+  "nodes": [
+    181482211,
+    7190966280,
+    12299868300,
+    181479692,
+    8191799198,
+    6874214516,
+    181479312
+  ],
+  "geometry": [
+    { "lat": 39.6418215, "lon": -86.8506022 },
+    { "lat": 39.6418215, "lon": -86.8506662 },
+    { "lat": 39.6418208, "lon": -86.8523459 },
+    { "lat": 39.6418202, "lon": -86.8536902 },
+    { "lat": 39.6418189, "lon": -86.8564862 },
+    { "lat": 39.6418184, "lon": -86.8575065 },
+    { "lat": 39.6418183, "lon": -86.8576304 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Seminary Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Seminary",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520556,
+  "bounds": {
+    "minlat": 39.6410939,
+    "minlon": -86.8664050,
+    "maxlat": 39.6440029,
+    "maxlon": -86.8663916
+  },
+  "nodes": [
+    181485835,
+    6874214212,
+    181485749,
+    6874214209,
+    181473958,
+    7773371569,
+    181469731,
+    7773386752,
+    181483463
+  ],
+  "geometry": [
+    { "lat": 39.6410939, "lon": -86.8663940 },
+    { "lat": 39.6417482, "lon": -86.8663921 },
+    { "lat": 39.6418141, "lon": -86.8663929 },
+    { "lat": 39.6418604, "lon": -86.8663928 },
+    { "lat": 39.6425341, "lon": -86.8663954 },
+    { "lat": 39.6429009, "lon": -86.8664028 },
+    { "lat": 39.6432596, "lon": -86.8664050 },
+    { "lat": 39.6436229, "lon": -86.8664008 },
+    { "lat": 39.6440029, "lon": -86.8663916 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "South Market Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Market",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520698,
+  "bounds": {
+    "minlat": 39.6390672,
+    "minlon": -86.8673465,
+    "maxlat": 39.6439968,
+    "maxlon": -86.8673390
+  },
+  "nodes": [
+    181486542,
+    181485837,
+    6874214210,
+    181485750,
+    6874214197,
+    181473959,
+    7773371570,
+    181469734,
+    7773386753,
+    181462781
+  ],
+  "geometry": [
+    { "lat": 39.6390672, "lon": -86.8673465 },
+    { "lat": 39.6410964, "lon": -86.8673427 },
+    { "lat": 39.6417708, "lon": -86.8673423 },
+    { "lat": 39.6418184, "lon": -86.8673423 },
+    { "lat": 39.6418927, "lon": -86.8673421 },
+    { "lat": 39.6425269, "lon": -86.8673412 },
+    { "lat": 39.6428768, "lon": -86.8673406 },
+    { "lat": 39.6432478, "lon": -86.8673400 },
+    { "lat": 39.6436250, "lon": -86.8673395 },
+    { "lat": 39.6439968, "lon": -86.8673390 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "South Madison Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Madison",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520706,
+  "bounds": {
+    "minlat": 39.6494818,
+    "minlon": -86.8654984,
+    "maxlat": 39.6500003,
+    "maxlon": -86.8424872
+  },
+  "nodes": [
+    181479625,
+    181487784,
+    181446086,
+    2437328416,
+    1798448997,
+    2489039172,
+    1798448985,
+    1798449001,
+    1798449015,
+    181487786,
+    181469959,
+    181471136,
+    181475872,
+    12885411975,
+    181473468,
+    181472911,
+    181486530,
+    11695582042,
+    181486684,
+    181457897,
+    181483483,
+    181473971,
+    181469973,
+    181485337,
+    181445703
+  ],
+  "geometry": [
+    { "lat": 39.6495206, "lon": -86.8424872 },
+    { "lat": 39.6494818, "lon": -86.8427375 },
+    { "lat": 39.6494933, "lon": -86.8446172 },
+    { "lat": 39.6495014, "lon": -86.8463337 },
+    { "lat": 39.6495161, "lon": -86.8494213 },
+    { "lat": 39.6495247, "lon": -86.8496171 },
+    { "lat": 39.6495757, "lon": -86.8498169 },
+    { "lat": 39.6497469, "lon": -86.8502262 },
+    { "lat": 39.6498899, "lon": -86.8504885 },
+    { "lat": 39.6499210, "lon": -86.8506886 },
+    { "lat": 39.6499361, "lon": -86.8510762 },
+    { "lat": 39.6499225, "lon": -86.8515018 },
+    { "lat": 39.6499300, "lon": -86.8521210 },
+    { "lat": 39.6499597, "lon": -86.8529182 },
+    { "lat": 39.6500003, "lon": -86.8540111 },
+    { "lat": 39.6499359, "lon": -86.8556617 },
+    { "lat": 39.6499199, "lon": -86.8561277 },
+    { "lat": 39.6499099, "lon": -86.8565000 },
+    { "lat": 39.6498731, "lon": -86.8578590 },
+    { "lat": 39.6498525, "lon": -86.8591046 },
+    { "lat": 39.6498393, "lon": -86.8606940 },
+    { "lat": 39.6498566, "lon": -86.8625627 },
+    { "lat": 39.6498839, "lon": -86.8633103 },
+    { "lat": 39.6498528, "lon": -86.8644866 },
+    { "lat": 39.6497973, "lon": -86.8654984 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Shadowlawn Avenue",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Shadowlawn",
+    "tiger:name_type": "Ave",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520826,
+  "bounds": {
+    "minlat": 39.6418175,
+    "minlon": -86.8594216,
+    "maxlat": 39.6431893,
+    "maxlon": -86.8594047
+  },
+  "nodes": [
+    181461989,
+    7563748006,
+    6874214200,
+    181486792
+  ],
+  "geometry": [
+    { "lat": 39.6431893, "lon": -86.8594216 },
+    { "lat": 39.6423436, "lon": -86.8594108 },
+    { "lat": 39.6418715, "lon": -86.8594057 },
+    { "lat": 39.6418175, "lon": -86.8594047 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Taylor Place",
+    "oneway": "yes",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Taylor",
+    "tiger:name_type": "Pl",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 17520827,
+  "bounds": {
+    "minlat": 39.6447147,
+    "minlon": -86.8691980,
+    "maxlat": 39.6447747,
+    "maxlon": -86.8644407
+  },
+  "nodes": [
+    181471129,
+    8677638894,
+    11415146247,
+    11415146198,
+    181445686,
+    8677638888,
+    11415146199,
+    11415147254,
+    181484648,
+    8474685752,
+    181462783,
+    181466545,
+    181474731
+  ],
+  "geometry": [
+    { "lat": 39.6447747, "lon": -86.8644407 },
+    { "lat": 39.6447147, "lon": -86.8645253 },
+    { "lat": 39.6447165, "lon": -86.8649727 },
+    { "lat": 39.6447178, "lon": -86.8653113 },
+    { "lat": 39.6447182, "lon": -86.8654026 },
+    { "lat": 39.6447611, "lon": -86.8655418 },
+    { "lat": 39.6447611, "lon": -86.8655615 },
+    { "lat": 39.6447614, "lon": -86.8659253 },
+    { "lat": 39.6447618, "lon": -86.8663859 },
+    { "lat": 39.6447607, "lon": -86.8666425 },
+    { "lat": 39.6447578, "lon": -86.8673392 },
+    { "lat": 39.6447542, "lon": -86.8682706 },
+    { "lat": 39.6447500, "lon": -86.8691980 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "West Franklin Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Franklin",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 168609637,
+  "bounds": {
+    "minlat": 39.6447548,
+    "minlon": -86.8644407,
+    "maxlat": 39.6447747,
+    "maxlon": -86.8523669
+  },
+  "nodes": [
+    181471115,
+    181471117,
+    181471119,
+    11222394456,
+    181464435,
+    181467069,
+    7563748012,
+    6431860808,
+    181471121,
+    6431860806,
+    181471123,
+    181471126,
+    3586248617,
+    181445842,
+    11415347735,
+    11415146232,
+    11415146263,
+    181471129
+  ],
+  "geometry": [
+    { "lat": 39.6447564, "lon": -86.8523669 },
+    { "lat": 39.6447690, "lon": -86.8536565 },
+    { "lat": 39.6447548, "lon": -86.8542161 },
+    { "lat": 39.6447610, "lon": -86.8567983 },
+    { "lat": 39.6447625, "lon": -86.8569038 },
+    { "lat": 39.6447663, "lon": -86.8581277 },
+    { "lat": 39.6447605, "lon": -86.8599113 },
+    { "lat": 39.6447583, "lon": -86.8605722 },
+    { "lat": 39.6447580, "lon": -86.8606624 },
+    { "lat": 39.6447584, "lon": -86.8607491 },
+    { "lat": 39.6447622, "lon": -86.8616226 },
+    { "lat": 39.6447669, "lon": -86.8625546 },
+    { "lat": 39.6447671, "lon": -86.8627781 },
+    { "lat": 39.6447659, "lon": -86.8634871 },
+    { "lat": 39.6447668, "lon": -86.8635619 },
+    { "lat": 39.6447713, "lon": -86.8639466 },
+    { "lat": 39.6447744, "lon": -86.8643688 },
+    { "lat": 39.6447747, "lon": -86.8644407 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "East Franklin Street",
+    "surface": "paved",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Franklin",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 168609644,
+  "bounds": {
+    "minlat": 39.6455439,
+    "minlon": -86.8753851,
+    "maxlat": 39.6472023,
+    "maxlon": -86.8692314
+  },
+  "nodes": [
+    181474733,
+    181484256,
+    181479387,
+    2489017798,
+    8063081989,
+    8062992776,
+    181479390,
+    8036407614,
+    8036407623,
+    181464799
+  ],
+  "geometry": [
+    { "lat": 39.6455439, "lon": -86.8692314 },
+    { "lat": 39.6456283, "lon": -86.8694983 },
+    { "lat": 39.6459879, "lon": -86.8706134 },
+    { "lat": 39.6465332, "lon": -86.8726197 },
+    { "lat": 39.6465972, "lon": -86.8728846 },
+    { "lat": 39.6469031, "lon": -86.8741497 },
+    { "lat": 39.6469132, "lon": -86.8741915 },
+    { "lat": 39.6469513, "lon": -86.8743489 },
+    { "lat": 39.6471298, "lon": -86.8750858 },
+    { "lat": 39.6472023, "lon": -86.8753851 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Columbia Street",
+    "name_1": "West County Road 125 South",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Columbia",
+    "tiger:name_base_1": "County Road 125",
+    "tiger:name_direction_prefix_1": "W",
+    "tiger:name_direction_suffix_1": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 168609648,
+  "bounds": {
+    "minlat": 39.6432460,
+    "minlon": -86.8682691,
+    "maxlat": 39.6439908,
+    "maxlon": -86.8682681
+  },
+  "nodes": [
+    181460442,
+    7773386754,
+    181460444
+  ],
+  "geometry": [
+    { "lat": 39.6432460, "lon": -86.8682691 },
+    { "lat": 39.6436219, "lon": -86.8682686 },
+    { "lat": 39.6439908, "lon": -86.8682681 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "maxspeed": "30 mph",
+    "maxspeed:type": "sign",
+    "name": "South Jefferson Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Jefferson",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 168609651,
+  "bounds": {
+    "minlat": 39.6390711,
+    "minlon": -86.8644933,
+    "maxlat": 39.6440418,
+    "maxlon": -86.8644550
+  },
+  "nodes": [
+    181475704,
+    6431860833,
+    13105100680,
+    8677638826,
+    11656959008,
+    11656959001,
+    13796430987,
+    181469861,
+    6431861270,
+    181484383,
+    3633463767,
+    11050110910,
+    3633463774,
+    6874214167,
+    181484386,
+    6874214207,
+    181473953,
+    7773386769,
+    181462003,
+    11415347714,
+    8570150108,
+    6848301193,
+    181445774
+  ],
+  "geometry": [
+    { "lat": 39.6390711, "lon": -86.8644588 },
+    { "lat": 39.6391168, "lon": -86.8644637 },
+    { "lat": 39.6394529, "lon": -86.8644569 },
+    { "lat": 39.6396724, "lon": -86.8644614 },
+    { "lat": 39.6397878, "lon": -86.8644610 },
+    { "lat": 39.6398870, "lon": -86.8644612 },
+    { "lat": 39.6401572, "lon": -86.8644619 },
+    { "lat": 39.6402085, "lon": -86.8644620 },
+    { "lat": 39.6402547, "lon": -86.8644607 },
+    { "lat": 39.6410902, "lon": -86.8644673 },
+    { "lat": 39.6412314, "lon": -86.8644708 },
+    { "lat": 39.6412494, "lon": -86.8644706 },
+    { "lat": 39.6414081, "lon": -86.8644689 },
+    { "lat": 39.6417580, "lon": -86.8644656 },
+    { "lat": 39.6418143, "lon": -86.8644651 },
+    { "lat": 39.6418893, "lon": -86.8644657 },
+    { "lat": 39.6425408, "lon": -86.8644588 },
+    { "lat": 39.6428973, "lon": -86.8644567 },
+    { "lat": 39.6432619, "lon": -86.8644550 },
+    { "lat": 39.6433385, "lon": -86.8644571 },
+    { "lat": 39.6436227, "lon": -86.8644647 },
+    { "lat": 39.6439309, "lon": -86.8644606 },
+    { "lat": 39.6440418, "lon": -86.8644933 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "South Indiana Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Indiana",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 241204956,
+  "bounds": {
+    "minlat": 39.6474657,
+    "minlon": -86.8712840,
+    "maxlat": 39.6475576,
+    "maxlon": -86.8673357
+  },
+  "nodes": [
+    181462795,
+    7773386763,
+    181481607,
+    181483044,
+    181484248,
+    181483046,
+    8474770935,
+    181474742,
+    181462538
+  ],
+  "geometry": [
+    { "lat": 39.6474657, "lon": -86.8673357 },
+    { "lat": 39.6474686, "lon": -86.8678290 },
+    { "lat": 39.6474718, "lon": -86.8683791 },
+    { "lat": 39.6474739, "lon": -86.8684489 },
+    { "lat": 39.6474943, "lon": -86.8685162 },
+    { "lat": 39.6475132, "lon": -86.8687090 },
+    { "lat": 39.6475227, "lon": -86.8688291 },
+    { "lat": 39.6475328, "lon": -86.8692133 },
+    { "lat": 39.6475576, "lon": -86.8712840 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "Jacob Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Jacob",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 241204957,
+  "bounds": {
+    "minlat": 39.6439947,
+    "minlon": -86.8616285,
+    "maxlat": 39.6447622,
+    "maxlon": -86.8616226
+  },
+  "nodes": [
+    181471123,
+    7773386766,
+    6848301237,
+    181445766
+  ],
+  "geometry": [
+    { "lat": 39.6447622, "lon": -86.8616226 },
+    { "lat": 39.6443929, "lon": -86.8616254 },
+    { "lat": 39.6440934, "lon": -86.8616277 },
+    { "lat": 39.6439947, "lon": -86.8616285 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "North Spring Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Spring",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 241204958,
+  "bounds": {
+    "minlat": 39.6432503,
+    "minlon": -86.8644550,
+    "maxlat": 39.6432624,
+    "maxlon": -86.8606865
+  },
+  "nodes": [
+    2489022556,
+    6431860804,
+    181461993,
+    181461996,
+    11415347682,
+    181461999,
+    8474136409,
+    6874214233,
+    181462003
+  ],
+  "geometry": [
+    { "lat": 39.6432503, "lon": -86.8606865 },
+    { "lat": 39.6432505, "lon": -86.8607546 },
+    { "lat": 39.6432532, "lon": -86.8616409 },
+    { "lat": 39.6432561, "lon": -86.8625560 },
+    { "lat": 39.6432566, "lon": -86.8627306 },
+    { "lat": 39.6432590, "lon": -86.8634914 },
+    { "lat": 39.6432609, "lon": -86.8641109 },
+    { "lat": 39.6432624, "lon": -86.8643828 },
+    { "lat": 39.6432619, "lon": -86.8644550 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "East Walnut Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Walnut",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 352849615,
+  "bounds": {
+    "minlat": 39.6447671,
+    "minlon": -86.8627854,
+    "maxlat": 39.6455065,
+    "maxlon": -86.8627781
+  },
+  "nodes": [
+    3586248618,
+    3586248617
+  ],
+  "geometry": [
+    { "lat": 39.6455065, "lon": -86.8627854 },
+    { "lat": 39.6447671, "lon": -86.8627781 }
+  ],
+  "tags": {
+    "highway": "service",
+    "name": "Central Square"
+  }
+},
+{
+  "type": "way",
+  "id": 580026015,
+  "bounds": {
+    "minlat": 39.6433216,
+    "minlon": -86.8640113,
+    "maxlat": 39.6436012,
+    "maxlon": -86.8635641
+  },
+  "nodes": [
+    5553754320,
+    5553754319,
+    5553754318,
+    5553754316,
+    5553754320
+  ],
+  "geometry": [
+    { "lat": 39.6433216, "lon": -86.8640075 },
+    { "lat": 39.6433253, "lon": -86.8635641 },
+    { "lat": 39.6436012, "lon": -86.8635680 },
+    { "lat": 39.6435975, "lon": -86.8640113 },
+    { "lat": 39.6433216, "lon": -86.8640075 }
+  ],
+  "tags": {
+    "amenity": "parking",
+    "capacity:disabled": "2",
+    "parking": "surface",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 614032746,
+  "bounds": {
+    "minlat": 39.6440418,
+    "minlon": -86.8654168,
+    "maxlat": 39.6440476,
+    "maxlon": -86.8644933
+  },
+  "nodes": [
+    181445774,
+    6848301152,
+    181445683
+  ],
+  "geometry": [
+    { "lat": 39.6440418, "lon": -86.8644933 },
+    { "lat": 39.6440476, "lon": -86.8649290 },
+    { "lat": 39.6440428, "lon": -86.8654168 }
+  ],
+  "tags": {
+    "NHS": "yes",
+    "hgv": "designated",
+    "hgv:national_network": "yes",
+    "highway": "primary",
+    "lanes": "2",
+    "name": "West Washington Street",
+    "ref": "US 231",
+    "source:hgv:national_network": "https://hepgis-usdot.hub.arcgis.com/apps/usdot::national-network-conventional-combination-trucks-map/explore",
+    "tiger:cfcc": "A21",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "United States Highway 231",
+    "tiger:name_base_1": "Washington",
+    "tiger:name_direction_prefix_1": "W",
+    "tiger:name_type_1": "St",
+    "tiger:reviewed": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 675309953,
+  "bounds": {
+    "minlat": 39.6432460,
+    "minlon": -86.8682691,
+    "maxlat": 39.6432604,
+    "maxlon": -86.8654364
+  },
+  "nodes": [
+    181469728,
+    8677638885,
+    181469731,
+    181469734,
+    181460442
+  ],
+  "geometry": [
+    { "lat": 39.6432604, "lon": -86.8654364 },
+    { "lat": 39.6432603, "lon": -86.8655323 },
+    { "lat": 39.6432596, "lon": -86.8664050 },
+    { "lat": 39.6432478, "lon": -86.8673400 },
+    { "lat": 39.6432460, "lon": -86.8682691 }
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "name": "West Walnut Street",
+    "surface": "paved",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Walnut",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 686210051,
+  "bounds": {
+    "minlat": 39.6418157,
+    "minlon": -86.8625566,
+    "maxlat": 39.6439954,
+    "maxlon": -86.8625475
+  },
+  "nodes": [
+    6431861141,
+    6874214205,
+    11050110161,
+    8474136413,
+    181475862,
+    7563748010,
+    181461996,
+    10613338247,
+    8570150110,
+    6848301195,
+    181445768
+  ],
+  "geometry": [
+    { "lat": 39.6418157, "lon": -86.8625560 },
+    { "lat": 39.6418726, "lon": -86.8625566 },
+    { "lat": 39.6420225, "lon": -86.8625540 },
+    { "lat": 39.6421823, "lon": -86.8625525 },
+    { "lat": 39.6425423, "lon": -86.8625493 },
+    { "lat": 39.6428902, "lon": -86.8625526 },
+    { "lat": 39.6432561, "lon": -86.8625560 },
+    { "lat": 39.6435635, "lon": -86.8625525 },
+    { "lat": 39.6436259, "lon": -86.8625518 },
+    { "lat": 39.6439511, "lon": -86.8625480 },
+    { "lat": 39.6439954, "lon": -86.8625475 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "South College Avenue",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "College",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "Ave",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 686210054,
+  "bounds": {
+    "minlat": 39.6410982,
+    "minlon": -86.8615937,
+    "maxlat": 39.6411724,
+    "maxlon": -86.8606652
+  },
+  "nodes": [
+    6431861172,
+    6431861175,
+    6431861173,
+    6431861174,
+    6431861178,
+    6431861171
+  ],
+  "geometry": [
+    { "lat": 39.6411032, "lon": -86.8606652 },
+    { "lat": 39.6411024, "lon": -86.8607603 },
+    { "lat": 39.6410982, "lon": -86.8612259 },
+    { "lat": 39.6411058, "lon": -86.8615131 },
+    { "lat": 39.6411269, "lon": -86.8615648 },
+    { "lat": 39.6411724, "lon": -86.8615937 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "lanes": "1",
+    "name": "East Simpson Street",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 686210055,
+  "bounds": {
+    "minlat": 39.6418140,
+    "minlon": -86.8644651,
+    "maxlat": 39.6418164,
+    "maxlon": -86.8616180
+  },
+  "nodes": [
+    181482651,
+    6431861179,
+    11050110945,
+    6874214165,
+    6431861141,
+    181477754,
+    11050110190,
+    6874214235,
+    181484386
+  ],
+  "geometry": [
+    { "lat": 39.6418164, "lon": -86.8616180 },
+    { "lat": 39.6418163, "lon": -86.8616991 },
+    { "lat": 39.6418162, "lon": -86.8618599 },
+    { "lat": 39.6418160, "lon": -86.8621882 },
+    { "lat": 39.6418157, "lon": -86.8625560 },
+    { "lat": 39.6418140, "lon": -86.8634935 },
+    { "lat": 39.6418147, "lon": -86.8639782 },
+    { "lat": 39.6418144, "lon": -86.8643641 },
+    { "lat": 39.6418143, "lon": -86.8644651 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "East Seminary Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Seminary",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 686210056,
+  "bounds": {
+    "minlat": 39.6418164,
+    "minlon": -86.8616409,
+    "maxlat": 39.6439947,
+    "maxlon": -86.8616106
+  },
+  "nodes": [
+    181482651,
+    6874214204,
+    181478724,
+    7563748009,
+    181461993,
+    10613338248,
+    10613338246,
+    10613338250,
+    6848301196,
+    181445766
+  ],
+  "geometry": [
+    { "lat": 39.6418164, "lon": -86.8616180 },
+    { "lat": 39.6418711, "lon": -86.8616199 },
+    { "lat": 39.6425435, "lon": -86.8616106 },
+    { "lat": 39.6429072, "lon": -86.8616265 },
+    { "lat": 39.6432532, "lon": -86.8616409 },
+    { "lat": 39.6434057, "lon": -86.8616383 },
+    { "lat": 39.6435623, "lon": -86.8616357 },
+    { "lat": 39.6436047, "lon": -86.8616350 },
+    { "lat": 39.6439555, "lon": -86.8616292 },
+    { "lat": 39.6439947, "lon": -86.8616285 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "South Spring Street",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Spring",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 720713314,
+  "bounds": {
+    "minlat": 39.6373372,
+    "minlon": -86.8794587,
+    "maxlat": 39.6395004,
+    "maxlon": -86.8711644
+  },
+  "nodes": [
+    6416767203,
+    13027297672,
+    13027297673,
+    6762904779,
+    6762904780,
+    6762932722,
+    6762904781,
+    6762904782,
+    6762904783,
+    6762904784,
+    6762932585,
+    6762932586,
+    6762932587,
+    6762932588,
+    6762932589,
+    6762932590,
+    6762932591,
+    6762932592,
+    6762932593,
+    6762932594,
+    6762932595,
+    6762932596,
+    6762932597,
+    6762932598,
+    6762932599,
+    6762932600,
+    6762932601,
+    6762932602,
+    6762932603,
+    6762932604,
+    6762932605,
+    6762932606,
+    6762932607,
+    6762932608,
+    6762932609,
+    6762932610,
+    6762932611,
+    6762932612,
+    6762932613,
+    6762932614,
+    6762932615,
+    6762932616,
+    6762932617,
+    6762932618,
+    6762932619,
+    6762932620,
+    6762932621,
+    6762932622,
+    6762932623,
+    6762932624,
+    10592208450
+  ],
+  "geometry": [
+    { "lat": 39.6392129, "lon": -86.8711644 },
+    { "lat": 39.6391993, "lon": -86.8712052 },
+    { "lat": 39.6392024, "lon": -86.8712582 },
+    { "lat": 39.6392274, "lon": -86.8713455 },
+    { "lat": 39.6393158, "lon": -86.8715944 },
+    { "lat": 39.6393330, "lon": -86.8716525 },
+    { "lat": 39.6394597, "lon": -86.8719340 },
+    { "lat": 39.6395004, "lon": -86.8722748 },
+    { "lat": 39.6394959, "lon": -86.8725216 },
+    { "lat": 39.6394778, "lon": -86.8726333 },
+    { "lat": 39.6393646, "lon": -86.8727214 },
+    { "lat": 39.6392334, "lon": -86.8727273 },
+    { "lat": 39.6391474, "lon": -86.8727273 },
+    { "lat": 39.6391021, "lon": -86.8728390 },
+    { "lat": 39.6390750, "lon": -86.8729154 },
+    { "lat": 39.6390026, "lon": -86.8729506 },
+    { "lat": 39.6389664, "lon": -86.8730681 },
+    { "lat": 39.6389528, "lon": -86.8732797 },
+    { "lat": 39.6389257, "lon": -86.8733972 },
+    { "lat": 39.6388804, "lon": -86.8734736 },
+    { "lat": 39.6388804, "lon": -86.8736793 },
+    { "lat": 39.6388804, "lon": -86.8739379 },
+    { "lat": 39.6388804, "lon": -86.8740378 },
+    { "lat": 39.6388170, "lon": -86.8740789 },
+    { "lat": 39.6387084, "lon": -86.8740907 },
+    { "lat": 39.6386406, "lon": -86.8741259 },
+    { "lat": 39.6385863, "lon": -86.8742141 },
+    { "lat": 39.6384912, "lon": -86.8742141 },
+    { "lat": 39.6383238, "lon": -86.8742023 },
+    { "lat": 39.6382197, "lon": -86.8742317 },
+    { "lat": 39.6381654, "lon": -86.8742905 },
+    { "lat": 39.6381428, "lon": -86.8744961 },
+    { "lat": 39.6381156, "lon": -86.8746959 },
+    { "lat": 39.6379889, "lon": -86.8748135 },
+    { "lat": 39.6377264, "lon": -86.8750191 },
+    { "lat": 39.6375635, "lon": -86.8751484 },
+    { "lat": 39.6374504, "lon": -86.8752307 },
+    { "lat": 39.6373915, "lon": -86.8753306 },
+    { "lat": 39.6373870, "lon": -86.8755892 },
+    { "lat": 39.6373870, "lon": -86.8760064 },
+    { "lat": 39.6373553, "lon": -86.8761122 },
+    { "lat": 39.6373372, "lon": -86.8765000 },
+    { "lat": 39.6373689, "lon": -86.8771288 },
+    { "lat": 39.6373947, "lon": -86.8775372 },
+    { "lat": 39.6373825, "lon": -86.8779692 },
+    { "lat": 39.6373915, "lon": -86.8782630 },
+    { "lat": 39.6374006, "lon": -86.8786215 },
+    { "lat": 39.6374006, "lon": -86.8790681 },
+    { "lat": 39.6374594, "lon": -86.8792620 },
+    { "lat": 39.6375434, "lon": -86.8793627 },
+    { "lat": 39.6375919, "lon": -86.8794587 }
+  ],
+  "tags": {
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "footway",
+    "horse": "no",
+    "motor_vehicle": "no",
+    "name": "Connector Trail C1",
+    "surface": "gravel"
+  }
+},
+{
+  "type": "way",
+  "id": 733990030,
+  "bounds": {
+    "minlat": 39.6413067,
+    "minlon": -86.8643364,
+    "maxlat": 39.6414603,
+    "maxlon": -86.8636343
+  },
+  "nodes": [
+    6874214102,
+    6874214103,
+    6874214104,
+    6874214105,
+    6874214102
+  ],
+  "geometry": [
+    { "lat": 39.6414518, "lon": -86.8643364 },
+    { "lat": 39.6414603, "lon": -86.8636491 },
+    { "lat": 39.6413067, "lon": -86.8636343 },
+    { "lat": 39.6413209, "lon": -86.8643290 },
+    { "lat": 39.6414518, "lon": -86.8643364 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 733990034,
+  "bounds": {
+    "minlat": 39.6415259,
+    "minlon": -86.8613964,
+    "maxlat": 39.6417261,
+    "maxlon": -86.8608072
+  },
+  "nodes": [
+    6874214127,
+    6874214128,
+    6874214129,
+    6874214130,
+    6874214127
+  ],
+  "geometry": [
+    { "lat": 39.6417261, "lon": -86.8613964 },
+    { "lat": 39.6417115, "lon": -86.8608072 },
+    { "lat": 39.6415259, "lon": -86.8608123 },
+    { "lat": 39.6415343, "lon": -86.8613914 },
+    { "lat": 39.6417261, "lon": -86.8613964 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 733990035,
+  "bounds": {
+    "minlat": 39.6412131,
+    "minlon": -86.8619459,
+    "maxlat": 39.6417095,
+    "maxlon": -86.8617150
+  },
+  "nodes": [
+    6874214131,
+    6874214132,
+    6874214133,
+    6874214134,
+    6874214135,
+    6874214136,
+    6874214131
+  ],
+  "geometry": [
+    { "lat": 39.6417093, "lon": -86.8619459 },
+    { "lat": 39.6417095, "lon": -86.8617159 },
+    { "lat": 39.6412133, "lon": -86.8617150 },
+    { "lat": 39.6412131, "lon": -86.8618907 },
+    { "lat": 39.6413994, "lon": -86.8618910 },
+    { "lat": 39.6413993, "lon": -86.8619453 },
+    { "lat": 39.6417093, "lon": -86.8619459 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 733990062,
+  "bounds": {
+    "minlat": 39.6397962,
+    "minlon": -86.8643386,
+    "maxlat": 39.6401460,
+    "maxlon": -86.8636280
+  },
+  "nodes": [
+    6874214362,
+    11656959000,
+    11656958999,
+    6874214363,
+    11656958998,
+    6874214364,
+    6874214365,
+    6874214366,
+    6874214367,
+    6874214362
+  ],
+  "geometry": [
+    { "lat": 39.6401460, "lon": -86.8643386 },
+    { "lat": 39.6401449, "lon": -86.8637003 },
+    { "lat": 39.6400982, "lon": -86.8636981 },
+    { "lat": 39.6400982, "lon": -86.8636282 },
+    { "lat": 39.6398963, "lon": -86.8636285 },
+    { "lat": 39.6398502, "lon": -86.8636280 },
+    { "lat": 39.6398491, "lon": -86.8636981 },
+    { "lat": 39.6397962, "lon": -86.8636994 },
+    { "lat": 39.6397993, "lon": -86.8643370 },
+    { "lat": 39.6401460, "lon": -86.8643386 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 733990063,
+  "bounds": {
+    "minlat": 39.6396771,
+    "minlon": -86.8633970,
+    "maxlat": 39.6401645,
+    "maxlon": -86.8630992
+  },
+  "nodes": [
+    6874214368,
+    6874214369,
+    6874214370,
+    6874214371,
+    6874214372,
+    6874214373,
+    6874214374,
+    6874214375,
+    6874214368
+  ],
+  "geometry": [
+    { "lat": 39.6401645, "lon": -86.8633970 },
+    { "lat": 39.6401625, "lon": -86.8631717 },
+    { "lat": 39.6400034, "lon": -86.8631207 },
+    { "lat": 39.6398072, "lon": -86.8630992 },
+    { "lat": 39.6397948, "lon": -86.8632494 },
+    { "lat": 39.6396771, "lon": -86.8632575 },
+    { "lat": 39.6396853, "lon": -86.8633460 },
+    { "lat": 39.6397205, "lon": -86.8633889 },
+    { "lat": 39.6401645, "lon": -86.8633970 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 765950631,
+  "bounds": {
+    "minlat": 39.6439848,
+    "minlon": -86.8591602,
+    "maxlat": 39.6462703,
+    "maxlon": -86.8317632
+  },
+  "nodes": [
+    181466950,
+    8061330647,
+    8049005798,
+    8074955140,
+    8074955133,
+    8475498279,
+    8475498281,
+    181474154,
+    12641429027,
+    12639557810,
+    12641429015,
+    12641429024,
+    12641429013,
+    12639557811,
+    181481423,
+    7202303191,
+    12641429016,
+    7202284081,
+    7202284060,
+    8594719247,
+    12641429018,
+    8594719256,
+    8061447339,
+    8061447341,
+    9326326546,
+    7010881569,
+    9326326549,
+    7010881573,
+    181475087,
+    7010881567,
+    9326326693,
+    8594967523,
+    9326326593,
+    181463126,
+    8036553489,
+    6558433408,
+    6999866001,
+    9326326620,
+    181481426,
+    9326326625,
+    6999865996,
+    181462640,
+    9326326816,
+    181481428,
+    8024276177,
+    181481430,
+    9380220676,
+    8024276180,
+    1798473594,
+    7010916980,
+    9380220674,
+    181481433,
+    8024343405,
+    12639545891,
+    181471113,
+    1798473725,
+    1798473658,
+    7010916984,
+    12639545890,
+    6848301241,
+    181477002,
+    181479693,
+    8049043480,
+    8191799193,
+    11222394454,
+    8191799187,
+    181445762
+  ],
+  "geometry": [
+    { "lat": 39.6462703, "lon": -86.8317632 },
+    { "lat": 39.6462682, "lon": -86.8324902 },
+    { "lat": 39.6462667, "lon": -86.8336264 },
+    { "lat": 39.6462664, "lon": -86.8337911 },
+    { "lat": 39.6462658, "lon": -86.8341230 },
+    { "lat": 39.6462642, "lon": -86.8349892 },
+    { "lat": 39.6462635, "lon": -86.8353456 },
+    { "lat": 39.6462629, "lon": -86.8356613 },
+    { "lat": 39.6462628, "lon": -86.8356853 },
+    { "lat": 39.6462621, "lon": -86.8358793 },
+    { "lat": 39.6462620, "lon": -86.8359023 },
+    { "lat": 39.6462617, "lon": -86.8359777 },
+    { "lat": 39.6462605, "lon": -86.8362722 },
+    { "lat": 39.6462603, "lon": -86.8363347 },
+    { "lat": 39.6462598, "lon": -86.8364761 },
+    { "lat": 39.6462597, "lon": -86.8365032 },
+    { "lat": 39.6462589, "lon": -86.8366799 },
+    { "lat": 39.6462586, "lon": -86.8367500 },
+    { "lat": 39.6462579, "lon": -86.8369256 },
+    { "lat": 39.6462584, "lon": -86.8371182 },
+    { "lat": 39.6462575, "lon": -86.8372204 },
+    { "lat": 39.6462563, "lon": -86.8373673 },
+    { "lat": 39.6462549, "lon": -86.8376253 },
+    { "lat": 39.6462554, "lon": -86.8382266 },
+    { "lat": 39.6462523, "lon": -86.8384747 },
+    { "lat": 39.6462508, "lon": -86.8385909 },
+    { "lat": 39.6462529, "lon": -86.8387845 },
+    { "lat": 39.6462532, "lon": -86.8388083 },
+    { "lat": 39.6462526, "lon": -86.8390272 },
+    { "lat": 39.6462522, "lon": -86.8391118 },
+    { "lat": 39.6462505, "lon": -86.8394771 },
+    { "lat": 39.6462471, "lon": -86.8402247 },
+    { "lat": 39.6462464, "lon": -86.8403872 },
+    { "lat": 39.6462451, "lon": -86.8406692 },
+    { "lat": 39.6461705, "lon": -86.8411997 },
+    { "lat": 39.6461425, "lon": -86.8413381 },
+    { "lat": 39.6460590, "lon": -86.8417010 },
+    { "lat": 39.6460390, "lon": -86.8417878 },
+    { "lat": 39.6460190, "lon": -86.8418750 },
+    { "lat": 39.6459773, "lon": -86.8420374 },
+    { "lat": 39.6459717, "lon": -86.8420592 },
+    { "lat": 39.6456664, "lon": -86.8432132 },
+    { "lat": 39.6453599, "lon": -86.8443717 },
+    { "lat": 39.6451586, "lon": -86.8451843 },
+    { "lat": 39.6450844, "lon": -86.8455680 },
+    { "lat": 39.6450176, "lon": -86.8460367 },
+    { "lat": 39.6449259, "lon": -86.8467818 },
+    { "lat": 39.6448878, "lon": -86.8471438 },
+    { "lat": 39.6448576, "lon": -86.8474088 },
+    { "lat": 39.6447827, "lon": -86.8478655 },
+    { "lat": 39.6447038, "lon": -86.8483813 },
+    { "lat": 39.6446974, "lon": -86.8484379 },
+    { "lat": 39.6446939, "lon": -86.8484975 },
+    { "lat": 39.6446638, "lon": -86.8487415 },
+    { "lat": 39.6446272, "lon": -86.8489342 },
+    { "lat": 39.6444568, "lon": -86.8494446 },
+    { "lat": 39.6442347, "lon": -86.8500240 },
+    { "lat": 39.6442179, "lon": -86.8500604 },
+    { "lat": 39.6441397, "lon": -86.8502143 },
+    { "lat": 39.6440999, "lon": -86.8503008 },
+    { "lat": 39.6439960, "lon": -86.8505937 },
+    { "lat": 39.6439848, "lon": -86.8536787 },
+    { "lat": 39.6439947, "lon": -86.8542728 },
+    { "lat": 39.6440041, "lon": -86.8565568 },
+    { "lat": 39.6440035, "lon": -86.8568109 },
+    { "lat": 39.6440027, "lon": -86.8569229 },
+    { "lat": 39.6440012, "lon": -86.8591602 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "name": "Indianapolis Road",
+    "tiger:cfcc": "A31",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "State Road 240",
+    "tiger:name_base_1": "Indianapolis",
+    "tiger:name_type_1": "Rd",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 996752298,
+  "bounds": {
+    "minlat": 39.6425269,
+    "minlon": -86.8681855,
+    "maxlat": 39.6425514,
+    "maxlon": -86.8673412
+  },
+  "nodes": [
+    181473959,
+    181460437
+  ],
+  "geometry": [
+    { "lat": 39.6425269, "lon": -86.8673412 },
+    { "lat": 39.6425514, "lon": -86.8681855 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "West Poplar Street",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Poplar",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 996752300,
+  "bounds": {
+    "minlat": 39.6432300,
+    "minlon": -86.8704750,
+    "maxlat": 39.6432460,
+    "maxlon": -86.8682691
+  },
+  "nodes": [
+    181460442,
+    181469614,
+    181469737
+  ],
+  "geometry": [
+    { "lat": 39.6432460, "lon": -86.8682691 },
+    { "lat": 39.6432347, "lon": -86.8692270 },
+    { "lat": 39.6432300, "lon": -86.8704750 }
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "name": "West Walnut Street",
+    "surface": "paved",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Walnut",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 996752301,
+  "bounds": {
+    "minlat": 39.6425514,
+    "minlon": -86.8682691,
+    "maxlat": 39.6432460,
+    "maxlon": -86.8681855
+  },
+  "nodes": [
+    181460437,
+    181460440,
+    181460442
+  ],
+  "geometry": [
+    { "lat": 39.6425514, "lon": -86.8681855 },
+    { "lat": 39.6426830, "lon": -86.8682603 },
+    { "lat": 39.6432460, "lon": -86.8682691 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "maxspeed": "30 mph",
+    "maxspeed:type": "sign",
+    "name": "South Jefferson Street",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Jefferson",
+    "tiger:name_direction_prefix": "S",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 1011067664,
+  "bounds": {
+    "minlat": 39.6429156,
+    "minlon": -86.8653006,
+    "maxlat": 39.6431815,
+    "maxlon": -86.8645985
+  },
+  "nodes": [
+    9328029694,
+    9328029695,
+    9328029696,
+    9328029697,
+    9328029698,
+    9328029694
+  ],
+  "geometry": [
+    { "lat": 39.6429156, "lon": -86.8652991 },
+    { "lat": 39.6431790, "lon": -86.8653006 },
+    { "lat": 39.6431815, "lon": -86.8645998 },
+    { "lat": 39.6429598, "lon": -86.8645985 },
+    { "lat": 39.6429178, "lon": -86.8646556 },
+    { "lat": 39.6429156, "lon": -86.8652991 }
+  ],
+  "tags": {
+    "access": "yes",
+    "amenity": "parking",
+    "capacity:disabled": "3",
+    "fee": "no",
+    "parking": "surface",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1052354863,
+  "bounds": {
+    "minlat": 39.6390532,
+    "minlon": -86.8690513,
+    "maxlat": 39.6393510,
+    "maxlon": -86.8686645
+  },
+  "nodes": [
+    9671321549,
+    9671321550,
+    9671321551,
+    9671321552,
+    9671321553,
+    9671321554,
+    9671321555,
+    9671321556,
+    181486552,
+    4764661407,
+    4764661409,
+    9671321544,
+    9671321545,
+    9671321546,
+    9671321547,
+    9671321548,
+    181469628,
+    181486546,
+    181486549,
+    9671321549
+  ],
+  "geometry": [
+    { "lat": 39.6393510, "lon": -86.8688883 },
+    { "lat": 39.6393509, "lon": -86.8688262 },
+    { "lat": 39.6393357, "lon": -86.8687672 },
+    { "lat": 39.6393069, "lon": -86.8687175 },
+    { "lat": 39.6392676, "lon": -86.8686821 },
+    { "lat": 39.6392217, "lon": -86.8686645 },
+    { "lat": 39.6391738, "lon": -86.8686667 },
+    { "lat": 39.6391289, "lon": -86.8686884 },
+    { "lat": 39.6390916, "lon": -86.8687273 },
+    { "lat": 39.6390642, "lon": -86.8687838 },
+    { "lat": 39.6390532, "lon": -86.8688489 },
+    { "lat": 39.6390597, "lon": -86.8689151 },
+    { "lat": 39.6390830, "lon": -86.8689746 },
+    { "lat": 39.6391205, "lon": -86.8690203 },
+    { "lat": 39.6391676, "lon": -86.8690469 },
+    { "lat": 39.6392188, "lon": -86.8690513 },
+    { "lat": 39.6392682, "lon": -86.8690329 },
+    { "lat": 39.6393074, "lon": -86.8689973 },
+    { "lat": 39.6393360, "lon": -86.8689474 },
+    { "lat": 39.6393510, "lon": -86.8688883 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "West Hanna Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Hanna",
+    "tiger:name_direction_prefix": "W",
+    "tiger:name_type": "St"
+  }
+},
+{
+  "type": "way",
+  "id": 1095643698,
+  "bounds": {
+    "minlat": 39.6441044,
+    "minlon": -86.8667611,
+    "maxlat": 39.6446333,
+    "maxlon": -86.8665113
+  },
+  "nodes": [
+    10033925086,
+    10033925087,
+    10033925088,
+    10033925089,
+    10033925086
+  ],
+  "geometry": [
+    { "lat": 39.6446333, "lon": -86.8667610 },
+    { "lat": 39.6446333, "lon": -86.8665114 },
+    { "lat": 39.6441044, "lon": -86.8665113 },
+    { "lat": 39.6441044, "lon": -86.8667611 },
+    { "lat": 39.6446333, "lon": -86.8667610 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1154174413,
+  "bounds": {
+    "minlat": 39.6425403,
+    "minlon": -86.8644588,
+    "maxlat": 39.6425408,
+    "maxlon": -86.8640580
+  },
+  "nodes": [
+    8474136404,
+    6874214234,
+    181473953
+  ],
+  "geometry": [
+    { "lat": 39.6425403, "lon": -86.8640580 },
+    { "lat": 39.6425407, "lon": -86.8643653 },
+    { "lat": 39.6425408, "lon": -86.8644588 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "East Poplar Street",
+    "oneway": "yes",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Poplar",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:reviewed": "no",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 1190059551,
+  "bounds": {
+    "minlat": 39.6419424,
+    "minlon": -86.8633771,
+    "maxlat": 39.6424561,
+    "maxlon": -86.8625916
+  },
+  "nodes": [
+    11050110168,
+    11050110169,
+    11050110170,
+    11050110171,
+    11050110172,
+    11050110173,
+    11050110174,
+    11050110175,
+    11050110176,
+    11050110177,
+    11050110178,
+    11050110179,
+    11050110180,
+    11050110181,
+    11050110182,
+    11050110183,
+    11050110184,
+    11050110185,
+    11050110186,
+    11050110187,
+    11050110188,
+    11050110189,
+    11050110168
+  ],
+  "geometry": [
+    { "lat": 39.6421731, "lon": -86.8633771 },
+    { "lat": 39.6424022, "lon": -86.8633769 },
+    { "lat": 39.6424022, "lon": -86.8633006 },
+    { "lat": 39.6424561, "lon": -86.8633005 },
+    { "lat": 39.6424558, "lon": -86.8629392 },
+    { "lat": 39.6424078, "lon": -86.8629393 },
+    { "lat": 39.6424077, "lon": -86.8628624 },
+    { "lat": 39.6421964, "lon": -86.8628627 },
+    { "lat": 39.6421961, "lon": -86.8626116 },
+    { "lat": 39.6421489, "lon": -86.8626117 },
+    { "lat": 39.6421489, "lon": -86.8626356 },
+    { "lat": 39.6421271, "lon": -86.8626605 },
+    { "lat": 39.6420522, "lon": -86.8626625 },
+    { "lat": 39.6420510, "lon": -86.8625916 },
+    { "lat": 39.6419771, "lon": -86.8625937 },
+    { "lat": 39.6419859, "lon": -86.8626118 },
+    { "lat": 39.6419859, "lon": -86.8626594 },
+    { "lat": 39.6419424, "lon": -86.8626595 },
+    { "lat": 39.6419426, "lon": -86.8629557 },
+    { "lat": 39.6421616, "lon": -86.8629554 },
+    { "lat": 39.6421618, "lon": -86.8631824 },
+    { "lat": 39.6421730, "lon": -86.8631824 },
+    { "lat": 39.6421731, "lon": -86.8633771 }
+  ],
+  "tags": {
+    "amenity": "parking",
+    "operator": "DePauw University",
+    "operator:type": "university"
+  }
+},
+{
+  "type": "way",
+  "id": 1190059579,
+  "bounds": {
+    "minlat": 39.6382602,
+    "minlon": -86.8644535,
+    "maxlat": 39.6390049,
+    "maxlon": -86.8638733
+  },
+  "nodes": [
+    11050110557,
+    11050110558,
+    11050110556,
+    11050110559,
+    11050110560,
+    11050110561,
+    11050110562,
+    11050110563,
+    11050110564,
+    6874214278,
+    11050110565,
+    11050110566,
+    11050110567,
+    6874213990,
+    11050110568,
+    11050110569,
+    11050110570,
+    11050110571,
+    11050110572,
+    11050110573,
+    11050110575,
+    13105100406,
+    13105100405,
+    11050110576,
+    11050110577,
+    11050110578,
+    11050110579,
+    11050110580,
+    11050110581,
+    11050110582,
+    11050110583,
+    11050110584,
+    11050110585,
+    11050110586,
+    11050110587,
+    11050110588,
+    11050110557
+  ],
+  "geometry": [
+    { "lat": 39.6382602, "lon": -86.8644295 },
+    { "lat": 39.6382644, "lon": -86.8641073 },
+    { "lat": 39.6383252, "lon": -86.8641064 },
+    { "lat": 39.6383298, "lon": -86.8641063 },
+    { "lat": 39.6383295, "lon": -86.8640892 },
+    { "lat": 39.6383686, "lon": -86.8640871 },
+    { "lat": 39.6383717, "lon": -86.8641274 },
+    { "lat": 39.6383829, "lon": -86.8641360 },
+    { "lat": 39.6384411, "lon": -86.8641344 },
+    { "lat": 39.6384412, "lon": -86.8641132 },
+    { "lat": 39.6384419, "lon": -86.8639794 },
+    { "lat": 39.6385341, "lon": -86.8639789 },
+    { "lat": 39.6385341, "lon": -86.8638906 },
+    { "lat": 39.6387722, "lon": -86.8638919 },
+    { "lat": 39.6388752, "lon": -86.8638878 },
+    { "lat": 39.6389007, "lon": -86.8638803 },
+    { "lat": 39.6389209, "lon": -86.8638738 },
+    { "lat": 39.6390049, "lon": -86.8638733 },
+    { "lat": 39.6390046, "lon": -86.8639543 },
+    { "lat": 39.6389431, "lon": -86.8639550 },
+    { "lat": 39.6389370, "lon": -86.8639590 },
+    { "lat": 39.6389361, "lon": -86.8639650 },
+    { "lat": 39.6389376, "lon": -86.8639699 },
+    { "lat": 39.6389441, "lon": -86.8639738 },
+    { "lat": 39.6389785, "lon": -86.8639746 },
+    { "lat": 39.6389792, "lon": -86.8643672 },
+    { "lat": 39.6387209, "lon": -86.8643725 },
+    { "lat": 39.6387194, "lon": -86.8644183 },
+    { "lat": 39.6386624, "lon": -86.8644284 },
+    { "lat": 39.6386643, "lon": -86.8643629 },
+    { "lat": 39.6385566, "lon": -86.8643619 },
+    { "lat": 39.6385597, "lon": -86.8644430 },
+    { "lat": 39.6384884, "lon": -86.8644535 },
+    { "lat": 39.6384853, "lon": -86.8644334 },
+    { "lat": 39.6384760, "lon": -86.8644258 },
+    { "lat": 39.6384628, "lon": -86.8644243 },
+    { "lat": 39.6382602, "lon": -86.8644295 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230885405,
+  "bounds": {
+    "minlat": 39.6440418,
+    "minlon": -86.8645253,
+    "maxlat": 39.6447147,
+    "maxlon": -86.8644933
+  },
+  "nodes": [
+    181445774,
+    6848301117,
+    11415146197,
+    8677638894
+  ],
+  "geometry": [
+    { "lat": 39.6440418, "lon": -86.8644933 },
+    { "lat": 39.6444150, "lon": -86.8645145 },
+    { "lat": 39.6446919, "lon": -86.8645248 },
+    { "lat": 39.6447147, "lon": -86.8645253 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "North Indiana Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Indiana",
+    "tiger:name_direction_prefix": "N",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 1230887739,
+  "bounds": {
+    "minlat": 39.6418164,
+    "minlon": -86.8616180,
+    "maxlat": 39.6418183,
+    "maxlon": -86.8576304
+  },
+  "nodes": [
+    181479312,
+    6874214496,
+    8474669256,
+    181486792,
+    8474669251,
+    6431860811,
+    181477694,
+    6431860802,
+    181482651
+  ],
+  "geometry": [
+    { "lat": 39.6418183, "lon": -86.8576304 },
+    { "lat": 39.6418183, "lon": -86.8577164 },
+    { "lat": 39.6418175, "lon": -86.8592306 },
+    { "lat": 39.6418175, "lon": -86.8594047 },
+    { "lat": 39.6418173, "lon": -86.8596733 },
+    { "lat": 39.6418169, "lon": -86.8605883 },
+    { "lat": 39.6418169, "lon": -86.8606608 },
+    { "lat": 39.6418168, "lon": -86.8607653 },
+    { "lat": 39.6418164, "lon": -86.8616180 }
+  ],
+  "tags": {
+    "highway": "unclassified",
+    "name": "East Seminary Street",
+    "surface": "asphalt",
+    "tiger:cfcc": "A41",
+    "tiger:county": "Putnam, IN",
+    "tiger:name_base": "Seminary",
+    "tiger:name_direction_prefix": "E",
+    "tiger:name_type": "St",
+    "tiger:zip_left": "46135",
+    "tiger:zip_right": "46135"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907845,
+  "bounds": {
+    "minlat": 39.6451581,
+    "minlon": -86.8643528,
+    "maxlat": 39.6454445,
+    "maxlon": -86.8637851
+  },
+  "nodes": [
+    11415342612,
+    11415342613,
+    11415342614,
+    11415342615,
+    11415342616,
+    11415342617,
+    11415342618,
+    11415342619,
+    11415342620,
+    11415342612
+  ],
+  "geometry": [
+    { "lat": 39.6453882, "lon": -86.8643528 },
+    { "lat": 39.6453870, "lon": -86.8639353 },
+    { "lat": 39.6454445, "lon": -86.8639323 },
+    { "lat": 39.6454434, "lon": -86.8637875 },
+    { "lat": 39.6451604, "lon": -86.8637851 },
+    { "lat": 39.6451593, "lon": -86.8639338 },
+    { "lat": 39.6452233, "lon": -86.8639338 },
+    { "lat": 39.6451634, "lon": -86.8639762 },
+    { "lat": 39.6451581, "lon": -86.8643474 },
+    { "lat": 39.6453882, "lon": -86.8643528 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907848,
+  "bounds": {
+    "minlat": 39.6449839,
+    "minlon": -86.8660145,
+    "maxlat": 39.6452828,
+    "maxlon": -86.8655505
+  },
+  "nodes": [
+    11415342625,
+    11415342626,
+    11415342627,
+    11415342628,
+    11415342629,
+    11415342630,
+    11415342631,
+    11415342632,
+    11415342625
+  ],
+  "geometry": [
+    { "lat": 39.6452828, "lon": -86.8659210 },
+    { "lat": 39.6452801, "lon": -86.8655505 },
+    { "lat": 39.6450269, "lon": -86.8655515 },
+    { "lat": 39.6450265, "lon": -86.8657116 },
+    { "lat": 39.6449839, "lon": -86.8657101 },
+    { "lat": 39.6449858, "lon": -86.8660145 },
+    { "lat": 39.6451126, "lon": -86.8660145 },
+    { "lat": 39.6451138, "lon": -86.8659174 },
+    { "lat": 39.6452828, "lon": -86.8659210 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907852,
+  "bounds": {
+    "minlat": 39.6441006,
+    "minlon": -86.8679105,
+    "maxlat": 39.6446712,
+    "maxlon": -86.8674013
+  },
+  "nodes": [
+    11415342647,
+    11415342648,
+    11415342649,
+    11415342650,
+    11415342651,
+    11415342652,
+    11415342647
+  ],
+  "geometry": [
+    { "lat": 39.6446680, "lon": -86.8679095 },
+    { "lat": 39.6446712, "lon": -86.8674013 },
+    { "lat": 39.6441006, "lon": -86.8674064 },
+    { "lat": 39.6441022, "lon": -86.8678018 },
+    { "lat": 39.6443839, "lon": -86.8678028 },
+    { "lat": 39.6443824, "lon": -86.8679105 },
+    { "lat": 39.6446680, "lon": -86.8679095 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907853,
+  "bounds": {
+    "minlat": 39.6445127,
+    "minlon": -86.8638829,
+    "maxlat": 39.6446622,
+    "maxlon": -86.8635925
+  },
+  "nodes": [
+    11415342653,
+    11415342654,
+    11415342655,
+    11415342656,
+    11415342657,
+    11415342658,
+    11415342653
+  ],
+  "geometry": [
+    { "lat": 39.6446601, "lon": -86.8638829 },
+    { "lat": 39.6446622, "lon": -86.8635933 },
+    { "lat": 39.6445142, "lon": -86.8635925 },
+    { "lat": 39.6445127, "lon": -86.8638521 },
+    { "lat": 39.6445614, "lon": -86.8638509 },
+    { "lat": 39.6445611, "lon": -86.8638829 },
+    { "lat": 39.6446601, "lon": -86.8638829 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907855,
+  "bounds": {
+    "minlat": 39.6448680,
+    "minlon": -86.8629038,
+    "maxlat": 39.6454119,
+    "maxlon": -86.8626558
+  },
+  "nodes": [
+    11415342662,
+    11415342663,
+    11415342664,
+    11415342665,
+    11415342662
+  ],
+  "geometry": [
+    { "lat": 39.6448692, "lon": -86.8628999 },
+    { "lat": 39.6448680, "lon": -86.8626565 },
+    { "lat": 39.6454119, "lon": -86.8626558 },
+    { "lat": 39.6454119, "lon": -86.8629038 },
+    { "lat": 39.6448692, "lon": -86.8628999 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907856,
+  "bounds": {
+    "minlat": 39.6452826,
+    "minlon": -86.8634045,
+    "maxlat": 39.6454352,
+    "maxlon": -86.8630715
+  },
+  "nodes": [
+    11415342666,
+    11415342667,
+    11415342668,
+    11415347669,
+    11415342666
+  ],
+  "geometry": [
+    { "lat": 39.6454314, "lon": -86.8634045 },
+    { "lat": 39.6452826, "lon": -86.8634021 },
+    { "lat": 39.6452836, "lon": -86.8630715 },
+    { "lat": 39.6454352, "lon": -86.8630768 },
+    { "lat": 39.6454314, "lon": -86.8634045 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907858,
+  "bounds": {
+    "minlat": 39.6433246,
+    "minlon": -86.8653184,
+    "maxlat": 39.6436051,
+    "maxlon": -86.8650656
+  },
+  "nodes": [
+    11415347673,
+    11415347674,
+    11415347675,
+    11415347676,
+    11415347673
+  ],
+  "geometry": [
+    { "lat": 39.6436029, "lon": -86.8653184 },
+    { "lat": 39.6436051, "lon": -86.8650686 },
+    { "lat": 39.6433267, "lon": -86.8650656 },
+    { "lat": 39.6433246, "lon": -86.8653145 },
+    { "lat": 39.6436029, "lon": -86.8653184 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1230907862,
+  "bounds": {
+    "minlat": 39.6426120,
+    "minlon": -86.8632040,
+    "maxlat": 39.6431686,
+    "maxlon": -86.8626387
+  },
+  "nodes": [
+    11415347685,
+    11415347686,
+    11415347687,
+    11415347688,
+    11415347689,
+    11415347690,
+    11415347691,
+    11415347692,
+    11415347693,
+    11415347694,
+    11415347685
+  ],
+  "geometry": [
+    { "lat": 39.6431686, "lon": -86.8628238 },
+    { "lat": 39.6431681, "lon": -86.8626387 },
+    { "lat": 39.6426822, "lon": -86.8626387 },
+    { "lat": 39.6426807, "lon": -86.8627239 },
+    { "lat": 39.6426120, "lon": -86.8627198 },
+    { "lat": 39.6426130, "lon": -86.8632040 },
+    { "lat": 39.6427715, "lon": -86.8632026 },
+    { "lat": 39.6427731, "lon": -86.8627842 },
+    { "lat": 39.6429208, "lon": -86.8627842 },
+    { "lat": 39.6429208, "lon": -86.8628298 },
+    { "lat": 39.6431686, "lon": -86.8628238 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1254059256,
+  "bounds": {
+    "minlat": 39.6402367,
+    "minlon": -86.8650368,
+    "maxlat": 39.6410771,
+    "maxlon": -86.8648548
+  },
+  "nodes": [
+    11656959075,
+    11656959076,
+    11656959077,
+    11656959078,
+    11656959079,
+    13796357880,
+    11656959080,
+    11656959081,
+    11656959082,
+    13796357879,
+    11656959083,
+    11656959084,
+    11656959085,
+    11656959086,
+    11656959087,
+    11656959088,
+    11656959089,
+    11656959090,
+    11656959091,
+    11656959092,
+    11656959093,
+    11656959094,
+    11656959095,
+    11656959096,
+    11656959097,
+    11656959098,
+    11656959099,
+    11656959100,
+    11656959075
+  ],
+  "geometry": [
+    { "lat": 39.6402974, "lon": -86.8650298 },
+    { "lat": 39.6402970, "lon": -86.8649607 },
+    { "lat": 39.6402742, "lon": -86.8649600 },
+    { "lat": 39.6402634, "lon": -86.8649633 },
+    { "lat": 39.6402550, "lon": -86.8649671 },
+    { "lat": 39.6402501, "lon": -86.8649729 },
+    { "lat": 39.6402382, "lon": -86.8649870 },
+    { "lat": 39.6402367, "lon": -86.8648581 },
+    { "lat": 39.6402431, "lon": -86.8648747 },
+    { "lat": 39.6402493, "lon": -86.8648905 },
+    { "lat": 39.6402515, "lon": -86.8648959 },
+    { "lat": 39.6402599, "lon": -86.8649062 },
+    { "lat": 39.6402856, "lon": -86.8649145 },
+    { "lat": 39.6403222, "lon": -86.8649145 },
+    { "lat": 39.6403256, "lon": -86.8649094 },
+    { "lat": 39.6403251, "lon": -86.8649017 },
+    { "lat": 39.6403034, "lon": -86.8648709 },
+    { "lat": 39.6403172, "lon": -86.8648548 },
+    { "lat": 39.6410172, "lon": -86.8648571 },
+    { "lat": 39.6410633, "lon": -86.8649193 },
+    { "lat": 39.6410682, "lon": -86.8649177 },
+    { "lat": 39.6410744, "lon": -86.8649097 },
+    { "lat": 39.6410771, "lon": -86.8649619 },
+    { "lat": 39.6410368, "lon": -86.8649619 },
+    { "lat": 39.6410121, "lon": -86.8650122 },
+    { "lat": 39.6409846, "lon": -86.8649921 },
+    { "lat": 39.6409776, "lon": -86.8649936 },
+    { "lat": 39.6409393, "lon": -86.8650368 },
+    { "lat": 39.6402974, "lon": -86.8650298 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1457911433,
+  "bounds": {
+    "minlat": 39.6408552,
+    "minlon": -86.8599720,
+    "maxlat": 39.6410218,
+    "maxlon": -86.8597429
+  },
+  "nodes": [
+    13370663332,
+    13370663333,
+    13370663334,
+    13370663335,
+    13370663332
+  ],
+  "geometry": [
+    { "lat": 39.6408559, "lon": -86.8599720 },
+    { "lat": 39.6408552, "lon": -86.8597429 },
+    { "lat": 39.6410218, "lon": -86.8597446 },
+    { "lat": 39.6410205, "lon": -86.8599720 },
+    { "lat": 39.6408559, "lon": -86.8599720 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1457911434,
+  "bounds": {
+    "minlat": 39.6411073,
+    "minlon": -86.8596699,
+    "maxlat": 39.6412572,
+    "maxlon": -86.8592356
+  },
+  "nodes": [
+    13370663336,
+    13370663337,
+    13370663338,
+    13370663339,
+    13370663336
+  ],
+  "geometry": [
+    { "lat": 39.6412541, "lon": -86.8596693 },
+    { "lat": 39.6411073, "lon": -86.8596699 },
+    { "lat": 39.6411141, "lon": -86.8592357 },
+    { "lat": 39.6412572, "lon": -86.8592356 },
+    { "lat": 39.6412541, "lon": -86.8596693 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1457911435,
+  "bounds": {
+    "minlat": 39.6412670,
+    "minlon": -86.8596678,
+    "maxlat": 39.6414862,
+    "maxlon": -86.8592368
+  },
+  "nodes": [
+    13370663340,
+    13370663341,
+    13370663342,
+    13370663343,
+    13370663340
+  ],
+  "geometry": [
+    { "lat": 39.6412670, "lon": -86.8596678 },
+    { "lat": 39.6412682, "lon": -86.8592368 },
+    { "lat": 39.6414862, "lon": -86.8592388 },
+    { "lat": 39.6414837, "lon": -86.8596674 },
+    { "lat": 39.6412670, "lon": -86.8596678 }
+  ],
+  "tags": {
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1457911436,
+  "bounds": {
+    "minlat": 39.6410897,
+    "minlon": -86.8592058,
+    "maxlat": 39.6413176,
+    "maxlon": -86.8585598
+  },
+  "nodes": [
+    13370663344,
+    13370663345,
+    13370663346,
+    13370663347,
+    13370663348,
+    13370663349,
+    13370663350,
+    13370663351,
+    13370663352,
+    13370663353,
+    13370663344
+  ],
+  "geometry": [
+    { "lat": 39.6413121, "lon": -86.8592048 },
+    { "lat": 39.6411081, "lon": -86.8592058 },
+    { "lat": 39.6411091, "lon": -86.8591509 },
+    { "lat": 39.6410897, "lon": -86.8591488 },
+    { "lat": 39.6411021, "lon": -86.8585598 },
+    { "lat": 39.6413176, "lon": -86.8585653 },
+    { "lat": 39.6413135, "lon": -86.8588216 },
+    { "lat": 39.6412225, "lon": -86.8588243 },
+    { "lat": 39.6412229, "lon": -86.8589690 },
+    { "lat": 39.6413129, "lon": -86.8589692 },
+    { "lat": 39.6413121, "lon": -86.8592048 }
+  ],
+  "tags": {
+    "access": "private",
+    "amenity": "parking"
+  }
+},
+{
+  "type": "way",
+  "id": 1512683975,
+  "bounds": {
+    "minlat": 39.6323640,
+    "minlon": -86.8741016,
+    "maxlat": 39.6393330,
+    "maxlon": -86.8716525
+  },
+  "nodes": [
+    6762932722,
+    6762932723,
+    6762932724,
+    6762932725,
+    6762932726,
+    6762932727,
+    6762932728,
+    6762932729,
+    6762932730,
+    6762932731,
+    6762932732,
+    6762932733,
+    6762932734,
+    6762932735,
+    6762932736,
+    6762932737,
+    6762932738,
+    6762932739,
+    6762932740,
+    6762932741,
+    6762932742,
+    6762932743,
+    6762932744,
+    6762932745,
+    6762932746,
+    6762932747,
+    6762932748,
+    6762932749,
+    6762932750,
+    6762932751,
+    6762932752,
+    6762932753,
+    6762932754,
+    6762932755,
+    6762932756,
+    6762932757,
+    6762932758,
+    6762932759,
+    6762932760
+  ],
+  "geometry": [
+    { "lat": 39.6393330, "lon": -86.8716525 },
+    { "lat": 39.6391058, "lon": -86.8718053 },
+    { "lat": 39.6388658, "lon": -86.8719016 },
+    { "lat": 39.6386187, "lon": -86.8719657 },
+    { "lat": 39.6381775, "lon": -86.8719749 },
+    { "lat": 39.6378139, "lon": -86.8720162 },
+    { "lat": 39.6375669, "lon": -86.8720391 },
+    { "lat": 39.6373022, "lon": -86.8721170 },
+    { "lat": 39.6371398, "lon": -86.8720803 },
+    { "lat": 39.6369315, "lon": -86.8721812 },
+    { "lat": 39.6366456, "lon": -86.8723462 },
+    { "lat": 39.6365327, "lon": -86.8725157 },
+    { "lat": 39.6364656, "lon": -86.8725707 },
+    { "lat": 39.6363386, "lon": -86.8725799 },
+    { "lat": 39.6362644, "lon": -86.8725570 },
+    { "lat": 39.6359891, "lon": -86.8727220 },
+    { "lat": 39.6357562, "lon": -86.8728320 },
+    { "lat": 39.6356397, "lon": -86.8728916 },
+    { "lat": 39.6354844, "lon": -86.8728824 },
+    { "lat": 39.6353996, "lon": -86.8729007 },
+    { "lat": 39.6353255, "lon": -86.8729924 },
+    { "lat": 39.6351737, "lon": -86.8731024 },
+    { "lat": 39.6350114, "lon": -86.8731482 },
+    { "lat": 39.6348490, "lon": -86.8732078 },
+    { "lat": 39.6347219, "lon": -86.8732766 },
+    { "lat": 39.6346407, "lon": -86.8733499 },
+    { "lat": 39.6345949, "lon": -86.8734782 },
+    { "lat": 39.6345101, "lon": -86.8735241 },
+    { "lat": 39.6343937, "lon": -86.8734553 },
+    { "lat": 39.6343019, "lon": -86.8734920 },
+    { "lat": 39.6341960, "lon": -86.8735287 },
+    { "lat": 39.6339913, "lon": -86.8736478 },
+    { "lat": 39.6337724, "lon": -86.8737395 },
+    { "lat": 39.6334794, "lon": -86.8738724 },
+    { "lat": 39.6331688, "lon": -86.8740145 },
+    { "lat": 39.6328758, "lon": -86.8740420 },
+    { "lat": 39.6326535, "lon": -86.8740283 },
+    { "lat": 39.6325617, "lon": -86.8740878 },
+    { "lat": 39.6323640, "lon": -86.8741016 }
+  ],
+  "tags": {
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "footway",
+    "horse": "no",
+    "motor_vehicle": "no",
+    "name": "Prindle Trail P1",
+    "surface": "gravel"
+  }
+}
+
+  ]
+}

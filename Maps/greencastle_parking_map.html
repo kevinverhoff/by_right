@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Downtown Greencastle Public Parking</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
+      crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
+        crossorigin="anonymous"></script>
+<style>
+  :root {
+    --ink: #17202a;
+    --muted: #5b6770;
+    --line: #d8dee3;
+    --panel: #ffffff;
+    /* One stack for the whole map -- panel, popups, and the numbered map
+       badges alike -- so nothing renders in a mismatched face. */
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+            Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font: 14px/1.5 var(--font);
+    color: var(--ink);
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+  }
+  #map { flex: 1 1 auto; height: 100vh; }
+  #panel {
+    flex: 0 0 340px;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    padding: 18px 18px 28px;
+  }
+  h1 { font-size: 17px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); font-size: 12.5px; margin: 0 0 16px; }
+  .hint {
+    background: #f1f6fd; border: 1px solid #cfe0f7; border-radius: 8px;
+    padding: 11px 13px; font-size: 13px; color: #1c3d63;
+  }
+  .status { font-size: 12px; color: var(--muted); margin: 10px 0 4px; min-height: 16px; }
+  ol.results { list-style: none; margin: 4px 0 0; padding: 0; }
+  ol.results li {
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; margin-bottom: 8px; cursor: pointer;
+    display: grid; grid-template-columns: 26px 1fr; gap: 10px;
+    transition: border-color .12s, background .12s;
+  }
+  ol.results li:hover { border-color: #9db6cf; background: #fafcff; }
+  ol.results li.nearest { border-color: #1f6feb; background: #f4f9ff; }
+  .rank {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #eef2f6; color: var(--muted);
+    font-size: 12px; font-weight: 700;
+    display: grid; place-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+  li.nearest .rank { background: #1f6feb; color: #fff; }
+  .lot-name { font-weight: 600; }
+  /* Tabular figures keep the distance column from jittering as the router
+     result replaces the straight-line estimate. */
+  .dist { font-size: 13px; margin-top: 1px; font-variant-numeric: tabular-nums; }
+  /* The numbered badges pinned on the map. */
+  .lot-badge {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center;
+    font: 700 11px/1 var(--font); color: #fff;
+    border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+  }
+  .dist .walk { color: var(--muted); }
+  .meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .tag {
+    display: inline-block; font-size: 11px; padding: 1px 7px;
+    border-radius: 999px; margin-top: 5px; font-weight: 600;
+  }
+  .tag.limited { background: #fef3c7; color: #92400e; }
+  .tag.open { background: #dbeafe; color: #1e40af; }
+  .tag.approx { background: #f3f4f6; color: #4b5563; }
+  .legend {
+    margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--muted);
+  }
+  .legend div { margin-bottom: 5px; }
+  .swatch {
+    display: inline-block; width: 11px; height: 11px; border-radius: 2px;
+    margin-right: 7px; vertical-align: -1px;
+  }
+  .credit { margin-top: 14px; font-size: 11px; color: #94a3b8; }
+  .credit a { color: #94a3b8; }
+  .leaflet-popup-content {
+    font: 13px/1.5 var(--font); margin: 12px 14px;
+  }
+  .leaflet-popup-content b { font-size: 14px; }
+  @media (max-width: 780px) {
+    body { flex-direction: column; }
+    #map { height: 58vh; flex: none; }
+    #panel { flex: none; height: auto; border-left: none; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<aside id="panel">
+  <h1>Downtown Greencastle Public Parking</h1>
+  <p class="sub">6 public lots &middot; 204 spaces</p>
+  <div id="results">
+    <div class="hint">Click anywhere on the map to see how far each public lot
+      is. Drag the pin to move it.</div>
+  </div>
+  <div class="legend">
+    <div><span class="swatch" style="background:#1f6feb"></span>No time limit</div>
+    <div><span class="swatch" style="background:#b45309"></span>Time-limited</div>
+    <div><span class="swatch" style="background:#6b7280"></span>Approximate location</div>
+  </div>
+  <p class="credit">
+    Lot details from the
+    <a href="https://www.cityofgreencastle.com/188/Downtown-Parking" target="_blank"
+       rel="noopener">City of Greencastle</a>.
+    Lot outlines and routing &copy; OpenStreetMap contributors.
+  </p>
+</aside>
+
+<script>
+const LOTS = [{"name":"Vine Street Lot","spaces":28,"accessible_spaces":3,"restrictions":"2 hours, 8am-6pm Mon-Fri","hours":"Open 24/7","location_text":"South Vine Street, just south of Washington Street","notes":"Accessible spaces: 1 northeast, 2 southwest.","time_limited":true,"lat":39.643433,"lon":-86.863832,"polygon":[[39.643322,-86.864007],[39.643325,-86.863564],[39.643601,-86.863568],[39.643597,-86.864011],[39.643322,-86.864007]],"source":"osm:way/580026015","approximate":false,"area_m2":1165,"m2_per_space":41.6},{"name":"Columbia Street Lot","spaces":40,"accessible_spaces":2,"restrictions":"No time limit","hours":"Open 24/7","location_text":"North Indiana Street, just north of the square","notes":"Accessible spaces at the west end.","time_limited":false,"lat":39.645292,"lon":-86.864034,"polygon":[[39.645388,-86.864353],[39.645387,-86.863935],[39.645445,-86.863932],[39.645443,-86.863788],[39.64516,-86.863785],[39.645159,-86.863934],[39.645223,-86.863934],[39.645163,-86.863976],[39.645158,-86.864347],[39.645388,-86.864353]],"source":"osm:way/1230907845","approximate":false,"area_m2":1285,"m2_per_space":32.1},{"name":"Jackson Street Lot","spaces":50,"accessible_spaces":3,"restrictions":"No time limit","hours":"Open 24/7","location_text":"South Jackson Street, just south of Walnut Street","notes":"Some spaces reserved for Crown Equipment after hours and weekends.","time_limited":false,"lat":39.643012,"lon":-86.864959,"polygon":[[39.642916,-86.865299],[39.643179,-86.865301],[39.643181,-86.8646],[39.64296,-86.864598],[39.642918,-86.864656],[39.642916,-86.865299]],"source":"osm:way/1011067664","approximate":false,"area_m2":1747,"m2_per_space":34.9},{"name":"Market Street Lot","spaces":37,"accessible_spaces":2,"restrictions":"No time limit","hours":"Open 24/7","location_text":"Entrances on Washington Street (one block west) and Franklin Street","notes":"37 lot spaces plus 8 on-street. Accessible spaces at the northeast corner.","time_limited":false,"lat":39.644422,"lon":-86.866661,"polygon":[[39.644633,-86.866761],[39.644633,-86.866511],[39.644104,-86.866511],[39.644104,-86.866761],[39.644633,-86.866761]],"source":"osm:way/1095643698","approximate":false,"area_m2":1257,"m2_per_space":34.0},{"name":"North Jackson Street Lot","spaces":30,"accessible_spaces":1,"restrictions":"No time limit","hours":"Open 24/7","location_text":"North Jackson Street, just north of the square","notes":"3 spaces reserved for county judges. Accessible space on the south side.","time_limited":false,"lat":39.645122,"lon":-86.865812,"polygon":[[39.645283,-86.865921],[39.64528,-86.86555],[39.645027,-86.865551],[39.645027,-86.865712],[39.644984,-86.86571],[39.644986,-86.866015],[39.645113,-86.866015],[39.645114,-86.865917],[39.645283,-86.865921]],"source":"osm:way/1230907848","approximate":false,"area_m2":1092,"m2_per_space":36.4},{"name":"City Hall Lot","spaces":19,"accessible_spaces":2,"restrictions":"City Hall visitors; open to all after hours and weekends","hours":"Open 24/7","location_text":"North Locust Street, just north of Washington Street","notes":"Accessible spaces at the northwest corner.","time_limited":true,"lat":39.64447,"lon":-86.86063,"polygon":null,"source":"manual","approximate":true,"area_m2":null,"m2_per_space":null}];
+const ROUTER = "https://router.project-osrm.org";
+const PROFILE = "foot";
+const WALK_SPEED = 1.4;
+const CENTER = [39.644292, -86.864321];
+
+const map = L.map("map").setView(CENTER, 16);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+function lotColor(lot) {
+  if (lot.approximate) return "#6b7280";
+  return lot.time_limited ? "#b45309" : "#1f6feb";
+}
+
+function popupHtml(lot) {
+  const acc = lot.accessible_spaces
+    ? " &middot; " + lot.accessible_spaces + " accessible" : "";
+  const approx = lot.approximate
+    ? '<div style="color:#6b7280;margin-top:6px">Approximate location &mdash; this lot'
+      + ' is not mapped in OpenStreetMap.</div>' : "";
+  const notes = lot.notes
+    ? '<div style="color:#5b6770;margin-top:6px">' + lot.notes + "</div>" : "";
+  return "<b>" + lot.name + "</b><br>"
+    + '<span style="color:#5b6770">' + lot.location_text + "</span><br><br>"
+    + "<b>" + lot.spaces + "</b> spaces" + acc + "<br>"
+    + lot.restrictions + "<br>" + lot.hours + notes + approx;
+}
+
+// Draw every lot: its real footprint where OSM has one, a dashed circle where
+// it does not.
+LOTS.forEach(function (lot, i) {
+  const color = lotColor(lot);
+  const style = { color: color, weight: 2, fillColor: color, fillOpacity: 0.28 };
+  lot.shape = lot.polygon
+    ? L.polygon(lot.polygon, style)
+    : L.circle([lot.lat, lot.lon],
+        Object.assign({}, style, { radius: 26, dashArray: "4 4" }));
+  lot.shape.addTo(map).bindPopup(popupHtml(lot));
+
+  lot.marker = L.marker([lot.lat, lot.lon], {
+    icon: L.divIcon({
+      className: "",
+      html: '<div class="lot-badge" style="background:' + color + '">'
+        + (i + 1) + "</div>",
+      iconSize: [22, 22], iconAnchor: [11, 11]
+    })
+  }).addTo(map).bindPopup(popupHtml(lot));
+});
+
+map.fitBounds(L.featureGroup(LOTS.map(function (l) { return l.shape; }))
+  .getBounds().pad(0.18));
+
+// --- Click to measure ------------------------------------------------------
+
+function haversine(a, b) {
+  const R = 6371000;
+  const p1 = a[0] * Math.PI / 180, p2 = b[0] * Math.PI / 180;
+  const dp = p2 - p1, dl = (b[1] - a[1]) * Math.PI / 180;
+  const h = Math.sin(dp / 2) * Math.sin(dp / 2)
+    + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) * Math.sin(dl / 2);
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function formatDistance(meters) {
+  const feet = meters * 3.28084;
+  if (feet < 1000) return Math.round(feet / 10) * 10 + " ft";
+  return (meters / 1609.344).toFixed(2) + " mi";
+}
+
+function formatWalk(meters) {
+  const minutes = Math.round(meters / WALK_SPEED / 60);
+  return minutes < 1 ? "under a minute" : minutes + " min walk";
+}
+
+const resultsEl = document.getElementById("results");
+let youMarker = null;
+let routeLine = null;
+// Bumped on every click/drag so a slow router response for an old origin
+// cannot overwrite the results for a newer one.
+let requestSeq = 0;
+
+function render(rows, statusText) {
+  const items = rows.map(function (row, i) {
+    const lot = row.lot;
+    const acc = lot.accessible_spaces
+      ? " &middot; " + lot.accessible_spaces + " accessible" : "";
+    let tag;
+    if (lot.approximate) {
+      tag = '<span class="tag approx">Approximate location</span>';
+    } else if (lot.time_limited) {
+      tag = '<span class="tag limited">' + lot.restrictions + "</span>";
+    } else {
+      tag = '<span class="tag open">No time limit</span>';
+    }
+    return '<li class="' + (i === 0 ? "nearest" : "") + '" data-idx="'
+      + LOTS.indexOf(lot) + '">'
+      + '<span class="rank">' + (i + 1) + "</span><div>"
+      + '<div class="lot-name">' + lot.name + "</div>"
+      + '<div class="dist">' + formatDistance(row.meters)
+      + ' <span class="walk">&middot; ' + formatWalk(row.meters) + "</span></div>"
+      + '<div class="meta">' + lot.spaces + " spaces" + acc + "</div>"
+      + tag + "</div></li>";
+  }).join("");
+
+  resultsEl.innerHTML = '<div class="status">' + statusText + "</div>"
+    + '<ol class="results">' + items + "</ol>";
+
+  resultsEl.querySelectorAll("li").forEach(function (li) {
+    li.addEventListener("click", function () {
+      const lot = LOTS[+li.dataset.idx];
+      map.panTo([lot.lat, lot.lon]);
+      lot.marker.openPopup();
+    });
+  });
+}
+
+function drawRoute(coords) {
+  if (routeLine) map.removeLayer(routeLine);
+  routeLine = L.polyline(coords.map(function (c) { return [c[1], c[0]]; }), {
+    color: "#c2410c", weight: 4, opacity: 0.85, dashArray: "1 7", lineCap: "round"
+  }).addTo(map);
+}
+
+function getJson(url) {
+  return fetch(url)
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; });
+}
+
+function measure(origin) {
+  const seq = ++requestSeq;
+
+  // Show straight-line distances immediately so the panel is never empty
+  // while the router responds.
+  const straight = LOTS.map(function (lot) {
+    return { lot: lot, meters: haversine(origin, [lot.lat, lot.lon]) };
+  }).sort(function (a, b) { return a.meters - b.meters; });
+  render(straight, "Straight-line distance &mdash; finding walking routes&hellip;");
+
+  const coords = [origin[1] + "," + origin[0]].concat(LOTS.map(function (l) {
+    return l.lon + "," + l.lat;
+  })).join(";");
+
+  const tableUrl = ROUTER + "/table/v1/" + PROFILE + "/" + coords
+    + "?sources=0&annotations=distance";
+
+  getJson(tableUrl).then(function (table) {
+    if (seq !== requestSeq) return null;  // a newer origin has been set
+    let rows = straight;
+    let status = "Straight-line distance (routing unavailable).";
+
+    if (table && table.code === "Ok" && table.distances && table.distances[0]) {
+      const walking = table.distances[0].slice(1);
+      const usable = walking.length === LOTS.length
+        && walking.every(function (d) { return typeof d === "number"; });
+      if (usable) {
+        rows = LOTS.map(function (lot, i) {
+          return { lot: lot, meters: walking[i] };
+        }).sort(function (a, b) { return a.meters - b.meters; });
+        status = "Walking distance along streets and paths.";
+      }
+    }
+    render(rows, status);
+
+    // Draw the actual path to the closest lot.
+    const nearest = rows[0].lot;
+    const routeUrl = ROUTER + "/route/v1/" + PROFILE + "/"
+      + origin[1] + "," + origin[0] + ";" + nearest.lon + "," + nearest.lat
+      + "?overview=full&geometries=geojson";
+
+    return getJson(routeUrl).then(function (route) {
+      if (seq !== requestSeq) return;  // a newer origin has been set
+      if (route && route.code === "Ok" && route.routes.length) {
+        drawRoute(route.routes[0].geometry.coordinates);
+      } else if (routeLine) {
+        map.removeLayer(routeLine);
+        routeLine = null;
+      }
+    });
+  });
+}
+
+function setOrigin(latlng) {
+  if (youMarker) {
+    youMarker.setLatLng(latlng);
+  } else {
+    youMarker = L.marker(latlng, { draggable: true, autoPan: true }).addTo(map);
+    youMarker.bindTooltip("Drag to move");
+    youMarker.on("dragend", function (e) { setOrigin(e.target.getLatLng()); });
+  }
+  measure([latlng.lat, latlng.lng]);
+}
+
+map.on("click", function (e) { setOrigin(e.latlng); });
+</script>
+</body>
+</html>

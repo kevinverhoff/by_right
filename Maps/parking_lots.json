@@ -1,0 +1,249 @@
+[
+  {
+    "name": "Vine Street Lot",
+    "spaces": 28,
+    "accessible_spaces": 3,
+    "restrictions": "2 hours, 8am-6pm Mon-Fri",
+    "hours": "Open 24/7",
+    "location_text": "South Vine Street, just south of Washington Street",
+    "notes": "Accessible spaces: 1 northeast, 2 southwest.",
+    "time_limited": true,
+    "lat": 39.643433,
+    "lon": -86.863832,
+    "polygon": [
+      [
+        39.643322,
+        -86.864007
+      ],
+      [
+        39.643325,
+        -86.863564
+      ],
+      [
+        39.643601,
+        -86.863568
+      ],
+      [
+        39.643597,
+        -86.864011
+      ],
+      [
+        39.643322,
+        -86.864007
+      ]
+    ],
+    "source": "osm:way/580026015",
+    "approximate": false,
+    "area_m2": 1165,
+    "m2_per_space": 41.6
+  },
+  {
+    "name": "Columbia Street Lot",
+    "spaces": 40,
+    "accessible_spaces": 2,
+    "restrictions": "No time limit",
+    "hours": "Open 24/7",
+    "location_text": "North Indiana Street, just north of the square",
+    "notes": "Accessible spaces at the west end.",
+    "time_limited": false,
+    "lat": 39.645292,
+    "lon": -86.864034,
+    "polygon": [
+      [
+        39.645388,
+        -86.864353
+      ],
+      [
+        39.645387,
+        -86.863935
+      ],
+      [
+        39.645445,
+        -86.863932
+      ],
+      [
+        39.645443,
+        -86.863788
+      ],
+      [
+        39.64516,
+        -86.863785
+      ],
+      [
+        39.645159,
+        -86.863934
+      ],
+      [
+        39.645223,
+        -86.863934
+      ],
+      [
+        39.645163,
+        -86.863976
+      ],
+      [
+        39.645158,
+        -86.864347
+      ],
+      [
+        39.645388,
+        -86.864353
+      ]
+    ],
+    "source": "osm:way/1230907845",
+    "approximate": false,
+    "area_m2": 1285,
+    "m2_per_space": 32.1
+  },
+  {
+    "name": "Jackson Street Lot",
+    "spaces": 50,
+    "accessible_spaces": 3,
+    "restrictions": "No time limit",
+    "hours": "Open 24/7",
+    "location_text": "South Jackson Street, just south of Walnut Street",
+    "notes": "Some spaces reserved for Crown Equipment after hours and weekends.",
+    "time_limited": false,
+    "lat": 39.643012,
+    "lon": -86.864959,
+    "polygon": [
+      [
+        39.642916,
+        -86.865299
+      ],
+      [
+        39.643179,
+        -86.865301
+      ],
+      [
+        39.643181,
+        -86.8646
+      ],
+      [
+        39.64296,
+        -86.864598
+      ],
+      [
+        39.642918,
+        -86.864656
+      ],
+      [
+        39.642916,
+        -86.865299
+      ]
+    ],
+    "source": "osm:way/1011067664",
+    "approximate": false,
+    "area_m2": 1747,
+    "m2_per_space": 34.9
+  },
+  {
+    "name": "Market Street Lot",
+    "spaces": 37,
+    "accessible_spaces": 2,
+    "restrictions": "No time limit",
+    "hours": "Open 24/7",
+    "location_text": "Entrances on Washington Street (one block west) and Franklin Street",
+    "notes": "37 lot spaces plus 8 on-street. Accessible spaces at the northeast corner.",
+    "time_limited": false,
+    "lat": 39.644422,
+    "lon": -86.866661,
+    "polygon": [
+      [
+        39.644633,
+        -86.866761
+      ],
+      [
+        39.644633,
+        -86.866511
+      ],
+      [
+        39.644104,
+        -86.866511
+      ],
+      [
+        39.644104,
+        -86.866761
+      ],
+      [
+        39.644633,
+        -86.866761
+      ]
+    ],
+    "source": "osm:way/1095643698",
+    "approximate": false,
+    "area_m2": 1257,
+    "m2_per_space": 34.0
+  },
+  {
+    "name": "North Jackson Street Lot",
+    "spaces": 30,
+    "accessible_spaces": 1,
+    "restrictions": "No time limit",
+    "hours": "Open 24/7",
+    "location_text": "North Jackson Street, just north of the square",
+    "notes": "3 spaces reserved for county judges. Accessible space on the south side.",
+    "time_limited": false,
+    "lat": 39.645122,
+    "lon": -86.865812,
+    "polygon": [
+      [
+        39.645283,
+        -86.865921
+      ],
+      [
+        39.64528,
+        -86.86555
+      ],
+      [
+        39.645027,
+        -86.865551
+      ],
+      [
+        39.645027,
+        -86.865712
+      ],
+      [
+        39.644984,
+        -86.86571
+      ],
+      [
+        39.644986,
+        -86.866015
+      ],
+      [
+        39.645113,
+        -86.866015
+      ],
+      [
+        39.645114,
+        -86.865917
+      ],
+      [
+        39.645283,
+        -86.865921
+      ]
+    ],
+    "source": "osm:way/1230907848",
+    "approximate": false,
+    "area_m2": 1092,
+    "m2_per_space": 36.4
+  },
+  {
+    "name": "City Hall Lot",
+    "spaces": 19,
+    "accessible_spaces": 2,
+    "restrictions": "City Hall visitors; open to all after hours and weekends",
+    "hours": "Open 24/7",
+    "location_text": "North Locust Street, just north of Washington Street",
+    "notes": "Accessible spaces at the northwest corner.",
+    "time_limited": true,
+    "lat": 39.64447,
+    "lon": -86.86063,
+    "polygon": null,
+    "source": "manual",
+    "approximate": true,
+    "area_m2": null,
+    "m2_per_space": null
+  }
+]
