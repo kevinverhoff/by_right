@@ -10,9 +10,15 @@ streets the city uses to describe the lot, then claim the nearest
 ``amenity=parking`` polygon within a match radius. Lots that OSM does not
 map fall back to a hand-placed coordinate recorded in ``LOT_SPECS``.
 
+On-street parking comes from OSM alone -- every ``parking=street_side`` bay
+downtown, with its surveyed ``capacity``. The city publishes no counts for
+it, so a bay tagged without a capacity contributes zero and is reported.
+
 Output is a single self-contained HTML file. Clicking anywhere on the map
-drops a pin and ranks every lot by walking distance, drawing the route to
-the closest one.
+names the nearest lot, draws the walking route to it, and reports how many
+spaces -- lot and on-street, counted separately -- lie within a 1, 2, and
+5 minute walk. Distances come from a pedestrian router; walk time is
+derived from ``WALK_SPEED_MPS``.
 
 Usage:
     python greencastle_parking_map.py
@@ -26,6 +32,7 @@ import math
 import sys
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -35,24 +42,66 @@ import requests
 # Downtown Greencastle, generous enough to include every lot plus context.
 BBOX = (39.6390, -86.8720, 39.6500, -86.8570)  # south, west, north, east
 
+# Ordered by observed freshness. The main instance is the only one that has
+# reliably been current for Putnam County -- the mirrors have been seen
+# serving snapshots months behind, which silently hides recent edits. Hence
+# MAX_DATA_AGE_DAYS below: a stale mirror is worse than a failed request,
+# because it returns a plausible answer that is quietly wrong.
 OVERPASS_MIRRORS = (
-    "https://overpass.kumi.systems/api/interpreter",
     "https://overpass-api.de/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
 )
+MAX_DATA_AGE_DAYS = 7
 USER_AGENT = "greencastle-parking-map/1.0 (https://www.cityofgreencastle.com)"
 
-# The public OSRM demo server advertises a /foot/ profile but ignores it --
-# it returns car routing (measured ~7.6 m/s implied speed). We therefore use
-# the router only for street-following distance and geometry, and derive walk
-# time ourselves from WALK_SPEED_MPS. Point ROUTER_BASE at an OSRM instance
-# actually built with the foot profile and the durations become trustworthy.
-ROUTER_BASE = "https://router.project-osrm.org"
+# FOSSGIS's routed-foot instance is a genuine pedestrian OSRM build: it
+# ignores one-way restrictions and uses footpaths, and its durations imply a
+# real walking speed (~1.25 m/s). Do NOT substitute router.project-osrm.org --
+# that demo server advertises a /foot/ profile but silently ignores it and
+# returns car routing (~7.6 m/s implied), which inflates downtown distances by
+# up to 2.4x because it detours around the one-way courthouse square.
+ROUTER_BASE = "https://routing.openstreetmap.de/routed-foot"
 ROUTER_PROFILE = "foot"
+
+# Walk time is derived from routed distance at this fixed pace rather than
+# taken from the router, so that "a 2-minute walk" stays a defined, tunable
+# quantity that does not shift if the routing service changes its cost model.
 WALK_SPEED_MPS = 1.4  # ~3.1 mph, a normal adult walking pace
+
+# Walk radii reported for every click, in minutes.
+WALK_THRESHOLDS_MIN = (1, 2, 5)
+
+# Reference walks at Walmart Supercenter #902, 1750 Indianapolis Road,
+# measured from OSM geometry: the store (way/669146738), its ~893-space lot
+# (way/419654159, 26,779 m2) and its two main entrance nodes.
+#
+# These are straight-line across the lot. The lot has no mapped aisles -- OSM
+# carries zero highway ways inside it -- so routing there is not possible;
+# asking the pedestrian router returns 75 m for a 79 m straight line, which
+# means it snapped both ends onto a distant road. A shopper crosses a lot
+# roughly directly anyway, so straight line is both the only option and a
+# generous one to Walmart. Downtown distances use the real pedestrian
+# network, so every comparison below understates downtown's advantage.
+WALMART_BENCHMARKS = (
+    ("Mid-lot to the door", 258),
+    ("Worst space to the door", 547),
+    ("Mid-lot to the back of the store", 661),
+)
+FEET_PER_METER = 3.28084
 
 # How far from a street intersection we will still accept a parking polygon.
 MATCH_RADIUS_M = 120.0
+
+# ``parking=*`` values that mean on-street. These are kerbside bays, not the
+# city's off-street lots, and they sit right at the intersections we anchor
+# on -- so without this filter a bay will out-compete the lot it is next to.
+ON_STREET_PARKING = frozenset({"street_side", "lane", "on_street"})
+
+# A surface lot needs roughly 30-40 m2 per space once aisles are counted.
+# Anything far below that is not the lot we are looking for, whatever its
+# tags say -- a backstop against future mis-matches.
+MIN_M2_PER_SPACE = 15.0
 
 MAP_TITLE = "Downtown Greencastle Public Parking"
 
@@ -153,8 +202,9 @@ LOT_SPECS: tuple[LotSpec, ...] = (
         cross_street="East Washington Street",
         side="N",
         notes="Accessible spaces at the northwest corner.",
-        # OpenStreetMap does not map this lot. Placed beside the tagged City
-        # Hall building (OSM way/1355501091, 1 North Locust Street).
+        # OSM now maps this lot (way/1555164097) and the match succeeds, so
+        # this coordinate is unused. Kept only as a safety net for the one
+        # lot that was missing from OSM the longest.
         fallback=(39.64447, -86.86063),
     ),
 )
@@ -223,25 +273,85 @@ def fetch_osm(cache_path: Path, refresh: bool) -> dict:
         return json.loads(cache_path.read_text(encoding="utf-8"))
 
     query = build_overpass_query()
+    stale: list[tuple[float, str, str]] = []  # (age_days, mirror, raw body)
+
     for mirror in OVERPASS_MIRRORS:
         print(f"Querying Overpass: {mirror}")
-        response = requests.post(
-            mirror,
-            data={"data": query},
-            timeout=240,
-            headers={"User-Agent": USER_AGENT},
-        )
-        if response.status_code == 200:
-            cache_path.parent.mkdir(parents=True, exist_ok=True)
-            cache_path.write_text(response.text, encoding="utf-8")
-            return response.json()
-        print(f"  -> HTTP {response.status_code}, trying next mirror")
-        time.sleep(2)
+        body = post_overpass(mirror, query)
+        if body is None:
+            continue
+
+        age = data_age_days(body)
+        if age is None:
+            print("  -> response carried no data timestamp, skipping")
+            continue
+        if age > MAX_DATA_AGE_DAYS:
+            print(f"  -> data is {age:.0f} days old, trying a fresher mirror")
+            stale.append((age, mirror, body))
+            continue
+
+        print(f"  -> data is current ({age * 24:.1f} hours old)")
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(body, encoding="utf-8")
+        return json.loads(body)
+
+    if stale:
+        age, mirror, body = min(stale)
+        print(f"\nWARNING: every mirror is behind. Using {mirror}, whose data is "
+              f"{age:.0f} days old.\n         Edits made to OpenStreetMap since "
+              f"then will NOT appear on this map.\n")
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(body, encoding="utf-8")
+        return json.loads(body)
 
     raise SystemExit(
-        "Every Overpass mirror failed. Retry later, or run without --refresh "
+        "Every Overpass mirror failed. Retry in a few minutes (the main "
+        "instance rate-limits repeated queries), or run without --refresh "
         f"if {cache_path.name} already exists."
     )
+
+
+def post_overpass(mirror: str, query: str) -> str | None:
+    """POST a query, retrying once past a rate-limit. Returns the raw body.
+
+    Overpass answers rate limits and outages with an HTML error page rather
+    than JSON, so the content type is checked before the body is trusted.
+    """
+    for attempt in (1, 2):
+        # A dropped connection or DNS failure must fall through to the next
+        # mirror, not abort the run -- this is a third-party network boundary,
+        # so the exception is caught here rather than left to propagate.
+        try:
+            response = requests.post(
+                mirror, data={"data": query}, timeout=240,
+                headers={"User-Agent": USER_AGENT},
+            )
+        except requests.RequestException as error:
+            print(f"  -> {type(error).__name__}: {error}")
+            return None
+
+        if response.status_code == 429 and attempt == 1:
+            print("  -> rate limited, waiting 10s")
+            time.sleep(10)
+            continue
+        if response.status_code != 200:
+            print(f"  -> HTTP {response.status_code}")
+            return None
+        if "json" not in response.headers.get("content-type", "").lower():
+            print("  -> non-JSON response (likely an error page)")
+            return None
+        return response.text
+    return None
+
+
+def data_age_days(body: str) -> float | None:
+    """How far behind live OSM this Overpass response is, in days."""
+    payload = json.loads(body)
+    stamp = payload.get("osm3s", {}).get("timestamp_osm_base")
+    if not stamp:
+        return None
+    base = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+    return (datetime.now(timezone.utc) - base).total_seconds() / 86400
 
 
 def index_osm(payload: dict) -> tuple[dict[str, list[dict]], list[dict]]:
@@ -280,9 +390,15 @@ def street_intersection(
 def match_parking_polygon(
     spec: LotSpec, anchor: tuple[float, float], parking: list[dict]
 ) -> dict | None:
-    """Nearest parking polygon to ``anchor``, honoring the lot's side hint."""
+    """Nearest plausible off-street polygon to ``anchor``.
+
+    Honors the lot's side hint, ignores on-street bays, and rejects any
+    polygon too small to hold the lot's published space count.
+    """
     candidates = []
     for way in parking:
+        if way.get("tags", {}).get("parking") in ON_STREET_PARKING:
+            continue
         centroid = polygon_centroid(way)
         if spec.side == "N" and centroid[0] < anchor[0]:
             continue
@@ -291,10 +407,15 @@ def match_parking_polygon(
         distance = haversine_m(anchor, centroid)
         if distance <= MATCH_RADIUS_M:
             candidates.append((distance, way))
-    if not candidates:
-        return None
+
     candidates.sort(key=lambda pair: pair[0])
-    return candidates[0][1]
+    for distance, way in candidates:
+        density = polygon_area_m2(way) / spec.spaces
+        if density >= MIN_M2_PER_SPACE:
+            return way
+        print(f"    (rejected osm:way/{way['id']}: {density:.1f} m2 per stated "
+              f"space is too dense for a {spec.spaces}-space lot)")
+    return None
 
 
 def resolve_lots(streets: dict[str, list[dict]], parking: list[dict]) -> list[dict]:
@@ -360,6 +481,64 @@ def resolve_lots(streets: dict[str, list[dict]], parking: list[dict]) -> list[di
     return resolved
 
 
+def nearest_street_name(
+    streets: dict[str, list[dict]], point: tuple[float, float]
+) -> str:
+    """Name of the street whose centerline passes closest to ``point``."""
+    best_name = ""
+    best_distance = float("inf")
+    for name, ways in streets.items():
+        for way in ways:
+            for vertex in way_points(way):
+                distance = haversine_m(point, vertex)
+                if distance < best_distance:
+                    best_distance = distance
+                    best_name = name
+    return best_name
+
+
+def resolve_street_bays(
+    streets: dict[str, list[dict]], parking: list[dict]
+) -> list[dict]:
+    """Collect the on-street parking bays surveyed in OpenStreetMap.
+
+    Unlike the lots -- whose facts come from the city's website and whose
+    only OSM contribution is a footprint -- a bay is described entirely by
+    its OSM tags. A bay with no ``capacity`` counts as zero spaces and is
+    flagged, so an untagged bay never silently inflates or deflates a total.
+    """
+    bays: list[dict] = []
+    for way in parking:
+        tags = way.get("tags", {})
+        if tags.get("parking") not in ON_STREET_PARKING:
+            continue
+
+        centroid = polygon_centroid(way)
+        capacity = tags.get("capacity", "")
+        accessible = tags.get("capacity:disabled", "")
+        bays.append({
+            "source": f"osm:way/{way['id']}",
+            "lat": round(centroid[0], 6),
+            "lon": round(centroid[1], 6),
+            "polygon": [[round(lat, 6), round(lon, 6)] for lat, lon in way_points(way)],
+            "spaces": int(capacity) if capacity.isdigit() else 0,
+            "capacity_known": capacity.isdigit(),
+            "accessible_spaces": int(accessible) if accessible.isdigit() else 0,
+            "orientation": tags.get("orientation", ""),
+            "maxstay": tags.get("maxstay", ""),
+            "street": nearest_street_name(streets, centroid),
+        })
+
+    bays.sort(key=lambda bay: (bay["street"], -bay["spaces"]))
+    untagged = [b["source"] for b in bays if not b["capacity_known"]]
+    print(f"Street bays: {len(bays)} covering "
+          f"{sum(b['spaces'] for b in bays)} spaces")
+    if untagged:
+        print(f"  {len(untagged)} bay(s) have no capacity tag and count as 0: "
+              f"{', '.join(untagged)}")
+    return bays
+
+
 # --- HTML rendering ---------------------------------------------------------
 
 HTML_TEMPLATE = r"""<!doctype html>
@@ -409,6 +588,52 @@ HTML_TEMPLATE = r"""<!doctype html>
     padding: 11px 13px; font-size: 13px; color: #1c3d63;
   }
   .status { font-size: 12px; color: var(--muted); margin: 10px 0 4px; min-height: 16px; }
+  .stat {
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; margin: 12px 0 4px; background: #f8fafc;
+  }
+  .stat .big {
+    font-size: 26px; font-weight: 700; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums; line-height: 1.1;
+  }
+  .stat .cap { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .stat .note { font-size: 11.5px; color: #94a3b8; margin-top: 7px; }
+  .radii { margin: 12px 0 4px; }
+  .radii h2 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin: 0 0 7px; font-weight: 700;
+  }
+  .radius {
+    display: grid; grid-template-columns: 54px 1fr auto; align-items: baseline;
+    gap: 10px; padding: 8px 11px; border: 1px solid var(--line);
+    border-radius: 8px; margin-bottom: 6px;
+  }
+  .radius .when { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .radius .total {
+    font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .radius .split { font-size: 11.5px; color: var(--muted); text-align: right; }
+  .radius.empty .total { color: #9aa5b1; font-weight: 600; font-size: 15px; }
+  .bench { margin: 16px 0 4px; }
+  .bench h2 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin: 0 0 3px; font-weight: 700;
+  }
+  .bench .lede { font-size: 11.5px; color: var(--muted); margin: 0 0 8px; }
+  .bench .row {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px;
+    align-items: baseline; padding: 7px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .bench .row:last-of-type { border-bottom: none; }
+  .bench .what { font-size: 12px; }
+  .bench .ft { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bench .beat {
+    font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums;
+    color: #0f766e;
+  }
+  .bench .beat span { font-size: 11px; font-weight: 600; color: var(--muted); }
   ol.results { list-style: none; margin: 4px 0 0; padding: 0; }
   ol.results li {
     border: 1px solid var(--line); border-radius: 8px;
@@ -418,6 +643,7 @@ HTML_TEMPLATE = r"""<!doctype html>
   }
   ol.results li:hover { border-color: #9db6cf; background: #fafcff; }
   ol.results li.nearest { border-color: #1f6feb; background: #f4f9ff; }
+  ol.results li.out { opacity: .48; }
   .rank {
     width: 24px; height: 24px; border-radius: 50%;
     background: #eef2f6; color: var(--muted);
@@ -478,8 +704,9 @@ HTML_TEMPLATE = r"""<!doctype html>
       is. Drag the pin to move it.</div>
   </div>
   <div class="legend">
-    <div><span class="swatch" style="background:#1f6feb"></span>No time limit</div>
-    <div><span class="swatch" style="background:#b45309"></span>Time-limited</div>
+    <div><span class="swatch" style="background:#1f6feb"></span>Lot, no time limit</div>
+    <div><span class="swatch" style="background:#b45309"></span>Lot, time-limited</div>
+    <div><span class="swatch" style="background:#0f766e"></span>On-street bay</div>
     <div><span class="swatch" style="background:#6b7280"></span>Approximate location</div>
   </div>
   <p class="credit">
@@ -492,6 +719,11 @@ HTML_TEMPLATE = r"""<!doctype html>
 
 <script>
 const LOTS = __LOTS_JSON__;
+const BAYS = __BAYS_JSON__;
+const THRESHOLDS = __THRESHOLDS__;
+const BENCHMARKS = __BENCHMARKS__;
+const FEET_PER_METER = __FEET_PER_METER__;
+const TOTAL_SPACES = __TOTAL_SPACES__;
 const ROUTER = "__ROUTER_BASE__";
 const PROFILE = "__ROUTER_PROFILE__";
 const WALK_SPEED = __WALK_SPEED__;
@@ -503,27 +735,49 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+// Lot text is authored in the build script, but every bay field comes from an
+// OpenStreetMap tag, which anyone can edit. Escape before it reaches innerHTML.
+function esc(value) {
+  const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+  return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
+    return map[c];
+  });
+}
+
 function lotColor(lot) {
   if (lot.approximate) return "#6b7280";
   return lot.time_limited ? "#b45309" : "#1f6feb";
 }
 
-function popupHtml(lot) {
+function lotPopup(lot) {
   const acc = lot.accessible_spaces
     ? " &middot; " + lot.accessible_spaces + " accessible" : "";
   const approx = lot.approximate
     ? '<div style="color:#6b7280;margin-top:6px">Approximate location &mdash; this lot'
       + ' is not mapped in OpenStreetMap.</div>' : "";
   const notes = lot.notes
-    ? '<div style="color:#5b6770;margin-top:6px">' + lot.notes + "</div>" : "";
-  return "<b>" + lot.name + "</b><br>"
-    + '<span style="color:#5b6770">' + lot.location_text + "</span><br><br>"
+    ? '<div style="color:#5b6770;margin-top:6px">' + esc(lot.notes) + "</div>" : "";
+  return "<b>" + esc(lot.name) + "</b><br>"
+    + '<span style="color:#5b6770">' + esc(lot.location_text) + "</span><br><br>"
     + "<b>" + lot.spaces + "</b> spaces" + acc + "<br>"
-    + lot.restrictions + "<br>" + lot.hours + notes + approx;
+    + esc(lot.restrictions) + "<br>" + esc(lot.hours) + notes + approx;
 }
 
-// Draw every lot: its real footprint where OSM has one, a dashed circle where
-// it does not.
+function bayPopup(bay) {
+  const acc = bay.accessible_spaces
+    ? " &middot; " + bay.accessible_spaces + " accessible" : "";
+  const orient = bay.orientation ? esc(bay.orientation) + " parking<br>" : "";
+  const unknown = bay.capacity_known ? ""
+    : '<div style="color:#b45309;margin-top:6px">No capacity recorded in '
+      + "OpenStreetMap &mdash; counted as zero.</div>";
+  return "<b>On-street parking</b><br>"
+    + '<span style="color:#5b6770">' + esc(bay.street) + "</span><br><br>"
+    + "<b>" + bay.spaces + "</b> spaces" + acc + "<br>" + orient
+    + (bay.maxstay ? "Max stay: " + esc(bay.maxstay) : "No time limit recorded")
+    + unknown;
+}
+
+// Lots: real footprint where OSM has one, a dashed circle where it does not.
 LOTS.forEach(function (lot, i) {
   const color = lotColor(lot);
   const style = { color: color, weight: 2, fillColor: color, fillOpacity: 0.28 };
@@ -531,7 +785,7 @@ LOTS.forEach(function (lot, i) {
     ? L.polygon(lot.polygon, style)
     : L.circle([lot.lat, lot.lon],
         Object.assign({}, style, { radius: 26, dashArray: "4 4" }));
-  lot.shape.addTo(map).bindPopup(popupHtml(lot));
+  lot.shape.addTo(map).bindPopup(lotPopup(lot));
 
   lot.marker = L.marker([lot.lat, lot.lon], {
     icon: L.divIcon({
@@ -540,7 +794,14 @@ LOTS.forEach(function (lot, i) {
         + (i + 1) + "</div>",
       iconSize: [22, 22], iconAnchor: [11, 11]
     })
-  }).addTo(map).bindPopup(popupHtml(lot));
+  }).addTo(map).bindPopup(lotPopup(lot));
+});
+
+// On-street bays: drawn thinner so they read as kerbside strips, not lots.
+BAYS.forEach(function (bay) {
+  bay.shape = L.polygon(bay.polygon, {
+    color: "#0f766e", weight: 1.5, fillColor: "#0f766e", fillOpacity: 0.35
+  }).addTo(map).bindPopup(bayPopup(bay));
 });
 
 map.fitBounds(L.featureGroup(LOTS.map(function (l) { return l.shape; }))
@@ -557,15 +818,19 @@ function haversine(a, b) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
+function walkMinutes(meters) { return meters / WALK_SPEED / 60; }
+
+// Round UP, so the time shown and the radius a place falls into can never
+// disagree: ceil(x) <= N is true exactly when x <= N.
+function formatWalk(meters) {
+  const m = Math.ceil(walkMinutes(meters));
+  return m <= 1 ? "1 min walk" : m + " min walk";
+}
+
 function formatDistance(meters) {
   const feet = meters * 3.28084;
   if (feet < 1000) return Math.round(feet / 10) * 10 + " ft";
   return (meters / 1609.344).toFixed(2) + " mi";
-}
-
-function formatWalk(meters) {
-  const minutes = Math.round(meters / WALK_SPEED / 60);
-  return minutes < 1 ? "under a minute" : minutes + " min walk";
 }
 
 const resultsEl = document.getElementById("results");
@@ -575,30 +840,121 @@ let routeLine = null;
 // cannot overwrite the results for a newer one.
 let requestSeq = 0;
 
-function render(rows, statusText) {
-  const items = rows.map(function (row, i) {
+// Every destination we measure. Lots come first so a table response maps back
+// cleanly: indices 0..LOTS.length-1 are lots, everything after is a bay.
+const TARGETS = LOTS.concat(BAYS);
+
+function nearestLotIndex(dists) {
+  let best = -1;
+  for (let i = 0; i < LOTS.length; i++) {
+    if (best < 0 || dists[i] < dists[best]) best = i;
+  }
+  return best;
+}
+
+function radiiHtml(dists) {
+  const rows = THRESHOLDS.map(function (t) {
+    let lotSpaces = 0, baySpaces = 0;
+    TARGETS.forEach(function (place, i) {
+      if (walkMinutes(dists[i]) > t) return;
+      if (i < LOTS.length) lotSpaces += place.spaces;
+      else baySpaces += place.spaces;
+    });
+    const total = lotSpaces + baySpaces;
+    const split = total
+      ? lotSpaces + " lot &middot; " + baySpaces + " street" : "&nbsp;";
+    return '<div class="radius' + (total ? "" : " empty") + '">'
+      + '<span class="when">' + t + " min</span>"
+      + '<span class="total">' + (total ? total + " spaces" : "none") + "</span>"
+      + '<span class="split">' + split + "</span></div>";
+  }).join("");
+  return '<div class="radii"><h2>Spaces within a walk of</h2>' + rows + "</div>";
+}
+
+// How much downtown parking beats a walk you would not think twice about at
+// a big-box store. Walmart figures are straight-line across its lot; these
+// downtown ones follow the pedestrian network, so the gap is understated.
+function benchmarkHtml(dists) {
+  const rows = BENCHMARKS.map(function (b) {
+    const meters = b.feet / FEET_PER_METER;
+    let spaces = 0;
+    TARGETS.forEach(function (place, i) {
+      if (dists[i] <= meters) spaces += place.spaces;
+    });
+    const pct = TOTAL_SPACES ? Math.round(spaces / TOTAL_SPACES * 100) : 0;
+    return '<div class="row"><div><div class="what">' + esc(b.label) + "</div>"
+      + '<div class="ft">' + b.feet + " ft</div></div>"
+      + '<div class="beat">' + spaces
+      + ' <span>spaces &middot; ' + pct + "%</span></div></div>";
+  }).join("");
+  return '<div class="bench"><h2>Beats the walk at Walmart</h2>'
+    + '<p class="lede">Downtown spaces closer than these walks at '
+    + "Walmart Supercenter #902.</p>" + rows + "</div>";
+}
+
+function nearestLotHtml(dists) {
+  const lot = LOTS[nearestLotIndex(dists)];
+  const d = dists[nearestLotIndex(dists)];
+  const acc = lot.accessible_spaces
+    ? " &middot; " + lot.accessible_spaces + " accessible" : "";
+  return '<div class="stat"><div class="cap">Nearest lot</div>'
+    + '<div class="big" style="font-size:19px">' + esc(lot.name) + "</div>"
+    + '<div class="cap">' + formatDistance(d) + " &middot; " + formatWalk(d)
+    + " &middot; " + lot.spaces + " spaces" + acc + "</div></div>";
+}
+
+let lastDists = null;
+let lastRouted = false;
+let lastStatus = "";
+
+function render(dists, statusText, routed) {
+  lastDists = dists;
+  lastStatus = statusText;
+  lastRouted = !!routed;
+  paint();
+}
+
+function paint() {
+  if (!lastDists) return;
+  const dists = lastDists;
+  const widest = THRESHOLDS[THRESHOLDS.length - 1];
+
+  const order = LOTS
+    .map(function (lot, i) { return { lot: lot, meters: dists[i] }; })
+    .sort(function (a, b) { return a.meters - b.meters; });
+
+  const items = order.map(function (row, i) {
     const lot = row.lot;
+    const within = walkMinutes(row.meters) <= widest;
     const acc = lot.accessible_spaces
       ? " &middot; " + lot.accessible_spaces + " accessible" : "";
     let tag;
     if (lot.approximate) {
       tag = '<span class="tag approx">Approximate location</span>';
     } else if (lot.time_limited) {
-      tag = '<span class="tag limited">' + lot.restrictions + "</span>";
+      tag = '<span class="tag limited">' + esc(lot.restrictions) + "</span>";
     } else {
       tag = '<span class="tag open">No time limit</span>';
     }
-    return '<li class="' + (i === 0 ? "nearest" : "") + '" data-idx="'
-      + LOTS.indexOf(lot) + '">'
+    const cls = (i === 0 ? "nearest " : "") + (within ? "" : "out");
+    return '<li class="' + cls.trim() + '" data-idx="' + LOTS.indexOf(lot) + '">'
       + '<span class="rank">' + (i + 1) + "</span><div>"
-      + '<div class="lot-name">' + lot.name + "</div>"
+      + '<div class="lot-name">' + esc(lot.name) + "</div>"
       + '<div class="dist">' + formatDistance(row.meters)
       + ' <span class="walk">&middot; ' + formatWalk(row.meters) + "</span></div>"
       + '<div class="meta">' + lot.spaces + " spaces" + acc + "</div>"
       + tag + "</div></li>";
   }).join("");
 
-  resultsEl.innerHTML = '<div class="status">' + statusText + "</div>"
+  const note = lastRouted
+    ? "Pedestrian routing along streets and footpaths, at 3.1 mph."
+    : "Estimated from straight-line distance &mdash; routing unavailable.";
+  const status = lastStatus
+    ? '<div class="status">' + lastStatus + "</div>" : "";
+
+  resultsEl.innerHTML = nearestLotHtml(dists) + radiiHtml(dists)
+    + benchmarkHtml(dists) + status
+    + '<div class="status">' + note + "</div>"
     + '<ol class="results">' + items + "</ol>";
 
   resultsEl.querySelectorAll("li").forEach(function (li) {
@@ -608,13 +964,17 @@ function render(rows, statusText) {
       lot.marker.openPopup();
     });
   });
-}
 
-function drawRoute(coords) {
-  if (routeLine) map.removeLayer(routeLine);
-  routeLine = L.polyline(coords.map(function (c) { return [c[1], c[0]]; }), {
-    color: "#c2410c", weight: 4, opacity: 0.85, dashArray: "1 7", lineCap: "round"
-  }).addTo(map);
+  // Fade whatever falls outside the widest radius.
+  TARGETS.forEach(function (place, i) {
+    const within = walkMinutes(dists[i]) <= widest;
+    const base = i < LOTS.length ? 0.28 : 0.35;
+    place.shape.setStyle({
+      fillOpacity: within ? base : 0.05,
+      opacity: within ? 1 : 0.25
+    });
+    if (place.marker) place.marker.setOpacity(within ? 1 : 0.4);
+  });
 }
 
 function getJson(url) {
@@ -623,56 +983,54 @@ function getJson(url) {
     .catch(function () { return null; });
 }
 
+function drawRouteTo(origin, lot, seq) {
+  return getJson(ROUTER + "/route/v1/" + PROFILE + "/"
+    + origin[1] + "," + origin[0] + ";" + lot.lon + "," + lot.lat
+    + "?overview=full&geometries=geojson").then(function (route) {
+    if (seq !== requestSeq) return;
+    if (route && route.code === "Ok" && route.routes.length) {
+      if (routeLine) map.removeLayer(routeLine);
+      routeLine = L.polyline(
+        route.routes[0].geometry.coordinates.map(function (c) {
+          return [c[1], c[0]];
+        }),
+        { color: "#c2410c", weight: 4, opacity: 0.85,
+          dashArray: "1 7", lineCap: "round" }
+      ).addTo(map);
+    } else if (routeLine) {
+      map.removeLayer(routeLine);
+      routeLine = null;
+    }
+  });
+}
+
 function measure(origin) {
   const seq = ++requestSeq;
 
-  // Show straight-line distances immediately so the panel is never empty
-  // while the router responds.
-  const straight = LOTS.map(function (lot) {
-    return { lot: lot, meters: haversine(origin, [lot.lat, lot.lon]) };
-  }).sort(function (a, b) { return a.meters - b.meters; });
-  render(straight, "Straight-line distance &mdash; finding walking routes&hellip;");
+  // Straight-line first so the panel is never empty while the router responds.
+  const straight = TARGETS.map(function (p) {
+    return haversine(origin, [p.lat, p.lon]);
+  });
+  render(straight, "Finding walking routes&hellip;", false);
 
-  const coords = [origin[1] + "," + origin[0]].concat(LOTS.map(function (l) {
-    return l.lon + "," + l.lat;
+  const coords = [origin[1] + "," + origin[0]].concat(TARGETS.map(function (p) {
+    return p.lon + "," + p.lat;
   })).join(";");
 
-  const tableUrl = ROUTER + "/table/v1/" + PROFILE + "/" + coords
-    + "?sources=0&annotations=distance";
-
-  getJson(tableUrl).then(function (table) {
+  getJson(ROUTER + "/table/v1/" + PROFILE + "/" + coords
+          + "?sources=0&annotations=distance").then(function (table) {
     if (seq !== requestSeq) return null;  // a newer origin has been set
-    let rows = straight;
-    let status = "Straight-line distance (routing unavailable).";
+    let dists = straight;
+    let routed = false;
 
     if (table && table.code === "Ok" && table.distances && table.distances[0]) {
       const walking = table.distances[0].slice(1);
-      const usable = walking.length === LOTS.length
+      const usable = walking.length === TARGETS.length
         && walking.every(function (d) { return typeof d === "number"; });
-      if (usable) {
-        rows = LOTS.map(function (lot, i) {
-          return { lot: lot, meters: walking[i] };
-        }).sort(function (a, b) { return a.meters - b.meters; });
-        status = "Walking distance along streets and paths.";
-      }
+      if (usable) { dists = walking; routed = true; }
     }
-    render(rows, status);
-
-    // Draw the actual path to the closest lot.
-    const nearest = rows[0].lot;
-    const routeUrl = ROUTER + "/route/v1/" + PROFILE + "/"
-      + origin[1] + "," + origin[0] + ";" + nearest.lon + "," + nearest.lat
-      + "?overview=full&geometries=geojson";
-
-    return getJson(routeUrl).then(function (route) {
-      if (seq !== requestSeq) return;  // a newer origin has been set
-      if (route && route.code === "Ok" && route.routes.length) {
-        drawRoute(route.routes[0].geometry.coordinates);
-      } else if (routeLine) {
-        map.removeLayer(routeLine);
-        routeLine = null;
-      }
-    });
+    render(dists, "", routed);
+    return drawRouteTo(origin, LOTS[nearestLotIndex(dists)], seq);
   });
 }
 
@@ -694,7 +1052,7 @@ map.on("click", function (e) { setOrigin(e.latlng); });
 """
 
 
-def render_html(lots: list[dict], title: str, subtitle: str) -> str:
+def render_html(lots: list[dict], bays: list[dict], title: str, subtitle: str) -> str:
     center = [
         round(sum(lot["lat"] for lot in lots) / len(lots), 6),
         round(sum(lot["lon"] for lot in lots) / len(lots), 6),
@@ -703,6 +1061,15 @@ def render_html(lots: list[dict], title: str, subtitle: str) -> str:
         "__TITLE__": title,
         "__SUBTITLE__": subtitle,
         "__LOTS_JSON__": json.dumps(lots, separators=(",", ":")),
+        "__BAYS_JSON__": json.dumps(bays, separators=(",", ":")),
+        "__THRESHOLDS__": json.dumps(WALK_THRESHOLDS_MIN),
+        "__BENCHMARKS__": json.dumps(
+            [{"label": label, "feet": feet} for label, feet in WALMART_BENCHMARKS]
+        ),
+        "__FEET_PER_METER__": str(FEET_PER_METER),
+        "__TOTAL_SPACES__": str(
+            sum(lot["spaces"] for lot in lots) + sum(bay["spaces"] for bay in bays)
+        ),
         "__ROUTER_BASE__": ROUTER_BASE,
         "__ROUTER_PROFILE__": ROUTER_PROFILE,
         "__WALK_SPEED__": str(WALK_SPEED_MPS),
@@ -737,13 +1104,17 @@ def main() -> int:
     out_dir: Path = args.output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     lots_path = out_dir / "parking_lots.json"
+    bays_path = out_dir / "street_parking.json"
     cache_path = out_dir / "osm_cache.json"
     html_path = out_dir / "greencastle_parking_map.html"
 
-    # Hand edits to parking_lots.json survive re-runs unless --refresh is given.
-    if lots_path.exists() and not args.refresh:
-        print(f"Using existing lot data: {lots_path}  (--refresh to re-derive)")
+    # Hand edits to either data file survive re-runs unless --refresh is given.
+    reuse = lots_path.exists() and bays_path.exists() and not args.refresh
+    if reuse:
+        print(f"Using existing data: {lots_path.name}, {bays_path.name}"
+              "  (--refresh to re-derive)")
         lots = json.loads(lots_path.read_text(encoding="utf-8"))
+        bays = json.loads(bays_path.read_text(encoding="utf-8"))
     else:
         streets, parking = index_osm(fetch_osm(cache_path, args.refresh))
         print(f"OSM: {len(streets)} named streets, {len(parking)} parking polygons")
@@ -752,12 +1123,17 @@ def main() -> int:
         if not lots:
             print("No lots could be located.", file=sys.stderr)
             return 1
+        bays = resolve_street_bays(streets, parking)
         lots_path.write_text(json.dumps(lots, indent=2) + "\n", encoding="utf-8")
-        print(f"Wrote {lots_path}")
+        bays_path.write_text(json.dumps(bays, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote {lots_path}\nWrote {bays_path}")
 
-    subtitle = (f"{len(lots)} public lots &middot; "
-                f"{sum(lot['spaces'] for lot in lots)} spaces")
-    html_path.write_text(render_html(lots, MAP_TITLE, subtitle), encoding="utf-8")
+    lot_spaces = sum(lot["spaces"] for lot in lots)
+    bay_spaces = sum(bay["spaces"] for bay in bays)
+    subtitle = (f"{lot_spaces + bay_spaces} spaces &middot; "
+                f"{len(lots)} lots ({lot_spaces}) &middot; "
+                f"{len(bays)} street bays ({bay_spaces})")
+    html_path.write_text(render_html(lots, bays, MAP_TITLE, subtitle), encoding="utf-8")
     print(f"Wrote {html_path}")
 
     if args.open_map:

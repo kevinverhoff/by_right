@@ -45,6 +45,52 @@
     padding: 11px 13px; font-size: 13px; color: #1c3d63;
   }
   .status { font-size: 12px; color: var(--muted); margin: 10px 0 4px; min-height: 16px; }
+  .stat {
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; margin: 12px 0 4px; background: #f8fafc;
+  }
+  .stat .big {
+    font-size: 26px; font-weight: 700; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums; line-height: 1.1;
+  }
+  .stat .cap { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .stat .note { font-size: 11.5px; color: #94a3b8; margin-top: 7px; }
+  .radii { margin: 12px 0 4px; }
+  .radii h2 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin: 0 0 7px; font-weight: 700;
+  }
+  .radius {
+    display: grid; grid-template-columns: 54px 1fr auto; align-items: baseline;
+    gap: 10px; padding: 8px 11px; border: 1px solid var(--line);
+    border-radius: 8px; margin-bottom: 6px;
+  }
+  .radius .when { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .radius .total {
+    font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .radius .split { font-size: 11.5px; color: var(--muted); text-align: right; }
+  .radius.empty .total { color: #9aa5b1; font-weight: 600; font-size: 15px; }
+  .bench { margin: 16px 0 4px; }
+  .bench h2 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin: 0 0 3px; font-weight: 700;
+  }
+  .bench .lede { font-size: 11.5px; color: var(--muted); margin: 0 0 8px; }
+  .bench .row {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px;
+    align-items: baseline; padding: 7px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .bench .row:last-of-type { border-bottom: none; }
+  .bench .what { font-size: 12px; }
+  .bench .ft { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bench .beat {
+    font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums;
+    color: #0f766e;
+  }
+  .bench .beat span { font-size: 11px; font-weight: 600; color: var(--muted); }
   ol.results { list-style: none; margin: 4px 0 0; padding: 0; }
   ol.results li {
     border: 1px solid var(--line); border-radius: 8px;
@@ -54,6 +100,7 @@
   }
   ol.results li:hover { border-color: #9db6cf; background: #fafcff; }
   ol.results li.nearest { border-color: #1f6feb; background: #f4f9ff; }
+  ol.results li.out { opacity: .48; }
   .rank {
     width: 24px; height: 24px; border-radius: 50%;
     background: #eef2f6; color: var(--muted);
@@ -108,14 +155,15 @@
 <div id="map"></div>
 <aside id="panel">
   <h1>Downtown Greencastle Public Parking</h1>
-  <p class="sub">6 public lots &middot; 204 spaces</p>
+  <p class="sub">663 spaces &middot; 6 lots (204) &middot; 119 street bays (459)</p>
   <div id="results">
     <div class="hint">Click anywhere on the map to see how far each public lot
       is. Drag the pin to move it.</div>
   </div>
   <div class="legend">
-    <div><span class="swatch" style="background:#1f6feb"></span>No time limit</div>
-    <div><span class="swatch" style="background:#b45309"></span>Time-limited</div>
+    <div><span class="swatch" style="background:#1f6feb"></span>Lot, no time limit</div>
+    <div><span class="swatch" style="background:#b45309"></span>Lot, time-limited</div>
+    <div><span class="swatch" style="background:#0f766e"></span>On-street bay</div>
     <div><span class="swatch" style="background:#6b7280"></span>Approximate location</div>
   </div>
   <p class="credit">
@@ -127,11 +175,16 @@
 </aside>
 
 <script>
-const LOTS = [{"name":"Vine Street Lot","spaces":28,"accessible_spaces":3,"restrictions":"2 hours, 8am-6pm Mon-Fri","hours":"Open 24/7","location_text":"South Vine Street, just south of Washington Street","notes":"Accessible spaces: 1 northeast, 2 southwest.","time_limited":true,"lat":39.643433,"lon":-86.863832,"polygon":[[39.643322,-86.864007],[39.643325,-86.863564],[39.643601,-86.863568],[39.643597,-86.864011],[39.643322,-86.864007]],"source":"osm:way/580026015","approximate":false,"area_m2":1165,"m2_per_space":41.6},{"name":"Columbia Street Lot","spaces":40,"accessible_spaces":2,"restrictions":"No time limit","hours":"Open 24/7","location_text":"North Indiana Street, just north of the square","notes":"Accessible spaces at the west end.","time_limited":false,"lat":39.645292,"lon":-86.864034,"polygon":[[39.645388,-86.864353],[39.645387,-86.863935],[39.645445,-86.863932],[39.645443,-86.863788],[39.64516,-86.863785],[39.645159,-86.863934],[39.645223,-86.863934],[39.645163,-86.863976],[39.645158,-86.864347],[39.645388,-86.864353]],"source":"osm:way/1230907845","approximate":false,"area_m2":1285,"m2_per_space":32.1},{"name":"Jackson Street Lot","spaces":50,"accessible_spaces":3,"restrictions":"No time limit","hours":"Open 24/7","location_text":"South Jackson Street, just south of Walnut Street","notes":"Some spaces reserved for Crown Equipment after hours and weekends.","time_limited":false,"lat":39.643012,"lon":-86.864959,"polygon":[[39.642916,-86.865299],[39.643179,-86.865301],[39.643181,-86.8646],[39.64296,-86.864598],[39.642918,-86.864656],[39.642916,-86.865299]],"source":"osm:way/1011067664","approximate":false,"area_m2":1747,"m2_per_space":34.9},{"name":"Market Street Lot","spaces":37,"accessible_spaces":2,"restrictions":"No time limit","hours":"Open 24/7","location_text":"Entrances on Washington Street (one block west) and Franklin Street","notes":"37 lot spaces plus 8 on-street. Accessible spaces at the northeast corner.","time_limited":false,"lat":39.644422,"lon":-86.866661,"polygon":[[39.644633,-86.866761],[39.644633,-86.866511],[39.644104,-86.866511],[39.644104,-86.866761],[39.644633,-86.866761]],"source":"osm:way/1095643698","approximate":false,"area_m2":1257,"m2_per_space":34.0},{"name":"North Jackson Street Lot","spaces":30,"accessible_spaces":1,"restrictions":"No time limit","hours":"Open 24/7","location_text":"North Jackson Street, just north of the square","notes":"3 spaces reserved for county judges. Accessible space on the south side.","time_limited":false,"lat":39.645122,"lon":-86.865812,"polygon":[[39.645283,-86.865921],[39.64528,-86.86555],[39.645027,-86.865551],[39.645027,-86.865712],[39.644984,-86.86571],[39.644986,-86.866015],[39.645113,-86.866015],[39.645114,-86.865917],[39.645283,-86.865921]],"source":"osm:way/1230907848","approximate":false,"area_m2":1092,"m2_per_space":36.4},{"name":"City Hall Lot","spaces":19,"accessible_spaces":2,"restrictions":"City Hall visitors; open to all after hours and weekends","hours":"Open 24/7","location_text":"North Locust Street, just north of Washington Street","notes":"Accessible spaces at the northwest corner.","time_limited":true,"lat":39.64447,"lon":-86.86063,"polygon":null,"source":"manual","approximate":true,"area_m2":null,"m2_per_space":null}];
-const ROUTER = "https://router.project-osrm.org";
+const LOTS = [{"name":"Vine Street Lot","spaces":28,"accessible_spaces":3,"restrictions":"2 hours, 8am-6pm Mon-Fri","hours":"Open 24/7","location_text":"South Vine Street, just south of Washington Street","notes":"Accessible spaces: 1 northeast, 2 southwest.","time_limited":true,"lat":39.643433,"lon":-86.863832,"polygon":[[39.643322,-86.864007],[39.643325,-86.863564],[39.643601,-86.863568],[39.643597,-86.864011],[39.643322,-86.864007]],"source":"osm:way/580026015","approximate":false,"area_m2":1165,"m2_per_space":41.6},{"name":"Columbia Street Lot","spaces":40,"accessible_spaces":2,"restrictions":"No time limit","hours":"Open 24/7","location_text":"North Indiana Street, just north of the square","notes":"Accessible spaces at the west end.","time_limited":false,"lat":39.645292,"lon":-86.864034,"polygon":[[39.645388,-86.864353],[39.645387,-86.863935],[39.645445,-86.863932],[39.645443,-86.863788],[39.64516,-86.863785],[39.645159,-86.863934],[39.645223,-86.863934],[39.645163,-86.863976],[39.645158,-86.864347],[39.645388,-86.864353]],"source":"osm:way/1230907845","approximate":false,"area_m2":1285,"m2_per_space":32.1},{"name":"Jackson Street Lot","spaces":50,"accessible_spaces":3,"restrictions":"No time limit","hours":"Open 24/7","location_text":"South Jackson Street, just south of Walnut Street","notes":"Some spaces reserved for Crown Equipment after hours and weekends.","time_limited":false,"lat":39.643012,"lon":-86.864959,"polygon":[[39.642916,-86.865299],[39.643179,-86.865301],[39.643181,-86.8646],[39.64296,-86.864598],[39.642918,-86.864656],[39.642916,-86.865299]],"source":"osm:way/1011067664","approximate":false,"area_m2":1747,"m2_per_space":34.9},{"name":"Market Street Lot","spaces":37,"accessible_spaces":2,"restrictions":"No time limit","hours":"Open 24/7","location_text":"Entrances on Washington Street (one block west) and Franklin Street","notes":"37 lot spaces plus 8 on-street. Accessible spaces at the northeast corner.","time_limited":false,"lat":39.644422,"lon":-86.866661,"polygon":[[39.644633,-86.866761],[39.644633,-86.866511],[39.644104,-86.866511],[39.644104,-86.866761],[39.644633,-86.866761]],"source":"osm:way/1095643698","approximate":false,"area_m2":1257,"m2_per_space":34.0},{"name":"North Jackson Street Lot","spaces":30,"accessible_spaces":1,"restrictions":"No time limit","hours":"Open 24/7","location_text":"North Jackson Street, just north of the square","notes":"3 spaces reserved for county judges. Accessible space on the south side.","time_limited":false,"lat":39.645122,"lon":-86.865812,"polygon":[[39.645283,-86.865921],[39.64528,-86.86555],[39.645027,-86.865551],[39.645027,-86.865712],[39.644984,-86.86571],[39.644986,-86.866015],[39.645113,-86.866015],[39.645114,-86.865917],[39.645283,-86.865921]],"source":"osm:way/1230907848","approximate":false,"area_m2":1092,"m2_per_space":36.4},{"name":"City Hall Lot","spaces":19,"accessible_spaces":2,"restrictions":"City Hall visitors; open to all after hours and weekends","hours":"Open 24/7","location_text":"North Locust Street, just north of Washington Street","notes":"Accessible spaces at the northwest corner.","time_limited":true,"lat":39.644212,"lon":-86.860367,"polygon":[[39.644272,-86.860508],[39.644274,-86.860158],[39.644121,-86.860156],[39.644119,-86.860506],[39.644272,-86.860508]],"source":"osm:way/1555164097","approximate":false,"area_m2":509,"m2_per_space":26.8}];
+const BAYS = [{"source":"osm:way/1554882858","lat":39.645458,"lon":-86.865664,"polygon":[[39.645469,-86.865569],[39.645467,-86.865806],[39.645443,-86.865806],[39.645445,-86.865568],[39.645469,-86.865569]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"Columbia Street"},{"source":"osm:way/1555164098","lat":39.64553,"lon":-86.8661,"polygon":[[39.64554,-86.86617],[39.645518,-86.86617],[39.645515,-86.865994],[39.645538,-86.865994],[39.64554,-86.86617]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"Columbia Street"},{"source":"osm:way/1555164099","lat":39.645455,"lon":-86.866201,"polygon":[[39.645464,-86.86623],[39.645464,-86.866156],[39.645443,-86.866159],[39.64544,-86.86623],[39.645464,-86.86623]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"Columbia Street"},{"source":"osm:way/1555164161","lat":39.645475,"lon":-86.863263,"polygon":[[39.645483,-86.863389],[39.645461,-86.863389],[39.645461,-86.863074],[39.645483,-86.863074],[39.645483,-86.863389]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Columbia Street"},{"source":"osm:way/1555164162","lat":39.645485,"lon":-86.864183,"polygon":[[39.645502,-86.864342],[39.645465,-86.86434],[39.645461,-86.863946],[39.645493,-86.863946],[39.645502,-86.864342]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Columbia Street"},{"source":"osm:way/1554879754","lat":39.644803,"lon":-86.863861,"polygon":[[39.644791,-86.863581],[39.644826,-86.863578],[39.644818,-86.864278],[39.64479,-86.864286],[39.644791,-86.863581]],"spaces":10,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Franklin Street"},{"source":"osm:way/1555164155","lat":39.64481,"lon":-86.863087,"polygon":[[39.644816,-86.862889],[39.6448,-86.862891],[39.644798,-86.863379],[39.64482,-86.863386],[39.644816,-86.862889]],"spaces":6,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Franklin Street"},{"source":"osm:way/1554879753","lat":39.64473,"lon":-86.864118,"polygon":[[39.644746,-86.863977],[39.644706,-86.863978],[39.644705,-86.864327],[39.644748,-86.864334],[39.644746,-86.863977]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Franklin Street"},{"source":"osm:way/1554879755","lat":39.64473,"lon":-86.863725,"polygon":[[39.64474,-86.863617],[39.644713,-86.86361],[39.644712,-86.863887],[39.644745,-86.863895],[39.64474,-86.863617]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Franklin Street"},{"source":"osm:way/1555164150","lat":39.644554,"lon":-86.860716,"polygon":[[39.644666,-86.860729],[39.644666,-86.860698],[39.644385,-86.860695],[39.644385,-86.860726],[39.644666,-86.860729]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Franklin Street"},{"source":"osm:way/1555164125","lat":39.642525,"lon":-86.864202,"polygon":[[39.642534,-86.864323],[39.642531,-86.864021],[39.642511,-86.864022],[39.642513,-86.864323],[39.642534,-86.864323]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Poplar Street"},{"source":"osm:way/1555164128","lat":39.642519,"lon":-86.863151,"polygon":[[39.642526,-86.863013],[39.642504,-86.863014],[39.642507,-86.863359],[39.642529,-86.863358],[39.642526,-86.863013]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Poplar Street"},{"source":"osm:way/1555164175","lat":39.642519,"lon":-86.86191,"polygon":[[39.642504,-86.861754],[39.642543,-86.861755],[39.642543,-86.862139],[39.642499,-86.862145],[39.642504,-86.861754]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Poplar Street"},{"source":"osm:way/1555164126","lat":39.642521,"lon":-86.863796,"polygon":[[39.642529,-86.863911],[39.642526,-86.863623],[39.642508,-86.863624],[39.642511,-86.863912],[39.642529,-86.863911]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Poplar Street"},{"source":"osm:way/1555164127","lat":39.642523,"lon":-86.862825,"polygon":[[39.642532,-86.8629],[39.642506,-86.862901],[39.642504,-86.862679],[39.642532,-86.862679],[39.642534,-86.862893],[39.642532,-86.8629]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Poplar Street"},{"source":"osm:way/1555164176","lat":39.642526,"lon":-86.862301,"polygon":[[39.642543,-86.862214],[39.6425,-86.862214],[39.642502,-86.862435],[39.642542,-86.862429],[39.642543,-86.862214]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Poplar Street"},{"source":"osm:way/1555164171","lat":39.64186,"lon":-86.862296,"polygon":[[39.641872,-86.862458],[39.641842,-86.862456],[39.641843,-86.862053],[39.641872,-86.862055],[39.641872,-86.862458]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Seminary Street"},{"source":"osm:way/1555164172","lat":39.641861,"lon":-86.861884,"polygon":[[39.641872,-86.861982],[39.641846,-86.861982],[39.641842,-86.861736],[39.641871,-86.861736],[39.641872,-86.861982]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Seminary Street"},{"source":"osm:way/1555164174","lat":39.641861,"lon":-86.861027,"polygon":[[39.641871,-86.861058],[39.641842,-86.861057],[39.641845,-86.86098],[39.641874,-86.860982],[39.641871,-86.861058]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Seminary Street"},{"source":"osm:way/1555164137","lat":39.643298,"lon":-86.862178,"polygon":[[39.643307,-86.862472],[39.643282,-86.862472],[39.643285,-86.861737],[39.64331,-86.861738],[39.643307,-86.862472]],"spaces":9,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1554879762","lat":39.643296,"lon":-86.86382,"polygon":[[39.643306,-86.863969],[39.643277,-86.863968],[39.64328,-86.863597],[39.643309,-86.863598],[39.643306,-86.863969]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1555164134","lat":39.643299,"lon":-86.862818,"polygon":[[39.643307,-86.862674],[39.643288,-86.862674],[39.643285,-86.863034],[39.643305,-86.863034],[39.643307,-86.862674]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1555164142","lat":39.643293,"lon":-86.861185,"polygon":[[39.643303,-86.861296],[39.643274,-86.861296],[39.643278,-86.861019],[39.643306,-86.86102],[39.643303,-86.861296]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1555164145","lat":39.643408,"lon":-86.860633,"polygon":[[39.643543,-86.860613],[39.643543,-86.860662],[39.643207,-86.860661],[39.643207,-86.860612],[39.643543,-86.860613]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1554879763","lat":39.64329,"lon":-86.864168,"polygon":[[39.643279,-86.864086],[39.64331,-86.864086],[39.643308,-86.864291],[39.643277,-86.86429],[39.643279,-86.864086]],"spaces":2,"capacity_known":true,"accessible_spaces":1,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1555164141","lat":39.643294,"lon":-86.861466,"polygon":[[39.643305,-86.86152],[39.643277,-86.86152],[39.643278,-86.861386],[39.643306,-86.861386],[39.643305,-86.86152]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1555164146","lat":39.643056,"lon":-86.860635,"polygon":[[39.643139,-86.860654],[39.64314,-86.860611],[39.64293,-86.860606],[39.64293,-86.860648],[39.643139,-86.860654]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1555164133","lat":39.643296,"lon":-86.863176,"polygon":[[39.643305,-86.863219],[39.643282,-86.863218],[39.643283,-86.863111],[39.643306,-86.863112],[39.643305,-86.863219]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1555164143","lat":39.643294,"lon":-86.860861,"polygon":[[39.643303,-86.860823],[39.643302,-86.860918],[39.643281,-86.86092],[39.643283,-86.860819],[39.643303,-86.860823]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Walnut Street"},{"source":"osm:way/1554874990","lat":39.643964,"lon":-86.86405,"polygon":[[39.643977,-86.864352],[39.643975,-86.863597],[39.643944,-86.863597],[39.643946,-86.864352],[39.643977,-86.864352]],"spaces":9,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Washington Street"},{"source":"osm:way/1555164153","lat":39.644041,"lon":-86.862021,"polygon":[[39.64405,-86.861731],[39.644024,-86.861731],[39.644027,-86.862455],[39.644053,-86.862455],[39.64405,-86.861731]],"spaces":7,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Washington Street"},{"source":"osm:way/1554874991","lat":39.644052,"lon":-86.86383,"polygon":[[39.644065,-86.863631],[39.644033,-86.863631],[39.644032,-86.864129],[39.644063,-86.864129],[39.644065,-86.863631]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"East Washington Street"},{"source":"osm:way/1555164154","lat":39.644045,"lon":-86.863007,"polygon":[[39.644056,-86.862749],[39.644022,-86.862751],[39.644029,-86.863393],[39.644063,-86.863393],[39.644056,-86.862749]],"spaces":6,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North College Street"},{"source":"osm:way/1554879750","lat":39.644457,"lon":-86.864419,"polygon":[[39.644675,-86.864394],[39.644647,-86.864461],[39.644132,-86.864456],[39.644159,-86.864392],[39.644675,-86.864394]],"spaces":16,"capacity_known":true,"accessible_spaces":0,"orientation":"diagonal","maxstay":"","street":"North Indiana Street"},{"source":"osm:way/1554879749","lat":39.644353,"lon":-86.864594,"polygon":[[39.644172,-86.864618],[39.644195,-86.864554],[39.644619,-86.864556],[39.644606,-86.864626],[39.644172,-86.864618]],"spaces":11,"capacity_known":true,"accessible_spaces":0,"orientation":"diagonal","maxstay":"","street":"North Indiana Street"},{"source":"osm:way/1554879756","lat":39.645016,"lon":-86.86451,"polygon":[[39.645118,-86.864495],[39.645118,-86.86453],[39.644862,-86.864532],[39.644862,-86.864498],[39.645118,-86.864495]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Indiana Street"},{"source":"osm:way/1554879757","lat":39.645005,"lon":-86.864395,"polygon":[[39.645096,-86.864381],[39.645096,-86.864421],[39.644869,-86.864417],[39.644869,-86.864377],[39.645096,-86.864381]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Indiana Street"},{"source":"osm:way/1554879748","lat":39.644335,"lon":-86.86549,"polygon":[[39.644166,-86.86547],[39.644166,-86.865528],[39.644589,-86.865519],[39.644588,-86.865461],[39.644166,-86.86547]],"spaces":8,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Jackson Street"},{"source":"osm:way/1554879747","lat":39.644522,"lon":-86.865302,"polygon":[[39.644595,-86.865272],[39.644439,-86.86527],[39.644408,-86.865346],[39.644572,-86.865349],[39.644595,-86.865272]],"spaces":6,"capacity_known":true,"accessible_spaces":0,"orientation":"diagonal","maxstay":"","street":"North Jackson Street"},{"source":"osm:way/1554879746","lat":39.644319,"lon":-86.865302,"polygon":[[39.644366,-86.865324],[39.644366,-86.865268],[39.644248,-86.865268],[39.644247,-86.865324],[39.644366,-86.865324]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Jackson Street"},{"source":"osm:way/1555164151","lat":39.644213,"lon":-86.860719,"polygon":[[39.644296,-86.860735],[39.644296,-86.8607],[39.644088,-86.860697],[39.644088,-86.860731],[39.644296,-86.860735]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Locust Street"},{"source":"osm:way/1555164108","lat":39.644277,"lon":-86.867303,"polygon":[[39.644348,-86.867288],[39.644346,-86.867335],[39.644172,-86.867325],[39.644173,-86.867277],[39.644348,-86.867288]],"spaces":2,"capacity_known":true,"accessible_spaces":2,"orientation":"parallel","maxstay":"","street":"North Madison Street"},{"source":"osm:way/1555164100","lat":39.645188,"lon":-86.866351,"polygon":[[39.645408,-86.866346],[39.645407,-86.866368],[39.644857,-86.866358],[39.644857,-86.866336],[39.645408,-86.866346]],"spaces":11,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Market Street"},{"source":"osm:way/1554882853","lat":39.644432,"lon":-86.866459,"polygon":[[39.644624,-86.866474],[39.644624,-86.866429],[39.644143,-86.866435],[39.644143,-86.866481],[39.644624,-86.866474]],"spaces":8,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Market Street"},{"source":"osm:way/1555164101","lat":39.645298,"lon":-86.866426,"polygon":[[39.6454,-86.866433],[39.6454,-86.866412],[39.645146,-86.866415],[39.645147,-86.866437],[39.6454,-86.866433]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Market Street"},{"source":"osm:way/1555164102","lat":39.644961,"lon":-86.866429,"polygon":[[39.645023,-86.866437],[39.645023,-86.866416],[39.644869,-86.866416],[39.644865,-86.866438],[39.645023,-86.866437]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Market Street"},{"source":"osm:way/1555164152","lat":39.644046,"lon":-86.86123,"polygon":[[39.644058,-86.861077],[39.644029,-86.861077],[39.644027,-86.861462],[39.644059,-86.861458],[39.644058,-86.861077]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Spring Street"},{"source":"osm:way/1555164156","lat":39.644729,"lon":-86.863156,"polygon":[[39.644741,-86.863382],[39.644714,-86.863384],[39.64471,-86.862812],[39.644741,-86.862824],[39.644741,-86.863382]],"spaces":7,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Vine Street"},{"source":"osm:way/1555164158","lat":39.644199,"lon":-86.863532,"polygon":[[39.644272,-86.863543],[39.64427,-86.863517],[39.644092,-86.863515],[39.644092,-86.863545],[39.644272,-86.863543]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Vine Street"},{"source":"osm:way/1555164159","lat":39.644986,"lon":-86.863532,"polygon":[[39.645076,-86.863543],[39.645075,-86.86351],[39.644852,-86.863514],[39.644852,-86.863547],[39.645076,-86.863543]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Vine Street"},{"source":"osm:way/1555164160","lat":39.645316,"lon":-86.863532,"polygon":[[39.645402,-86.863542],[39.645401,-86.863509],[39.645186,-86.863517],[39.645187,-86.863549],[39.645402,-86.863542]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Vine Street"},{"source":"osm:way/1555164157","lat":39.64457,"lon":-86.863449,"polygon":[[39.644656,-86.86344],[39.644656,-86.863463],[39.644442,-86.863461],[39.644437,-86.86344],[39.644656,-86.86344]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"North Vine Street"},{"source":"osm:way/1555164136","lat":39.643449,"lon":-86.862594,"polygon":[[39.643533,-86.862603],[39.643532,-86.862579],[39.643323,-86.862581],[39.643323,-86.862606],[39.643533,-86.862603]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South College Avenue"},{"source":"osm:way/1555164135","lat":39.643796,"lon":-86.862599,"polygon":[[39.643833,-86.862609],[39.643832,-86.862581],[39.64374,-86.862583],[39.643741,-86.862612],[39.643833,-86.862609]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South College Avenue"},{"source":"osm:way/1555164169","lat":39.640953,"lon":-86.864395,"polygon":[[39.641156,-86.864373],[39.641156,-86.86443],[39.640649,-86.864427],[39.640649,-86.86437],[39.641156,-86.864373]],"spaces":7,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1555164163","lat":39.642332,"lon":-86.864526,"polygon":[[39.642422,-86.864508],[39.642421,-86.864558],[39.642198,-86.864551],[39.642199,-86.864501],[39.642422,-86.864508]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1554879758","lat":39.643501,"lon":-86.864508,"polygon":[[39.643571,-86.864491],[39.643569,-86.864542],[39.643396,-86.864535],[39.643397,-86.864484],[39.643571,-86.864491]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1555164164","lat":39.642339,"lon":-86.864398,"polygon":[[39.642412,-86.864378],[39.642412,-86.864428],[39.642229,-86.864428],[39.642229,-86.864378],[39.642412,-86.864378]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1555164168","lat":39.641595,"lon":-86.864389,"polygon":[[39.641697,-86.864367],[39.641697,-86.864422],[39.641441,-86.864421],[39.641442,-86.864366],[39.641697,-86.864367]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1555164170","lat":39.640434,"lon":-86.864388,"polygon":[[39.640533,-86.86437],[39.640532,-86.864426],[39.640285,-86.864415],[39.640287,-86.864358],[39.640533,-86.86437]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1554882840","lat":39.643078,"lon":-86.864406,"polygon":[[39.643125,-86.86439],[39.643125,-86.864429],[39.643007,-86.86443],[39.643007,-86.864391],[39.643125,-86.86439]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1554882841","lat":39.643074,"lon":-86.864502,"polygon":[[39.643123,-86.86449],[39.643123,-86.86452],[39.643002,-86.86452],[39.643002,-86.86449],[39.643123,-86.86449]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1555164165","lat":39.641982,"lon":-86.864515,"polygon":[[39.642032,-86.864522],[39.64203,-86.864494],[39.641909,-86.864499],[39.641908,-86.864537],[39.642032,-86.864522]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1554879759","lat":39.643494,"lon":-86.864406,"polygon":[[39.643567,-86.864389],[39.643566,-86.864434],[39.643385,-86.864433],[39.643385,-86.864387],[39.643567,-86.864389]],"spaces":0,"capacity_known":false,"accessible_spaces":3,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1555164166","lat":39.64201,"lon":-86.864403,"polygon":[[39.642088,-86.864384],[39.642089,-86.864427],[39.64189,-86.864426],[39.641891,-86.864394],[39.642088,-86.864384]],"spaces":0,"capacity_known":false,"accessible_spaces":3,"orientation":"parallel","maxstay":"","street":"South Indiana Street"},{"source":"osm:way/1554882846","lat":39.643787,"lon":-86.865398,"polygon":[[39.643874,-86.865383],[39.643873,-86.865427],[39.643656,-86.86542],[39.643656,-86.865376],[39.643874,-86.865383]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Jackson Street"},{"source":"osm:way/1554882844","lat":39.643506,"lon":-86.865482,"polygon":[[39.643457,-86.865464],[39.643457,-86.865509],[39.643579,-86.86551],[39.643579,-86.865465],[39.643457,-86.865464]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Jackson Street"},{"source":"osm:way/1554882843","lat":39.643548,"lon":-86.865375,"polygon":[[39.643571,-86.865363],[39.643571,-86.865394],[39.643514,-86.865392],[39.643515,-86.865361],[39.643571,-86.865363]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Jackson Street"},{"source":"osm:way/1554882845","lat":39.643848,"lon":-86.865506,"polygon":[[39.643876,-86.86549],[39.643876,-86.86553],[39.643806,-86.865529],[39.643806,-86.86549],[39.643876,-86.86549]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Jackson Street"},{"source":"osm:way/1555164149","lat":39.642147,"lon":-86.860616,"polygon":[[39.642314,-86.860604],[39.642313,-86.860645],[39.641897,-86.860635],[39.641898,-86.860593],[39.642314,-86.860604]],"spaces":6,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Locust Street"},{"source":"osm:way/1555164147","lat":39.642756,"lon":-86.860627,"polygon":[[39.642872,-86.860616],[39.642872,-86.860647],[39.642581,-86.860642],[39.642582,-86.860612],[39.642872,-86.860616]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Locust Street"},{"source":"osm:way/1555164144","lat":39.643684,"lon":-86.860627,"polygon":[[39.643729,-86.860611],[39.643727,-86.860656],[39.643618,-86.860646],[39.643619,-86.860611],[39.643729,-86.860611]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Locust Street"},{"source":"osm:way/1555164148","lat":39.642463,"lon":-86.860626,"polygon":[[39.642517,-86.860613],[39.642519,-86.86065],[39.642378,-86.860646],[39.642381,-86.860609],[39.642517,-86.860613]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Locust Street"},{"source":"osm:way/1555164109","lat":39.643684,"lon":-86.867396,"polygon":[[39.643917,-86.867384],[39.643915,-86.867422],[39.643337,-86.867416],[39.643336,-86.867374],[39.643917,-86.867384]],"spaces":9,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Madison Street"},{"source":"osm:way/1555164110","lat":39.643809,"lon":-86.867311,"polygon":[[39.643906,-86.867304],[39.643906,-86.867327],[39.643661,-86.867321],[39.643666,-86.867298],[39.643906,-86.867304]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"","maxstay":"","street":"South Madison Street"},{"source":"osm:way/1555164111","lat":39.64348,"lon":-86.867311,"polygon":[[39.643573,-86.867303],[39.643573,-86.867328],[39.643339,-86.867322],[39.64334,-86.867297],[39.643573,-86.867303]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Madison Street"},{"source":"osm:way/1555164113","lat":39.643057,"lon":-86.867284,"polygon":[[39.643163,-86.867275],[39.643162,-86.86731],[39.642897,-86.867298],[39.642898,-86.867264],[39.643163,-86.867275]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Madison Street"},{"source":"osm:way/1555164116","lat":39.642705,"lon":-86.867388,"polygon":[[39.642786,-86.867398],[39.642786,-86.867376],[39.642585,-86.867372],[39.642585,-86.867394],[39.642786,-86.867398]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Madison Street"},{"source":"osm:way/1555164112","lat":39.64311,"lon":-86.867384,"polygon":[[39.643166,-86.867396],[39.643167,-86.867367],[39.643026,-86.867367],[39.643026,-86.867395],[39.643166,-86.867396]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Madison Street"},{"source":"osm:way/1555164114","lat":39.642878,"lon":-86.867387,"polygon":[[39.642912,-86.867398],[39.642912,-86.867371],[39.642827,-86.867372],[39.642827,-86.867398],[39.642912,-86.867398]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Madison Street"},{"source":"osm:way/1554882851","lat":39.643799,"lon":-86.866448,"polygon":[[39.643903,-86.866467],[39.643903,-86.866421],[39.643643,-86.866419],[39.643643,-86.866466],[39.643903,-86.866467]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Market Street"},{"source":"osm:way/1554882852","lat":39.643487,"lon":-86.866449,"polygon":[[39.643595,-86.866469],[39.643597,-86.866416],[39.643325,-86.866418],[39.643323,-86.866473],[39.643595,-86.866469]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Market Street"},{"source":"osm:way/1555164120","lat":39.642562,"lon":-86.866678,"polygon":[[39.642568,-86.866802],[39.642554,-86.866802],[39.642554,-86.866493],[39.642568,-86.866493],[39.642568,-86.866802]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Market Street"},{"source":"osm:way/1555164138","lat":39.64345,"lon":-86.861587,"polygon":[[39.643518,-86.861577],[39.643518,-86.861606],[39.643346,-86.861602],[39.643347,-86.861572],[39.643518,-86.861577]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Spring Street"},{"source":"osm:way/1555164139","lat":39.643807,"lon":-86.861586,"polygon":[[39.643893,-86.861576],[39.643892,-86.861604],[39.643679,-86.861601],[39.64368,-86.861573],[39.643893,-86.861576]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Spring Street"},{"source":"osm:way/1555164140","lat":39.643798,"lon":-86.861669,"polygon":[[39.643897,-86.861664],[39.643896,-86.861689],[39.64365,-86.861677],[39.643651,-86.861652],[39.643897,-86.861664]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Spring Street"},{"source":"osm:way/1555164173","lat":39.641862,"lon":-86.861394,"polygon":[[39.641872,-86.861518],[39.641846,-86.861517],[39.641847,-86.861209],[39.641873,-86.861209],[39.641872,-86.861518]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Spring Street"},{"source":"osm:way/1555164131","lat":39.642779,"lon":-86.863449,"polygon":[[39.642879,-86.863436],[39.642878,-86.863472],[39.642629,-86.86347],[39.642629,-86.863433],[39.642879,-86.863436]],"spaces":4,"capacity_known":true,"accessible_spaces":1,"orientation":"parallel","maxstay":"","street":"South Vine Street"},{"source":"osm:way/1555164129","lat":39.642329,"lon":-86.863453,"polygon":[[39.642412,-86.863441],[39.642412,-86.863473],[39.642205,-86.86347],[39.642205,-86.863438],[39.642412,-86.863441]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Vine Street"},{"source":"osm:way/1555164130","lat":39.642061,"lon":-86.863446,"polygon":[[39.64214,-86.863431],[39.64214,-86.86347],[39.641944,-86.86347],[39.641944,-86.863431],[39.64214,-86.863431]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Vine Street"},{"source":"osm:way/1554879761","lat":39.643572,"lon":-86.863453,"polygon":[[39.643613,-86.863431],[39.643612,-86.863485],[39.643511,-86.863481],[39.64351,-86.863434],[39.643613,-86.863431]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Vine Street"},{"source":"osm:way/1555164132","lat":39.643025,"lon":-86.863452,"polygon":[[39.643098,-86.863441],[39.643097,-86.863473],[39.642916,-86.863468],[39.642917,-86.863435],[39.643098,-86.863441]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Vine Street"},{"source":"osm:way/1554879760","lat":39.643772,"lon":-86.863442,"polygon":[[39.643797,-86.863428],[39.643796,-86.863466],[39.643733,-86.863463],[39.643734,-86.863425],[39.643797,-86.863428]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"South Vine Street"},{"source":"osm:way/1554879752","lat":39.644784,"lon":-86.864882,"polygon":[[39.644767,-86.864616],[39.64482,-86.864654],[39.644813,-86.865273],[39.644754,-86.865252],[39.644767,-86.864616]],"spaces":15,"capacity_known":true,"accessible_spaces":0,"orientation":"diagonal","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1554879751","lat":39.644668,"lon":-86.8649,"polygon":[[39.644688,-86.864678],[39.644638,-86.86466],[39.644633,-86.865222],[39.644691,-86.865261],[39.644688,-86.864678]],"spaces":13,"capacity_known":true,"accessible_spaces":0,"orientation":"diagonal","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1555164105","lat":39.644809,"lon":-86.866944,"polygon":[[39.644818,-86.86676],[39.644799,-86.866762],[39.644791,-86.867217],[39.644818,-86.867222],[39.644818,-86.86676]],"spaces":6,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1555164106","lat":39.644708,"lon":-86.867103,"polygon":[[39.644703,-86.867026],[39.644719,-86.867026],[39.644716,-86.867218],[39.644699,-86.867218],[39.644703,-86.867026]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1554882856","lat":39.644809,"lon":-86.865688,"polygon":[[39.644818,-86.865751],[39.644792,-86.865751],[39.644795,-86.865592],[39.644822,-86.865593],[39.644818,-86.865751]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1554882857","lat":39.644722,"lon":-86.865684,"polygon":[[39.644735,-86.865752],[39.644702,-86.865752],[39.644704,-86.865581],[39.644734,-86.865583],[39.644735,-86.865752]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1555164104","lat":39.644713,"lon":-86.866792,"polygon":[[39.644708,-86.866736],[39.644727,-86.866737],[39.64472,-86.866877],[39.644701,-86.866875],[39.644708,-86.866736]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1554882854","lat":39.644802,"lon":-86.866128,"polygon":[[39.644814,-86.866159],[39.644815,-86.866082],[39.644784,-86.866082],[39.644783,-86.866158],[39.644814,-86.866159]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1554882855","lat":39.64472,"lon":-86.866106,"polygon":[[39.644733,-86.866135],[39.644731,-86.866061],[39.644701,-86.866063],[39.644703,-86.866136],[39.644733,-86.866135]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1555164107","lat":39.644605,"lon":-86.867305,"polygon":[[39.64463,-86.867294],[39.64463,-86.867321],[39.644568,-86.867321],[39.644568,-86.867294],[39.64463,-86.867294]],"spaces":1,"capacity_known":true,"accessible_spaces":1,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1555164103","lat":39.644812,"lon":-86.866572,"polygon":[[39.644821,-86.866521],[39.644822,-86.866648],[39.644799,-86.866648],[39.644798,-86.866521],[39.644821,-86.866521]],"spaces":0,"capacity_known":false,"accessible_spaces":2,"orientation":"parallel","maxstay":"","street":"West Franklin Street"},{"source":"osm:way/1555164121","lat":39.64251,"lon":-86.866151,"polygon":[[39.642517,-86.866301],[39.642502,-86.866301],[39.642499,-86.865926],[39.642515,-86.865926],[39.642517,-86.866301]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1555164119","lat":39.642508,"lon":-86.866679,"polygon":[[39.642516,-86.866805],[39.642496,-86.866804],[39.642495,-86.86649],[39.642517,-86.86649],[39.642516,-86.866805]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1555164123","lat":39.642511,"lon":-86.865139,"polygon":[[39.642503,-86.865024],[39.642524,-86.865024],[39.642523,-86.865311],[39.642503,-86.865311],[39.642503,-86.865024]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1555164124","lat":39.642515,"lon":-86.864803,"polygon":[[39.642525,-86.864911],[39.642501,-86.864911],[39.6425,-86.864641],[39.642524,-86.864641],[39.642525,-86.864911]],"spaces":4,"capacity_known":true,"accessible_spaces":1,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1555164115","lat":39.642696,"lon":-86.867312,"polygon":[[39.642618,-86.867302],[39.642618,-86.867327],[39.642814,-86.867326],[39.642814,-86.867302],[39.642618,-86.867302]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1555164118","lat":39.642564,"lon":-86.867124,"polygon":[[39.64257,-86.867222],[39.642552,-86.867222],[39.642555,-86.866978],[39.642573,-86.866978],[39.64257,-86.867222]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1555164122","lat":39.642577,"lon":-86.864795,"polygon":[[39.642587,-86.864892],[39.642563,-86.864893],[39.642563,-86.864648],[39.642585,-86.864649],[39.642587,-86.864892]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1555164117","lat":39.642505,"lon":-86.867209,"polygon":[[39.642499,-86.867178],[39.642512,-86.867178],[39.642514,-86.867254],[39.642501,-86.867254],[39.642499,-86.867178]],"spaces":1,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Poplar Street"},{"source":"osm:way/1554882842","lat":39.643232,"lon":-86.864869,"polygon":[[39.643245,-86.864582],[39.643243,-86.865299],[39.643212,-86.865301],[39.643215,-86.864583],[39.643245,-86.864582]],"spaces":8,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Walnut Street"},{"source":"osm:way/1554874988","lat":39.643987,"lon":-86.864828,"polygon":[[39.644001,-86.864681],[39.643966,-86.864641],[39.643962,-86.865047],[39.644005,-86.86509],[39.644001,-86.864681]],"spaces":8,"capacity_known":true,"accessible_spaces":0,"orientation":"diagonal","maxstay":"","street":"West Washington Street"},{"source":"osm:way/1554874989","lat":39.644118,"lon":-86.864948,"polygon":[[39.644127,-86.86512],[39.644102,-86.86512],[39.644105,-86.864689],[39.64413,-86.864689],[39.644127,-86.86512]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"","maxstay":"","street":"West Washington Street"},{"source":"osm:way/1554882848","lat":39.643964,"lon":-86.865722,"polygon":[[39.643977,-86.865574],[39.643977,-86.865942],[39.643946,-86.865942],[39.643945,-86.865574],[39.643977,-86.865574]],"spaces":5,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Washington Street"},{"source":"osm:way/1554882847","lat":39.644046,"lon":-86.865786,"polygon":[[39.64406,-86.865922],[39.644025,-86.865922],[39.644026,-86.86558],[39.644062,-86.865581],[39.64406,-86.865922]],"spaces":4,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Washington Street"},{"source":"osm:way/1554882850","lat":39.644046,"lon":-86.866121,"polygon":[[39.644059,-86.866035],[39.644025,-86.866035],[39.644026,-86.866251],[39.64406,-86.866251],[39.644059,-86.866035]],"spaces":3,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Washington Street"},{"source":"osm:way/1554882849","lat":39.643964,"lon":-86.866121,"polygon":[[39.643977,-86.866038],[39.643975,-86.866247],[39.643944,-86.866246],[39.643946,-86.866037],[39.643977,-86.866038]],"spaces":2,"capacity_known":true,"accessible_spaces":0,"orientation":"parallel","maxstay":"","street":"West Washington Street"}];
+const THRESHOLDS = [1, 2, 5];
+const BENCHMARKS = [{"label": "Mid-lot to the door", "feet": 258}, {"label": "Worst space to the door", "feet": 547}, {"label": "Mid-lot to the back of the store", "feet": 661}];
+const FEET_PER_METER = 3.28084;
+const TOTAL_SPACES = 663;
+const ROUTER = "https://routing.openstreetmap.de/routed-foot";
 const PROFILE = "foot";
 const WALK_SPEED = 1.4;
-const CENTER = [39.644292, -86.864321];
+const CENTER = [39.644249, -86.864278];
 
 const map = L.map("map").setView(CENTER, 16);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -139,27 +192,49 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+// Lot text is authored in the build script, but every bay field comes from an
+// OpenStreetMap tag, which anyone can edit. Escape before it reaches innerHTML.
+function esc(value) {
+  const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+  return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
+    return map[c];
+  });
+}
+
 function lotColor(lot) {
   if (lot.approximate) return "#6b7280";
   return lot.time_limited ? "#b45309" : "#1f6feb";
 }
 
-function popupHtml(lot) {
+function lotPopup(lot) {
   const acc = lot.accessible_spaces
     ? " &middot; " + lot.accessible_spaces + " accessible" : "";
   const approx = lot.approximate
     ? '<div style="color:#6b7280;margin-top:6px">Approximate location &mdash; this lot'
       + ' is not mapped in OpenStreetMap.</div>' : "";
   const notes = lot.notes
-    ? '<div style="color:#5b6770;margin-top:6px">' + lot.notes + "</div>" : "";
-  return "<b>" + lot.name + "</b><br>"
-    + '<span style="color:#5b6770">' + lot.location_text + "</span><br><br>"
+    ? '<div style="color:#5b6770;margin-top:6px">' + esc(lot.notes) + "</div>" : "";
+  return "<b>" + esc(lot.name) + "</b><br>"
+    + '<span style="color:#5b6770">' + esc(lot.location_text) + "</span><br><br>"
     + "<b>" + lot.spaces + "</b> spaces" + acc + "<br>"
-    + lot.restrictions + "<br>" + lot.hours + notes + approx;
+    + esc(lot.restrictions) + "<br>" + esc(lot.hours) + notes + approx;
 }
 
-// Draw every lot: its real footprint where OSM has one, a dashed circle where
-// it does not.
+function bayPopup(bay) {
+  const acc = bay.accessible_spaces
+    ? " &middot; " + bay.accessible_spaces + " accessible" : "";
+  const orient = bay.orientation ? esc(bay.orientation) + " parking<br>" : "";
+  const unknown = bay.capacity_known ? ""
+    : '<div style="color:#b45309;margin-top:6px">No capacity recorded in '
+      + "OpenStreetMap &mdash; counted as zero.</div>";
+  return "<b>On-street parking</b><br>"
+    + '<span style="color:#5b6770">' + esc(bay.street) + "</span><br><br>"
+    + "<b>" + bay.spaces + "</b> spaces" + acc + "<br>" + orient
+    + (bay.maxstay ? "Max stay: " + esc(bay.maxstay) : "No time limit recorded")
+    + unknown;
+}
+
+// Lots: real footprint where OSM has one, a dashed circle where it does not.
 LOTS.forEach(function (lot, i) {
   const color = lotColor(lot);
   const style = { color: color, weight: 2, fillColor: color, fillOpacity: 0.28 };
@@ -167,7 +242,7 @@ LOTS.forEach(function (lot, i) {
     ? L.polygon(lot.polygon, style)
     : L.circle([lot.lat, lot.lon],
         Object.assign({}, style, { radius: 26, dashArray: "4 4" }));
-  lot.shape.addTo(map).bindPopup(popupHtml(lot));
+  lot.shape.addTo(map).bindPopup(lotPopup(lot));
 
   lot.marker = L.marker([lot.lat, lot.lon], {
     icon: L.divIcon({
@@ -176,7 +251,14 @@ LOTS.forEach(function (lot, i) {
         + (i + 1) + "</div>",
       iconSize: [22, 22], iconAnchor: [11, 11]
     })
-  }).addTo(map).bindPopup(popupHtml(lot));
+  }).addTo(map).bindPopup(lotPopup(lot));
+});
+
+// On-street bays: drawn thinner so they read as kerbside strips, not lots.
+BAYS.forEach(function (bay) {
+  bay.shape = L.polygon(bay.polygon, {
+    color: "#0f766e", weight: 1.5, fillColor: "#0f766e", fillOpacity: 0.35
+  }).addTo(map).bindPopup(bayPopup(bay));
 });
 
 map.fitBounds(L.featureGroup(LOTS.map(function (l) { return l.shape; }))
@@ -193,15 +275,19 @@ function haversine(a, b) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
+function walkMinutes(meters) { return meters / WALK_SPEED / 60; }
+
+// Round UP, so the time shown and the radius a place falls into can never
+// disagree: ceil(x) <= N is true exactly when x <= N.
+function formatWalk(meters) {
+  const m = Math.ceil(walkMinutes(meters));
+  return m <= 1 ? "1 min walk" : m + " min walk";
+}
+
 function formatDistance(meters) {
   const feet = meters * 3.28084;
   if (feet < 1000) return Math.round(feet / 10) * 10 + " ft";
   return (meters / 1609.344).toFixed(2) + " mi";
-}
-
-function formatWalk(meters) {
-  const minutes = Math.round(meters / WALK_SPEED / 60);
-  return minutes < 1 ? "under a minute" : minutes + " min walk";
 }
 
 const resultsEl = document.getElementById("results");
@@ -211,30 +297,121 @@ let routeLine = null;
 // cannot overwrite the results for a newer one.
 let requestSeq = 0;
 
-function render(rows, statusText) {
-  const items = rows.map(function (row, i) {
+// Every destination we measure. Lots come first so a table response maps back
+// cleanly: indices 0..LOTS.length-1 are lots, everything after is a bay.
+const TARGETS = LOTS.concat(BAYS);
+
+function nearestLotIndex(dists) {
+  let best = -1;
+  for (let i = 0; i < LOTS.length; i++) {
+    if (best < 0 || dists[i] < dists[best]) best = i;
+  }
+  return best;
+}
+
+function radiiHtml(dists) {
+  const rows = THRESHOLDS.map(function (t) {
+    let lotSpaces = 0, baySpaces = 0;
+    TARGETS.forEach(function (place, i) {
+      if (walkMinutes(dists[i]) > t) return;
+      if (i < LOTS.length) lotSpaces += place.spaces;
+      else baySpaces += place.spaces;
+    });
+    const total = lotSpaces + baySpaces;
+    const split = total
+      ? lotSpaces + " lot &middot; " + baySpaces + " street" : "&nbsp;";
+    return '<div class="radius' + (total ? "" : " empty") + '">'
+      + '<span class="when">' + t + " min</span>"
+      + '<span class="total">' + (total ? total + " spaces" : "none") + "</span>"
+      + '<span class="split">' + split + "</span></div>";
+  }).join("");
+  return '<div class="radii"><h2>Spaces within a walk of</h2>' + rows + "</div>";
+}
+
+// How much downtown parking beats a walk you would not think twice about at
+// a big-box store. Walmart figures are straight-line across its lot; these
+// downtown ones follow the pedestrian network, so the gap is understated.
+function benchmarkHtml(dists) {
+  const rows = BENCHMARKS.map(function (b) {
+    const meters = b.feet / FEET_PER_METER;
+    let spaces = 0;
+    TARGETS.forEach(function (place, i) {
+      if (dists[i] <= meters) spaces += place.spaces;
+    });
+    const pct = TOTAL_SPACES ? Math.round(spaces / TOTAL_SPACES * 100) : 0;
+    return '<div class="row"><div><div class="what">' + esc(b.label) + "</div>"
+      + '<div class="ft">' + b.feet + " ft</div></div>"
+      + '<div class="beat">' + spaces
+      + ' <span>spaces &middot; ' + pct + "%</span></div></div>";
+  }).join("");
+  return '<div class="bench"><h2>Beats the walk at Walmart</h2>'
+    + '<p class="lede">Downtown spaces closer than these walks at '
+    + "Walmart Supercenter #902.</p>" + rows + "</div>";
+}
+
+function nearestLotHtml(dists) {
+  const lot = LOTS[nearestLotIndex(dists)];
+  const d = dists[nearestLotIndex(dists)];
+  const acc = lot.accessible_spaces
+    ? " &middot; " + lot.accessible_spaces + " accessible" : "";
+  return '<div class="stat"><div class="cap">Nearest lot</div>'
+    + '<div class="big" style="font-size:19px">' + esc(lot.name) + "</div>"
+    + '<div class="cap">' + formatDistance(d) + " &middot; " + formatWalk(d)
+    + " &middot; " + lot.spaces + " spaces" + acc + "</div></div>";
+}
+
+let lastDists = null;
+let lastRouted = false;
+let lastStatus = "";
+
+function render(dists, statusText, routed) {
+  lastDists = dists;
+  lastStatus = statusText;
+  lastRouted = !!routed;
+  paint();
+}
+
+function paint() {
+  if (!lastDists) return;
+  const dists = lastDists;
+  const widest = THRESHOLDS[THRESHOLDS.length - 1];
+
+  const order = LOTS
+    .map(function (lot, i) { return { lot: lot, meters: dists[i] }; })
+    .sort(function (a, b) { return a.meters - b.meters; });
+
+  const items = order.map(function (row, i) {
     const lot = row.lot;
+    const within = walkMinutes(row.meters) <= widest;
     const acc = lot.accessible_spaces
       ? " &middot; " + lot.accessible_spaces + " accessible" : "";
     let tag;
     if (lot.approximate) {
       tag = '<span class="tag approx">Approximate location</span>';
     } else if (lot.time_limited) {
-      tag = '<span class="tag limited">' + lot.restrictions + "</span>";
+      tag = '<span class="tag limited">' + esc(lot.restrictions) + "</span>";
     } else {
       tag = '<span class="tag open">No time limit</span>';
     }
-    return '<li class="' + (i === 0 ? "nearest" : "") + '" data-idx="'
-      + LOTS.indexOf(lot) + '">'
+    const cls = (i === 0 ? "nearest " : "") + (within ? "" : "out");
+    return '<li class="' + cls.trim() + '" data-idx="' + LOTS.indexOf(lot) + '">'
       + '<span class="rank">' + (i + 1) + "</span><div>"
-      + '<div class="lot-name">' + lot.name + "</div>"
+      + '<div class="lot-name">' + esc(lot.name) + "</div>"
       + '<div class="dist">' + formatDistance(row.meters)
       + ' <span class="walk">&middot; ' + formatWalk(row.meters) + "</span></div>"
       + '<div class="meta">' + lot.spaces + " spaces" + acc + "</div>"
       + tag + "</div></li>";
   }).join("");
 
-  resultsEl.innerHTML = '<div class="status">' + statusText + "</div>"
+  const note = lastRouted
+    ? "Pedestrian routing along streets and footpaths, at 3.1 mph."
+    : "Estimated from straight-line distance &mdash; routing unavailable.";
+  const status = lastStatus
+    ? '<div class="status">' + lastStatus + "</div>" : "";
+
+  resultsEl.innerHTML = nearestLotHtml(dists) + radiiHtml(dists)
+    + benchmarkHtml(dists) + status
+    + '<div class="status">' + note + "</div>"
     + '<ol class="results">' + items + "</ol>";
 
   resultsEl.querySelectorAll("li").forEach(function (li) {
@@ -244,13 +421,17 @@ function render(rows, statusText) {
       lot.marker.openPopup();
     });
   });
-}
 
-function drawRoute(coords) {
-  if (routeLine) map.removeLayer(routeLine);
-  routeLine = L.polyline(coords.map(function (c) { return [c[1], c[0]]; }), {
-    color: "#c2410c", weight: 4, opacity: 0.85, dashArray: "1 7", lineCap: "round"
-  }).addTo(map);
+  // Fade whatever falls outside the widest radius.
+  TARGETS.forEach(function (place, i) {
+    const within = walkMinutes(dists[i]) <= widest;
+    const base = i < LOTS.length ? 0.28 : 0.35;
+    place.shape.setStyle({
+      fillOpacity: within ? base : 0.05,
+      opacity: within ? 1 : 0.25
+    });
+    if (place.marker) place.marker.setOpacity(within ? 1 : 0.4);
+  });
 }
 
 function getJson(url) {
@@ -259,56 +440,54 @@ function getJson(url) {
     .catch(function () { return null; });
 }
 
+function drawRouteTo(origin, lot, seq) {
+  return getJson(ROUTER + "/route/v1/" + PROFILE + "/"
+    + origin[1] + "," + origin[0] + ";" + lot.lon + "," + lot.lat
+    + "?overview=full&geometries=geojson").then(function (route) {
+    if (seq !== requestSeq) return;
+    if (route && route.code === "Ok" && route.routes.length) {
+      if (routeLine) map.removeLayer(routeLine);
+      routeLine = L.polyline(
+        route.routes[0].geometry.coordinates.map(function (c) {
+          return [c[1], c[0]];
+        }),
+        { color: "#c2410c", weight: 4, opacity: 0.85,
+          dashArray: "1 7", lineCap: "round" }
+      ).addTo(map);
+    } else if (routeLine) {
+      map.removeLayer(routeLine);
+      routeLine = null;
+    }
+  });
+}
+
 function measure(origin) {
   const seq = ++requestSeq;
 
-  // Show straight-line distances immediately so the panel is never empty
-  // while the router responds.
-  const straight = LOTS.map(function (lot) {
-    return { lot: lot, meters: haversine(origin, [lot.lat, lot.lon]) };
-  }).sort(function (a, b) { return a.meters - b.meters; });
-  render(straight, "Straight-line distance &mdash; finding walking routes&hellip;");
+  // Straight-line first so the panel is never empty while the router responds.
+  const straight = TARGETS.map(function (p) {
+    return haversine(origin, [p.lat, p.lon]);
+  });
+  render(straight, "Finding walking routes&hellip;", false);
 
-  const coords = [origin[1] + "," + origin[0]].concat(LOTS.map(function (l) {
-    return l.lon + "," + l.lat;
+  const coords = [origin[1] + "," + origin[0]].concat(TARGETS.map(function (p) {
+    return p.lon + "," + p.lat;
   })).join(";");
 
-  const tableUrl = ROUTER + "/table/v1/" + PROFILE + "/" + coords
-    + "?sources=0&annotations=distance";
-
-  getJson(tableUrl).then(function (table) {
+  getJson(ROUTER + "/table/v1/" + PROFILE + "/" + coords
+          + "?sources=0&annotations=distance").then(function (table) {
     if (seq !== requestSeq) return null;  // a newer origin has been set
-    let rows = straight;
-    let status = "Straight-line distance (routing unavailable).";
+    let dists = straight;
+    let routed = false;
 
     if (table && table.code === "Ok" && table.distances && table.distances[0]) {
       const walking = table.distances[0].slice(1);
-      const usable = walking.length === LOTS.length
+      const usable = walking.length === TARGETS.length
         && walking.every(function (d) { return typeof d === "number"; });
-      if (usable) {
-        rows = LOTS.map(function (lot, i) {
-          return { lot: lot, meters: walking[i] };
-        }).sort(function (a, b) { return a.meters - b.meters; });
-        status = "Walking distance along streets and paths.";
-      }
+      if (usable) { dists = walking; routed = true; }
     }
-    render(rows, status);
-
-    // Draw the actual path to the closest lot.
-    const nearest = rows[0].lot;
-    const routeUrl = ROUTER + "/route/v1/" + PROFILE + "/"
-      + origin[1] + "," + origin[0] + ";" + nearest.lon + "," + nearest.lat
-      + "?overview=full&geometries=geojson";
-
-    return getJson(routeUrl).then(function (route) {
-      if (seq !== requestSeq) return;  // a newer origin has been set
-      if (route && route.code === "Ok" && route.routes.length) {
-        drawRoute(route.routes[0].geometry.coordinates);
-      } else if (routeLine) {
-        map.removeLayer(routeLine);
-        routeLine = null;
-      }
-    });
+    render(dists, "", routed);
+    return drawRouteTo(origin, LOTS[nearestLotIndex(dists)], seq);
   });
 }
 

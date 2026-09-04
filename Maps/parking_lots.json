@@ -238,12 +238,33 @@
     "location_text": "North Locust Street, just north of Washington Street",
     "notes": "Accessible spaces at the northwest corner.",
     "time_limited": true,
-    "lat": 39.64447,
-    "lon": -86.86063,
-    "polygon": null,
-    "source": "manual",
-    "approximate": true,
-    "area_m2": null,
-    "m2_per_space": null
+    "lat": 39.644212,
+    "lon": -86.860367,
+    "polygon": [
+      [
+        39.644272,
+        -86.860508
+      ],
+      [
+        39.644274,
+        -86.860158
+      ],
+      [
+        39.644121,
+        -86.860156
+      ],
+      [
+        39.644119,
+        -86.860506
+      ],
+      [
+        39.644272,
+        -86.860508
+      ]
+    ],
+    "source": "osm:way/1555164097",
+    "approximate": false,
+    "area_m2": 509,
+    "m2_per_space": 26.8
   }
 ]
