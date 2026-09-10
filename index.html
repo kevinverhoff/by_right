@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>By Right — Civic tools for Greencastle, Indiana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ede7d9;
+    --paper-line: #d9cfb4;
+    --ink: #23291f;
+    --ink-soft: #4d5443;
+    --green: #33482f;
+    --rust: #a6431f;
+    --card-bg: #f6f2e6;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Title block, styled like a survey drawing's corner block */
+  .titleblock {
+    position: relative;
+    border: 1.5px solid var(--ink);
+    background: var(--card-bg);
+    padding: 28px 28px 22px;
+    margin-bottom: 56px;
+  }
+
+  .titleblock::before,
+  .titleblock::after,
+  .titleblock .corner-tl,
+  .titleblock .corner-br {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+  }
+  .titleblock::before { top: -1.5px; left: -1.5px; border-top: 2px solid var(--rust); border-left: 2px solid var(--rust); }
+  .titleblock::after { bottom: -1.5px; right: -1.5px; border-bottom: 2px solid var(--rust); border-right: 2px solid var(--rust); }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Serif', serif;
+    font-weight: 600;
+    font-size: 42px;
+    line-height: 1.05;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .tagline {
+    font-size: 17px;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 46ch;
+    line-height: 1.5;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--paper-line);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .meta-row span b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  section h2 {
+    font-family: 'IBM Plex Serif', serif;
+    font-weight: 500;
+    font-size: 15px;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  section h2::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid var(--paper-line);
+  }
+
+  .index-num {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--rust);
+    font-size: 14px;
+  }
+
+  .index {
+    margin-top: 24px;
+    border-top: 1px solid var(--ink);
+  }
+
+  .entry {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 22px 4px;
+    border-bottom: 1px solid var(--paper-line);
+    transition: background-color 0.15s ease;
+  }
+
+  .entry:hover {
+    background-color: rgba(166, 67, 31, 0.06);
+  }
+
+  .entry-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .entry-name {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .entry-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 2px 7px;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  .entry-desc {
+    margin: 8px 0 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 58ch;
+  }
+
+  .entry-go {
+    margin-top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--rust);
+  }
+
+  .index-empty {
+    padding: 22px 4px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 18px;
+    border-top: 1px solid var(--paper-line);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 520px) {
+    h1 { font-size: 32px; }
+    .meta-row { flex-wrap: wrap; gap: 10px 24px; }
+    .entry-top { flex-direction: column; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="titleblock">
+      <p class="eyebrow">GREENCASTLE, INDIANA — CIVIC RECORD</p>
+      <h1>By Right</h1>
+      <p class="tagline">Maps and tools for reading how this town is actually built and governed.</p>
+      <div class="meta-row">
+        <span><b>Maintained by</b> Kevin Verhoff</span>
+        <span><b>Scope</b> Putnam County</span>
+      </div>
+    </div>
+
+    <section>
+      <h2><span class="index-num">01</span> Index</h2>
+      <div class="index">
+        <a class="entry" href="greencastle_parking_map.html">
+          <div class="entry-top">
+            <span class="entry-name">Downtown Parking Map</span>
+            <span class="entry-tag">MAP</span>
+          </div>
+          <p class="entry-desc">Surveyed lot and on-street parking in downtown Greencastle, built from OpenStreetMap data.</p>
+          <p class="entry-go">Open map →</p>
+        </a>
+
+        <div class="index-empty">More entries filed as they're surveyed.</div>
+      </div>
+    </section>
+
+    <footer>
+      <span>byright.kevinverhoff.com</span>
+      <span>Filed 2026</span>
+    </footer>
+
+  </div>
+</body>
+</html>
