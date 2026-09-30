@@ -1,0 +1,12 @@
+# Dependencies for putnam_schools/app.py — the FRL vs. proficiency explorer.
+#
+# Streamlit Community Cloud looks for a dependency file next to the entrypoint
+# first and falls back to the repo root, so this file serves putnam_schools/
+# while jobs-housing/ and Maps/ keep using their own.
+
+streamlit>=1.64      # version the app was built and tested against
+pandas>=2.2
+numpy>=1.26
+scipy>=1.11          # linregress and the t-distribution for the fit band
+plotly>=5.18
+openpyxl>=3.1        # pandas reads the .xlsx workbook through it

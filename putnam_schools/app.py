@@ -201,7 +201,9 @@ drop_virtual = sb.checkbox(
 )
 
 sb.divider()
-app_theme = st.context.theme.type or "light"
+# st.context.theme is recent; fall back to light rather than crash without it.
+app_theme = getattr(getattr(st, "context", None), "theme", None)
+app_theme = getattr(app_theme, "type", None) or "light"
 mode = "dark" if sb.toggle(
     "Dark mode", value=app_theme == "dark",
     help="Follows your Streamlit theme by default.",

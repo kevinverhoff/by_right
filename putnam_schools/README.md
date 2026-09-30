@@ -30,6 +30,27 @@ python3 -m venv .venv
 .venv/bin/pip install pandas openpyxl numpy scipy plotly streamlit
 ```
 
+## Deploying to Streamlit Community Cloud
+
+Dependencies live in [`../requirements.txt`](../requirements.txt) at the repo
+root. Cloud checks the entrypoint's own directory first and falls back to the
+root, so that file covers this app while `jobs-housing/` and `Maps/` keep using
+their own.
+
+Deploy settings:
+
+| Field | Value |
+|---|---|
+| Repository | `kevinverhoff/by_right` |
+| Branch | `main` |
+| Main file path | `putnam_schools/app.py` |
+| Python version | 3.12 or 3.13 |
+
+Both data files (`Indiana-2026-School-Data-Combined.xlsx` and
+`corp_county.csv`) are committed, and the app resolves them relative to its own
+module rather than the working directory, so nothing extra is needed at
+deploy time. There are no secrets or network calls at runtime.
+
 ## Controls
 
 | Control | What it does |
