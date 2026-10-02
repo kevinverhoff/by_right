@@ -1,0 +1,23 @@
+# Both themes are declared here so Streamlit's chrome and the chart tokens in
+# theme.py stay in step. The app reads st.context.theme.type and picks the
+# matching chart token set, so switching the theme (⋮ → Settings → Appearance)
+# restyles the page and the charts together.
+[theme]
+base = "light"
+font = "sans serif"
+primaryColor = "#2a78d6"
+
+[theme.light]
+primaryColor = "#2a78d6"
+backgroundColor = "#f9f9f7"          # page plane
+secondaryBackgroundColor = "#fcfcfb"  # chart/card surface
+textColor = "#0b0b0b"
+
+[theme.dark]
+primaryColor = "#3987e5"
+backgroundColor = "#0d0d0d"
+secondaryBackgroundColor = "#1a1a19"
+textColor = "#ffffff"
+
+[browser]
+gatherUsageStats = false
