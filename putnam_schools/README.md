@@ -7,7 +7,7 @@ of the state. Opens on Putnam County.
 ## Run it
 
 ```bash
-cd ~/Desktop/github/by_right/putnam_schools
+cd ~/github/by_right/putnam_schools
 source .venv/bin/activate
 streamlit run app.py
 ```
@@ -18,14 +18,14 @@ It opens at http://localhost:8501. `Ctrl+C` in the terminal stops it,
 One-liner, no activation needed:
 
 ```bash
-~/Desktop/github/by_right/putnam_schools/.venv/bin/streamlit run \
-  ~/Desktop/github/by_right/putnam_schools/app.py
+~/github/by_right/putnam_schools/.venv/bin/streamlit run \
+  ~/github/by_right/putnam_schools/app.py
 ```
 
 ### Rebuilding the venv from scratch
 
 ```bash
-cd ~/Desktop/github/by_right/putnam_schools
+cd ~/github/by_right/putnam_schools
 python3 -m venv .venv
 .venv/bin/pip install pandas openpyxl numpy scipy plotly streamlit
 ```
