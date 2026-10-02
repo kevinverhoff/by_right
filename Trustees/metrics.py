@@ -4,11 +4,15 @@ Raw dollars mostly track population, so a $2M township looks alarming until you
 notice it has 40,000 residents. The per-resident and share-of-spending metrics
 are what actually separate townships of different sizes.
 """
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
-CSV = "indiana_townships_2025.csv"
-GEOJSON = "data/indiana_townships.geojson"
+# Anchored to this file, not the working directory: Streamlit Community Cloud
+# runs from the repo root while the app lives in this subdirectory.
+CSV = Path(__file__).with_name("indiana_townships_2025.csv")
+GEOJSON = Path(__file__).with_name("data") / "indiana_townships.geojson"
 
 
 class M:

@@ -12,6 +12,23 @@ python3 -m venv .venv
 .venv/bin/streamlit run app.py
 ```
 
+## Deploying
+
+Entrypoint `Trustees/app.py`. Streamlit Community Cloud runs from the **repo
+root**, not from this directory, so:
+
+- Data paths are anchored with `Path(__file__).with_name(...)` in `metrics.py`,
+  never resolved against the working directory. A bare `"indiana_townships_2025.csv"`
+  works locally and fails on deploy.
+- `.streamlit/config.toml` lives here, not at the repo root. Streamlit resolves a
+  script-level config last so it overrides the project and global ones, which means
+  this app's theme applies on Cloud without disturbing the sibling apps in this repo.
+- `requirements.txt` lives here too; Cloud prefers the file next to the entrypoint
+  over the repo root one.
+
+`scripts/sweep_controls.py` runs from the repo root for this reason — a path
+resolved against the working directory fails there rather than on deploy.
+
 ## What's in it
 
 | Tab | What it shows |

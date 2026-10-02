@@ -1,7 +1,10 @@
 """Run the app headlessly and sweep every selector value, looking for exceptions."""
 import os, sys
 APP = str(__import__('pathlib').Path(__file__).resolve().parent.parent)
-sys.path.insert(0, APP); os.chdir(APP)
+sys.path.insert(0, APP)
+# Run from the repo root, the way Streamlit Community Cloud does, so that a
+# path resolved against the working directory fails here instead of on deploy.
+os.chdir(str(__import__('pathlib').Path(APP).parent))
 from streamlit.testing.v1 import AppTest
 import metrics as mx
 

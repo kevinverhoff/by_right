@@ -1,3 +1,10 @@
-streamlit>=1.64
-plotly>=7.0
-pandas>=2.0
+# Dependencies for Trustees/app.py — the Indiana township trustee explorer.
+#
+# Streamlit Community Cloud picks the dependency file next to the entrypoint
+# over the one at the repo root, so this file serves Trustees/ alone.
+# Floors are the versions the app was built and tested against.
+
+streamlit>=1.64      # st.context.theme, width="stretch"
+pandas>=2.2          # tested on 3.0.6, which Cloud resolves
+numpy>=1.26          # imported directly in app.py for the trend fit
+plotly>=6.0          # marker_cornerradius on go.Bar
