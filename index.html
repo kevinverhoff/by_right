@@ -187,6 +187,66 @@
     color: var(--rust);
   }
 
+  /* A nested group: a labelled bracket holding related entries. */
+  .group {
+    border-bottom: 1px solid var(--paper-line);
+  }
+
+  .group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 4px 6px;
+  }
+
+  .group-name::before {
+    content: "";
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    margin-right: 9px;
+    vertical-align: 0;
+    border-left: 2px solid rgba(166, 67, 31, 0.55);
+    border-top: 2px solid rgba(166, 67, 31, 0.55);
+  }
+
+  .group-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .group-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    white-space: nowrap;
+  }
+
+  .group-items {
+    margin: 0 0 4px 3px;
+    padding-left: 19px;
+    /* Rust rather than --paper-line: the page's own grid is drawn in
+       --paper-line, so a rule in that color vanishes against it. */
+    border-left: 2px solid rgba(166, 67, 31, 0.28);
+  }
+
+  .group-items .entry {
+    padding-left: 0;
+  }
+
+  .group-items .entry:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 520px) {
+    .group-items { padding-left: 13px; }
+  }
+
   .index-empty {
     padding: 22px 4px;
     font-size: 14px;
@@ -248,32 +308,40 @@
           <p class="entry-go">Open map →</p>
         </a>
 
-        <a class="entry" href="putnam_precinct_results_2026.html">
-          <div class="entry-top">
-            <span class="entry-name">Putnam County 2026 Election Results</span>
-            <span class="entry-tag">MAP</span>
+        <div class="group">
+          <div class="group-head">
+            <span class="group-name">2026 General Election</span>
+            <span class="group-count">3 maps &middot; results &amp; shift</span>
           </div>
-          <p class="entry-desc">All 48 races on the Putnam County ballot, precinct by precinct &mdash; from Secretary of State down to township board. Shade the map by head-to-head margin, any candidate's share of the vote, or ballots cast. Four races also carry a 2022 baseline, so you can see the shift since the last midterm. Counts are preliminary.</p>
-          <p class="entry-go">Open map &rarr;</p>
-        </a>
+          <div class="group-items">
+          <a class="entry" href="putnam_precinct_results_2026.html">
+            <div class="entry-top">
+              <span class="entry-name">Putnam County 2026 Election Results</span>
+              <span class="entry-tag">MAP</span>
+            </div>
+            <p class="entry-desc">All 48 races on the Putnam County ballot, precinct by precinct &mdash; from Secretary of State down to township board. Shade the map by head-to-head margin, any candidate's share of the vote, or ballots cast. Four races also carry a 2022 baseline, so you can see the shift since the last midterm. Counts are preliminary.</p>
+            <p class="entry-go">Open map &rarr;</p>
+          </a>
 
-        <a class="entry" href="montgomery_precinct_results_2026.html">
-          <div class="entry-top">
-            <span class="entry-name">Montgomery County 2026 Election Results</span>
-            <span class="entry-tag">MAP</span>
-          </div>
-          <p class="entry-desc">The same map for Montgomery County: all 56 races across 27 precincts, from Secretary of State down to township board. Shade by head-to-head margin, any candidate's share of the vote, or ballots cast. No 2022 comparison &mdash; the state reports Montgomery's 2022 results at county level only.</p>
-          <p class="entry-go">Open map &rarr;</p>
-        </a>
+          <a class="entry" href="montgomery_precinct_results_2026.html">
+            <div class="entry-top">
+              <span class="entry-name">Montgomery County 2026 Election Results</span>
+              <span class="entry-tag">MAP</span>
+            </div>
+            <p class="entry-desc">The same map for Montgomery County: all 56 races across 27 precincts, from Secretary of State down to township board. Shade by head-to-head margin, any candidate's share of the vote, or ballots cast. No 2022 comparison &mdash; the state reports Montgomery's 2022 results at county level only.</p>
+            <p class="entry-go">Open map &rarr;</p>
+          </a>
 
-        <a class="entry" href="in_statewide_shift_2022_2026.html">
-          <div class="entry-top">
-            <span class="entry-name">Indiana Statewide Shift, 2022 to 2026</span>
-            <span class="entry-tag">MAP</span>
+          <a class="entry" href="in_statewide_shift_2022_2026.html">
+            <div class="entry-top">
+              <span class="entry-name">Indiana Statewide Shift, 2022 to 2026</span>
+              <span class="entry-tag">MAP</span>
+            </div>
+            <p class="entry-desc">All 92 Indiana counties, shaded by the change in Democratic two-party vote share for Secretary of State, Comptroller, and Treasurer. Counting is still underway: unreported counties are hatched out and the headline figure compares only the counties that have finished.</p>
+            <p class="entry-go">Open map &rarr;</p>
+          </a>
           </div>
-          <p class="entry-desc">All 92 Indiana counties, shaded by the change in Democratic two-party vote share for Secretary of State, Comptroller, and Treasurer. Counting is still underway: unreported counties are hatched out and the headline figure compares only the counties that have finished.</p>
-          <p class="entry-go">Open map &rarr;</p>
-        </a>
+        </div>
 
         <div class="index-empty">More entries filed as they're surveyed.</div>
       </div>
