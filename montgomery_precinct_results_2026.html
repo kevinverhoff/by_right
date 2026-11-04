@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>County Precinct Results 2026</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb;
+    --page: #f9f9f7;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    --tooltip-bg: #ffffff;
+    --row-hover: rgba(11,11,11,0.045);
+    --stroke-map: #fcfcfb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+      --tooltip-bg: #232322; --row-hover: rgba(255,255,255,0.06); --stroke-map: #1a1a19;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --tooltip-bg: #232322; --row-hover: rgba(255,255,255,0.06); --stroke-map: #1a1a19;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--text-primary);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 28px 16px 56px; }
+  h1 { font-size: 24px; line-height: 1.25; margin: 0 0 6px; font-weight: 650; letter-spacing: -0.01em; }
+  .sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 20px; max-width: 76ch; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: flex-end; margin-bottom: 16px; }
+  .field { min-width: 0; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  select {
+    appearance: none; font: inherit; font-size: 14px; color: var(--text-primary);
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 9px;
+    padding: 9px 32px 9px 12px; cursor: pointer; max-width: 330px;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 17px) 55%, calc(100% - 12px) 55%;
+    background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+  }
+  select:focus-visible { outline: 2px solid #3987e5; outline-offset: 1px; }
+  #race { max-width: 420px; width: 420px; }
+  @media (max-width: 760px) { #race { width: 100%; } }
+  .spacer { flex: 1 1 auto; }
+  .ghost {
+    appearance: none; cursor: pointer; font: inherit; font-size: 13px;
+    color: var(--text-secondary); background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px;
+  }
+  .ghost:hover { color: var(--text-primary); }
+  .ghost[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); border-color: transparent; }
+
+  .panel { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; }
+
+  /* result header: the race, its candidates, countywide bar */
+  .rhead { padding: 16px 20px 14px; margin-bottom: 16px; }
+  .rhead h2 { font-size: 18px; margin: 0 0 2px; font-weight: 650; letter-spacing: -0.01em; }
+  .rhead .meta { font-size: 12.5px; color: var(--muted); margin-bottom: 13px; }
+  .bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 2px; margin-bottom: 11px; }
+  .bar span { display: block; }
+  .clist { display: flex; flex-wrap: wrap; gap: 8px 26px; }
+  .cand { display: flex; align-items: baseline; gap: 8px; font-size: 14px; }
+  .cand .sw { width: 11px; height: 11px; border-radius: 3px; flex: 0 0 auto; align-self: center; border: 1px solid var(--border); }
+  .cand .nm { font-weight: 600; }
+  .cand .pa { color: var(--muted); font-size: 12.5px; }
+  .cand .vt { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .cand.win .nm::after { content: " \2713"; color: #006300; font-weight: 700; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cand.win .nm::after { color: #0ca30c; } }
+  :root[data-theme="dark"] .cand.win .nm::after { color: #0ca30c; }
+
+  .cols { display: grid; grid-template-columns: minmax(340px, 1.15fr) minmax(330px, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+
+  .mapcard { padding: 14px 14px 10px; }
+  svg.map { display: block; width: 100%; height: auto; }
+  .prec { stroke: var(--stroke-map); stroke-width: 1; cursor: pointer; vector-effect: non-scaling-stroke; }
+  .prec:focus { outline: none; }
+  .prec.hot { stroke: var(--text-primary); stroke-width: 2.4; }
+  .lbl.hidden { display: none; }
+  .prec.off { cursor: default; }
+  .lbl { font-size: calc(8.5px * var(--zoom, 1)); fill: var(--text-primary); pointer-events: none; text-anchor: middle;
+         paint-order: stroke; stroke: var(--surface-1);
+         stroke-width: calc(2.4px * var(--zoom, 1)); stroke-linejoin: round; }
+  .lbl.off { fill: var(--muted); }
+
+  .legend { padding: 6px 6px 2px; }
+  .legend .ramp { height: 12px; border-radius: 3px; border: 1px solid var(--border); }
+  .legend .ticks { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); margin-top: 5px; font-variant-numeric: tabular-nums; }
+  .legend .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-top: 2px; gap: 12px; }
+  .legend .note { font-size: 12px; color: var(--muted); margin-top: 7px; }
+
+  .tablecard { overflow: hidden; }
+  .tablehead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 13px 16px 9px; }
+  .tablehead h2 { font-size: 14px; margin: 0; font-weight: 650; }
+  .tablehead span { font-size: 12.5px; color: var(--muted); }
+  .scroll { max-height: 640px; overflow-y: auto; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th {
+    position: sticky; top: 0; background: var(--surface-1); z-index: 1;
+    text-align: right; font-weight: 600; font-size: 11px; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--muted);
+    padding: 6px 10px 7px; border-bottom: 1px solid var(--axis);
+  }
+  thead th:first-child, thead th:nth-child(2) { text-align: left; }
+  tbody td { padding: 6px 10px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  tbody td:first-child { color: var(--muted); text-align: left; width: 34px; }
+  tbody td:nth-child(2) { text-align: left; color: var(--text-primary); width: 1%; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover, tbody tr.hot { background: var(--row-hover); }
+  tbody tr.off td { color: var(--muted); }
+  .chip { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 7px; vertical-align: -1px; border: 1px solid var(--border); }
+  .val { font-weight: 600; }
+
+  #tip {
+    position: fixed; z-index: 50; pointer-events: none; opacity: 0;
+    transition: opacity .09s linear; max-width: 340px;
+    background: var(--tooltip-bg); color: var(--text-primary);
+    border: 1px solid var(--border); border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.14); padding: 11px 13px;
+    font-size: 13px; line-height: 1.45;
+  }
+  #tip.on { opacity: 1; }
+  #tip .tname { font-weight: 650; font-size: 14.5px; }
+  #tip .trace { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 9px; }
+  #tip table { font-size: 12.5px; width: 100%; }
+  #tip td { padding: 2px 0; border: 0; white-space: normal; }
+  #tip td.c { text-align: left; padding-right: 12px; }
+  #tip td.v { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  #tip .rule { border-top: 1px solid var(--grid); margin: 9px 0 7px; }
+  #tip .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  #tip .lead { font-weight: 650; }
+  #tip .yr { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  #tip .ctx { font-size: 11.5px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+  .foot { color: var(--muted); font-size: 12.5px; margin-top: 18px; line-height: 1.6; }
+  @media (forced-colors: active) { .prec { stroke: CanvasText; forced-color-adjust: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="h1"></h1>
+  <p class="sub" id="sub"></p>
+
+  <div class="controls">
+    <div class="field">
+      <label for="race">Race</label>
+      <select id="race"></select>
+    </div>
+    <div class="field">
+      <label for="metric">Shade by</label>
+      <select id="metric"></select>
+    </div>
+    <div class="field">
+      <label for="view">View</label>
+      <select id="view">
+        <option value="county">Whole county</option>
+        <option value="city" id="viewCity"></option>
+      </select>
+    </div>
+    <div class="spacer"></div>
+    <button class="ghost" id="labels" type="button" aria-pressed="true">Precinct labels</button>
+    <button class="ghost" id="theme" type="button">Toggle theme</button>
+  </div>
+
+  <div class="panel rhead" id="rhead"></div>
+
+  <div class="cols">
+    <div class="panel mapcard">
+      <svg class="map" id="map" role="img" aria-labelledby="maptitle"><title id="maptitle"></title></svg>
+      <div class="legend">
+        <div class="ramp" id="legramp"></div>
+        <div class="ticks" id="legticks"></div>
+        <div class="ends" id="legends"></div>
+        <div class="note" id="legnote"></div>
+      </div>
+    </div>
+
+    <div class="panel tablecard">
+      <div class="tablehead">
+        <h2 id="tabletitle"></h2>
+        <span id="tablenote"></span>
+      </div>
+      <div class="scroll">
+        <table><thead><tr id="thead"></tr></thead><tbody id="rows"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<div id="tip" role="tooltip"></div>
+
+<script>
+const DATA = {"county":"Montgomery","cityLabel":"Crawfordsville city precincts","races":[{"id":"r0","prior":null,"office":"United States Representative, Fourth District","cat":"US Representative","group":"Federal & state","seats":1,"cands":[{"name":"Jim Baird","party":"Republican","bucket":"R","total":6416},{"name":"Drew Cox","party":"Democratic","bucket":"D","total":3515},{"name":"David E. Bokash (W/I)","party":"Independent","bucket":"O","total":0}],"order":["Jim Baird","Drew Cox","David E. Bokash (W/I)"],"precincts":{"Brown":{"v":[316,110,0],"total":426},"Clark":{"v":[322,126,0],"total":448},"Coal Creek":{"v":[322,127,0],"total":449},"Crawfordsville 01":{"v":[225,262,0],"total":487},"Crawfordsville 02":{"v":[244,157,0],"total":401},"Crawfordsville 03":{"v":[177,146,0],"total":323},"Crawfordsville 04":{"v":[342,243,0],"total":585},"Crawfordsville 05":{"v":[149,127,0],"total":276},"Crawfordsville 06":{"v":[100,112,0],"total":212},"Crawfordsville 07":{"v":[220,151,0],"total":371},"Crawfordsville 08":{"v":[180,132,0],"total":312},"Crawfordsville 09":{"v":[85,141,0],"total":226},"Crawfordsville 10":{"v":[108,127,0],"total":235},"Franklin":{"v":[345,163,0],"total":508},"Madison":{"v":[198,94,0],"total":292},"Ripley":{"v":[196,61,0],"total":257},"Scott":{"v":[174,44,0],"total":218},"Sugar Creek":{"v":[109,27,0],"total":136},"Union 01":{"v":[245,128,0],"total":373},"Union 02":{"v":[177,91,0],"total":268},"Union 03":{"v":[349,153,0],"total":502},"Union 04":{"v":[178,88,0],"total":266},"Union 05":{"v":[336,101,0],"total":437},"Union 06":{"v":[453,194,0],"total":647},"Union 07":{"v":[306,165,0],"total":471},"Walnut":{"v":[284,125,0],"total":409},"Wayne":{"v":[276,120,0],"total":396}},"reporting":27,"total":9931,"margin":true,"demIdx":1,"repIdx":0},{"id":"r1","prior":null,"office":"State Senator, District 23","cat":"State Senator","group":"Federal & state","seats":1,"cands":[{"name":"Spencer R. Deery","party":"Republican","bucket":"R","total":1081},{"name":"David A Sanders","party":"Democratic","bucket":"D","total":343},{"name":"Joshua Brant","party":"Independent","bucket":"O","total":97}],"order":["Spencer R. Deery","David A Sanders","Joshua Brant"],"precincts":{"Brown":{"v":[303,86,32],"total":421},"Coal Creek":{"v":[322,104,23],"total":449},"Ripley":{"v":[193,48,17],"total":258},"Wayne":{"v":[263,105,25],"total":393}},"reporting":4,"total":1521,"margin":true,"demIdx":1,"repIdx":0},{"id":"r2","prior":null,"office":"State Representative, District 044","cat":"State Representative","group":"Federal & state","seats":1,"cands":[{"name":"Beau Baird","party":"Republican","bucket":"R","total":5044},{"name":"Kelsey Kauffman","party":"Democratic","bucket":"D","total":2913}],"order":["Beau Baird","Kelsey Kauffman"],"precincts":{"Brown":{"v":[321,103],"total":424},"Crawfordsville 01":{"v":[228,256],"total":484},"Crawfordsville 02":{"v":[248,152],"total":400},"Crawfordsville 03":{"v":[174,145],"total":319},"Crawfordsville 04":{"v":[347,237],"total":584},"Crawfordsville 05":{"v":[145,132],"total":277},"Crawfordsville 06":{"v":[100,112],"total":212},"Crawfordsville 07":{"v":[213,153],"total":366},"Crawfordsville 08":{"v":[178,131],"total":309},"Crawfordsville 09":{"v":[86,141],"total":227},"Crawfordsville 10":{"v":[107,123],"total":230},"Madison":{"v":[201,90],"total":291},"Ripley":{"v":[199,58],"total":257},"Scott":{"v":[167,49],"total":216},"Union 01":{"v":[248,128],"total":376},"Union 02":{"v":[183,89],"total":272},"Union 03":{"v":[349,153],"total":502},"Union 04":{"v":[173,91],"total":264},"Union 05":{"v":[335,105],"total":440},"Union 06":{"v":[455,188],"total":643},"Union 07":{"v":[308,162],"total":470},"Wayne":{"v":[279,115],"total":394}},"reporting":22,"total":7957,"margin":true,"demIdx":1,"repIdx":0},{"id":"r3","prior":null,"office":"State Representative, District 028","cat":"State Representative","group":"Federal & state","seats":1,"cands":[{"name":"Jeffrey A. Thompson","party":"Republican","bucket":"R","total":966},{"name":"Karen Whitney","party":"Democratic","bucket":"D","total":404}],"order":["Jeffrey A. Thompson","Karen Whitney"],"precincts":{"Clark":{"v":[318,128],"total":446},"Franklin":{"v":[352,156],"total":508},"Walnut":{"v":[296,120],"total":416}},"reporting":3,"total":1370,"margin":true,"demIdx":1,"repIdx":0},{"id":"r4","prior":null,"office":"State Representative, District 013","cat":"State Representative","group":"Federal & state","seats":1,"cands":[{"name":"Matt Commons","party":"Republican","bucket":"R","total":333},{"name":"Brenna Geswein","party":"Democratic","bucket":"D","total":118},{"name":"Ben Davis","party":"Socialist Party Of Indiana","bucket":"O","total":3}],"order":["Matt Commons","Brenna Geswein","Ben Davis"],"precincts":{"Coal Creek":{"v":[333,118,3],"total":454}},"reporting":1,"total":454,"margin":true,"demIdx":1,"repIdx":0},{"id":"r5","prior":null,"office":"State Representative, District 041","cat":"State Representative","group":"Federal & state","seats":1,"cands":[{"name":"Mark Genda","party":"Republican","bucket":"R","total":111},{"name":"Jackson T. Hayes","party":"Democratic","bucket":"D","total":25}],"order":["Mark Genda","Jackson T. Hayes"],"precincts":{"Sugar Creek":{"v":[111,25],"total":136}},"reporting":1,"total":136,"margin":true,"demIdx":1,"repIdx":0},{"id":"r6","prior":null,"office":"Secretary Of State","cat":"Secretary Of State","group":"Federal & state","seats":1,"cands":[{"name":"Max Engling","party":"Republican","bucket":"R","total":5499},{"name":"Beau Bayh","party":"Democratic","bucket":"D","total":3782},{"name":"Greg Ballard","party":"Lincoln Party","bucket":"O","total":433},{"name":"Lauri A. Shillings","party":"Libertarian","bucket":"O","total":277},{"name":"Andrew Delano (W/I)","party":"National Socialist American Workers'","bucket":"O","total":0}],"order":["Max Engling","Beau Bayh","Greg Ballard","Lauri A. Shillings","Andrew Delano (W/I)"],"precincts":{"Brown":{"v":[284,109,19,16,0],"total":428},"Clark":{"v":[268,148,24,5,0],"total":445},"Coal Creek":{"v":[289,132,12,20,0],"total":453},"Crawfordsville 01":{"v":[188,272,19,12,0],"total":491},"Crawfordsville 02":{"v":[214,159,20,12,0],"total":405},"Crawfordsville 03":{"v":[152,151,10,9,0],"total":322},"Crawfordsville 04":{"v":[278,265,28,16,0],"total":587},"Crawfordsville 05":{"v":[128,126,13,9,0],"total":276},"Crawfordsville 06":{"v":[87,110,8,10,0],"total":215},"Crawfordsville 07":{"v":[178,162,12,15,0],"total":367},"Crawfordsville 08":{"v":[145,152,17,5,0],"total":319},"Crawfordsville 09":{"v":[71,132,13,12,0],"total":228},"Crawfordsville 10":{"v":[92,122,10,9,0],"total":233},"Franklin":{"v":[289,182,26,17,0],"total":514},"Madison":{"v":[168,111,5,5,0],"total":289},"Ripley":{"v":[178,69,7,4,0],"total":258},"Scott":{"v":[150,53,9,6,0],"total":218},"Sugar Creek":{"v":[93,29,10,4,0],"total":136},"Union 01":{"v":[220,139,9,10,0],"total":378},"Union 02":{"v":[142,108,15,12,0],"total":277},"Union 03":{"v":[301,168,17,17,0],"total":503},"Union 04":{"v":[162,91,9,4,0],"total":266},"Union 05":{"v":[296,126,17,8,0],"total":447},"Union 06":{"v":[394,211,34,11,0],"total":650},"Union 07":{"v":[256,183,25,9,0],"total":473},"Walnut":{"v":[237,145,26,11,0],"total":419},"Wayne":{"v":[239,127,19,9,0],"total":394}},"reporting":27,"total":9991,"margin":true,"demIdx":1,"repIdx":0},{"id":"r7","prior":null,"office":"State Comptroller (Auditor Of State)","cat":"State Comptroller (Auditor Of State)","group":"Federal & state","seats":1,"cands":[{"name":"Elise Nieshalla","party":"Republican","bucket":"R","total":6233},{"name":"Jessica Bailey","party":"Democratic","bucket":"D","total":3363},{"name":"John Schick","party":"Libertarian","bucket":"O","total":333}],"order":["Elise Nieshalla","Jessica Bailey","John Schick"],"precincts":{"Brown":{"v":[305,95,21],"total":421},"Clark":{"v":[303,134,10],"total":447},"Coal Creek":{"v":[313,121,18],"total":452},"Crawfordsville 01":{"v":[220,246,20],"total":486},"Crawfordsville 02":{"v":[234,152,12],"total":398},"Crawfordsville 03":{"v":[163,142,12],"total":317},"Crawfordsville 04":{"v":[323,235,28],"total":586},"Crawfordsville 05":{"v":[144,123,9],"total":276},"Crawfordsville 06":{"v":[97,112,4],"total":213},"Crawfordsville 07":{"v":[206,146,11],"total":363},"Crawfordsville 08":{"v":[178,130,7],"total":315},"Crawfordsville 09":{"v":[82,133,11],"total":226},"Crawfordsville 10":{"v":[103,115,12],"total":230},"Franklin":{"v":[346,153,13],"total":512},"Madison":{"v":[190,90,9],"total":289},"Ripley":{"v":[192,58,8],"total":258},"Scott":{"v":[169,42,6],"total":217},"Sugar Creek":{"v":[103,25,5],"total":133},"Union 01":{"v":[250,124,7],"total":381},"Union 02":{"v":[181,88,7],"total":276},"Union 03":{"v":[334,150,15],"total":499},"Union 04":{"v":[169,90,4],"total":263},"Union 05":{"v":[333,92,17],"total":442},"Union 06":{"v":[445,183,19],"total":647},"Union 07":{"v":[301,156,18],"total":475},"Walnut":{"v":[279,121,15],"total":415},"Wayne":{"v":[270,107,15],"total":392}},"reporting":27,"total":9929,"margin":true,"demIdx":1,"repIdx":0},{"id":"r8","prior":null,"office":"Treasurer Of State","cat":"Treasurer Of State","group":"Federal & state","seats":1,"cands":[{"name":"Daniel Elliott","party":"Republican","bucket":"R","total":6671},{"name":"Coumba Kebe","party":"Democratic","bucket":"D","total":3272}],"order":["Daniel Elliott","Coumba Kebe"],"precincts":{"Brown":{"v":[334,89],"total":423},"Clark":{"v":[323,124],"total":447},"Coal Creek":{"v":[338,117],"total":455},"Crawfordsville 01":{"v":[243,245],"total":488},"Crawfordsville 02":{"v":[256,143],"total":399},"Crawfordsville 03":{"v":[174,145],"total":319},"Crawfordsville 04":{"v":[362,225],"total":587},"Crawfordsville 05":{"v":[149,124],"total":273},"Crawfordsville 06":{"v":[106,107],"total":213},"Crawfordsville 07":{"v":[224,144],"total":368},"Crawfordsville 08":{"v":[190,123],"total":313},"Crawfordsville 09":{"v":[91,134],"total":225},"Crawfordsville 10":{"v":[116,113],"total":229},"Franklin":{"v":[360,153],"total":513},"Madison":{"v":[199,88],"total":287},"Ripley":{"v":[203,57],"total":260},"Scott":{"v":[175,42],"total":217},"Sugar Creek":{"v":[108,26],"total":134},"Union 01":{"v":[263,117],"total":380},"Union 02":{"v":[190,85],"total":275},"Union 03":{"v":[358,142],"total":500},"Union 04":{"v":[179,86],"total":265},"Union 05":{"v":[357,85],"total":442},"Union 06":{"v":[470,182],"total":652},"Union 07":{"v":[321,153],"total":474},"Walnut":{"v":[294,118],"total":412},"Wayne":{"v":[288,105],"total":393}},"reporting":27,"total":9943,"margin":true,"demIdx":1,"repIdx":0},{"id":"r9","prior":null,"office":"Judge Of The Montgomery Superior Court, No. 1","cat":"Judge, Superior Court","group":"Countywide","seats":1,"cands":[{"name":"Heather Barajas","party":"Republican","bucket":"R","total":7807}],"order":["Heather Barajas"],"precincts":{"Brown":{"v":[366],"total":366},"Clark":{"v":[363],"total":363},"Coal Creek":{"v":[381],"total":381},"Crawfordsville 01":{"v":[340],"total":340},"Crawfordsville 02":{"v":[306],"total":306},"Crawfordsville 03":{"v":[230],"total":230},"Crawfordsville 04":{"v":[431],"total":431},"Crawfordsville 05":{"v":[199],"total":199},"Crawfordsville 06":{"v":[148],"total":148},"Crawfordsville 07":{"v":[288],"total":288},"Crawfordsville 08":{"v":[238],"total":238},"Crawfordsville 09":{"v":[155],"total":155},"Crawfordsville 10":{"v":[148],"total":148},"Franklin":{"v":[402],"total":402},"Madison":{"v":[232],"total":232},"Ripley":{"v":[208],"total":208},"Scott":{"v":[175],"total":175},"Sugar Creek":{"v":[116],"total":116},"Union 01":{"v":[297],"total":297},"Union 02":{"v":[222],"total":222},"Union 03":{"v":[398],"total":398},"Union 04":{"v":[203],"total":203},"Union 05":{"v":[372],"total":372},"Union 06":{"v":[534],"total":534},"Union 07":{"v":[391],"total":391},"Walnut":{"v":[336],"total":336},"Wayne":{"v":[328],"total":328}},"reporting":27,"total":7807,"margin":false,"demIdx":null,"repIdx":null},{"id":"r10","prior":null,"office":"Judge Of The Montgomery Superior Court, No. 2","cat":"Judge, Superior Court","group":"Countywide","seats":1,"cands":[{"name":"Daniel G. Petrie","party":"Republican","bucket":"R","total":8059}],"order":["Daniel G. Petrie"],"precincts":{"Brown":{"v":[368],"total":368},"Clark":{"v":[369],"total":369},"Coal Creek":{"v":[384],"total":384},"Crawfordsville 01":{"v":[368],"total":368},"Crawfordsville 02":{"v":[318],"total":318},"Crawfordsville 03":{"v":[231],"total":231},"Crawfordsville 04":{"v":[448],"total":448},"Crawfordsville 05":{"v":[200],"total":200},"Crawfordsville 06":{"v":[156],"total":156},"Crawfordsville 07":{"v":[289],"total":289},"Crawfordsville 08":{"v":[261],"total":261},"Crawfordsville 09":{"v":[166],"total":166},"Crawfordsville 10":{"v":[162],"total":162},"Franklin":{"v":[418],"total":418},"Madison":{"v":[235],"total":235},"Ripley":{"v":[210],"total":210},"Scott":{"v":[174],"total":174},"Sugar Creek":{"v":[119],"total":119},"Union 01":{"v":[313],"total":313},"Union 02":{"v":[223],"total":223},"Union 03":{"v":[415],"total":415},"Union 04":{"v":[214],"total":214},"Union 05":{"v":[392],"total":392},"Union 06":{"v":[554],"total":554},"Union 07":{"v":[407],"total":407},"Walnut":{"v":[337],"total":337},"Wayne":{"v":[328],"total":328}},"reporting":27,"total":8059,"margin":false,"demIdx":null,"repIdx":null},{"id":"r11","prior":null,"office":"Prosecuting Attorney Of Montgomery County, 22nd Judicial Circuit","cat":"Prosecuting Attorney","group":"Countywide","seats":1,"cands":[{"name":"Jacob A. Moore","party":"Republican","bucket":"R","total":7962}],"order":["Jacob A. Moore"],"precincts":{"Brown":{"v":[363],"total":363},"Clark":{"v":[370],"total":370},"Coal Creek":{"v":[385],"total":385},"Crawfordsville 01":{"v":[358],"total":358},"Crawfordsville 02":{"v":[306],"total":306},"Crawfordsville 03":{"v":[226],"total":226},"Crawfordsville 04":{"v":[435],"total":435},"Crawfordsville 05":{"v":[198],"total":198},"Crawfordsville 06":{"v":[155],"total":155},"Crawfordsville 07":{"v":[278],"total":278},"Crawfordsville 08":{"v":[253],"total":253},"Crawfordsville 09":{"v":[153],"total":153},"Crawfordsville 10":{"v":[156],"total":156},"Franklin":{"v":[412],"total":412},"Madison":{"v":[234],"total":234},"Ripley":{"v":[211],"total":211},"Scott":{"v":[172],"total":172},"Sugar Creek":{"v":[119],"total":119},"Union 01":{"v":[305],"total":305},"Union 02":{"v":[226],"total":226},"Union 03":{"v":[417],"total":417},"Union 04":{"v":[212],"total":212},"Union 05":{"v":[397],"total":397},"Union 06":{"v":[554],"total":554},"Union 07":{"v":[398],"total":398},"Walnut":{"v":[339],"total":339},"Wayne":{"v":[330],"total":330}},"reporting":27,"total":7962,"margin":false,"demIdx":null,"repIdx":null},{"id":"r12","prior":null,"office":"Montgomery County Sheriff","cat":"County Sheriff","group":"Countywide","seats":1,"cands":[{"name":"Matt Mccarty","party":"Republican","bucket":"R","total":8086}],"order":["Matt Mccarty"],"precincts":{"Brown":{"v":[380],"total":380},"Clark":{"v":[373],"total":373},"Coal Creek":{"v":[383],"total":383},"Crawfordsville 01":{"v":[359],"total":359},"Crawfordsville 02":{"v":[319],"total":319},"Crawfordsville 03":{"v":[238],"total":238},"Crawfordsville 04":{"v":[449],"total":449},"Crawfordsville 05":{"v":[199],"total":199},"Crawfordsville 06":{"v":[155],"total":155},"Crawfordsville 07":{"v":[284],"total":284},"Crawfordsville 08":{"v":[250],"total":250},"Crawfordsville 09":{"v":[153],"total":153},"Crawfordsville 10":{"v":[155],"total":155},"Franklin":{"v":[415],"total":415},"Madison":{"v":[240],"total":240},"Ripley":{"v":[223],"total":223},"Scott":{"v":[181],"total":181},"Sugar Creek":{"v":[121],"total":121},"Union 01":{"v":[316],"total":316},"Union 02":{"v":[228],"total":228},"Union 03":{"v":[420],"total":420},"Union 04":{"v":[209],"total":209},"Union 05":{"v":[399],"total":399},"Union 06":{"v":[562],"total":562},"Union 07":{"v":[397],"total":397},"Walnut":{"v":[348],"total":348},"Wayne":{"v":[330],"total":330}},"reporting":27,"total":8086,"margin":false,"demIdx":null,"repIdx":null},{"id":"r13","prior":null,"office":"Montgomery County Assessor","cat":"County Assessor","group":"Countywide","seats":1,"cands":[{"name":"Sherri L Bentley","party":"Republican","bucket":"R","total":7901}],"order":["Sherri L Bentley"],"precincts":{"Brown":{"v":[370],"total":370},"Clark":{"v":[363],"total":363},"Coal Creek":{"v":[379],"total":379},"Crawfordsville 01":{"v":[350],"total":350},"Crawfordsville 02":{"v":[312],"total":312},"Crawfordsville 03":{"v":[227],"total":227},"Crawfordsville 04":{"v":[441],"total":441},"Crawfordsville 05":{"v":[196],"total":196},"Crawfordsville 06":{"v":[152],"total":152},"Crawfordsville 07":{"v":[271],"total":271},"Crawfordsville 08":{"v":[246],"total":246},"Crawfordsville 09":{"v":[153],"total":153},"Crawfordsville 10":{"v":[157],"total":157},"Franklin":{"v":[410],"total":410},"Madison":{"v":[232],"total":232},"Ripley":{"v":[208],"total":208},"Scott":{"v":[171],"total":171},"Sugar Creek":{"v":[119],"total":119},"Union 01":{"v":[309],"total":309},"Union 02":{"v":[226],"total":226},"Union 03":{"v":[412],"total":412},"Union 04":{"v":[205],"total":205},"Union 05":{"v":[395],"total":395},"Union 06":{"v":[545],"total":545},"Union 07":{"v":[392],"total":392},"Walnut":{"v":[338],"total":338},"Wayne":{"v":[322],"total":322}},"reporting":27,"total":7901,"margin":false,"demIdx":null,"repIdx":null},{"id":"r14","prior":null,"office":"Montgomery County Auditor","cat":"County Auditor","group":"Countywide","seats":1,"cands":[{"name":"Jennifer Andel","party":"Republican","bucket":"R","total":7899}],"order":["Jennifer Andel"],"precincts":{"Brown":{"v":[371],"total":371},"Clark":{"v":[366],"total":366},"Coal Creek":{"v":[380],"total":380},"Crawfordsville 01":{"v":[349],"total":349},"Crawfordsville 02":{"v":[305],"total":305},"Crawfordsville 03":{"v":[227],"total":227},"Crawfordsville 04":{"v":[436],"total":436},"Crawfordsville 05":{"v":[195],"total":195},"Crawfordsville 06":{"v":[152],"total":152},"Crawfordsville 07":{"v":[275],"total":275},"Crawfordsville 08":{"v":[243],"total":243},"Crawfordsville 09":{"v":[149],"total":149},"Crawfordsville 10":{"v":[155],"total":155},"Franklin":{"v":[416],"total":416},"Madison":{"v":[233],"total":233},"Ripley":{"v":[209],"total":209},"Scott":{"v":[175],"total":175},"Sugar Creek":{"v":[121],"total":121},"Union 01":{"v":[303],"total":303},"Union 02":{"v":[223],"total":223},"Union 03":{"v":[416],"total":416},"Union 04":{"v":[209],"total":209},"Union 05":{"v":[387],"total":387},"Union 06":{"v":[552],"total":552},"Union 07":{"v":[388],"total":388},"Walnut":{"v":[335],"total":335},"Wayne":{"v":[329],"total":329}},"reporting":27,"total":7899,"margin":false,"demIdx":null,"repIdx":null},{"id":"r15","prior":null,"office":"Montgomery County Treasurer","cat":"County Treasurer","group":"Countywide","seats":1,"cands":[{"name":"Morgan Biggs","party":"Republican","bucket":"R","total":7870}],"order":["Morgan Biggs"],"precincts":{"Brown":{"v":[366],"total":366},"Clark":{"v":[364],"total":364},"Coal Creek":{"v":[379],"total":379},"Crawfordsville 01":{"v":[338],"total":338},"Crawfordsville 02":{"v":[307],"total":307},"Crawfordsville 03":{"v":[226],"total":226},"Crawfordsville 04":{"v":[433],"total":433},"Crawfordsville 05":{"v":[195],"total":195},"Crawfordsville 06":{"v":[151],"total":151},"Crawfordsville 07":{"v":[274],"total":274},"Crawfordsville 08":{"v":[241],"total":241},"Crawfordsville 09":{"v":[147],"total":147},"Crawfordsville 10":{"v":[154],"total":154},"Franklin":{"v":[414],"total":414},"Madison":{"v":[234],"total":234},"Ripley":{"v":[208],"total":208},"Scott":{"v":[175],"total":175},"Sugar Creek":{"v":[120],"total":120},"Union 01":{"v":[300],"total":300},"Union 02":{"v":[224],"total":224},"Union 03":{"v":[412],"total":412},"Union 04":{"v":[210],"total":210},"Union 05":{"v":[391],"total":391},"Union 06":{"v":[551],"total":551},"Union 07":{"v":[392],"total":392},"Walnut":{"v":[340],"total":340},"Wayne":{"v":[324],"total":324}},"reporting":27,"total":7870,"margin":false,"demIdx":null,"repIdx":null},{"id":"r16","prior":null,"office":"Montgomery County Commissioner, District 2","cat":"County Commissioner","group":"Commissioner & council","seats":1,"cands":[{"name":"Jim Fulwider","party":"Republican","bucket":"R","total":7878}],"order":["Jim Fulwider"],"precincts":{"Brown":{"v":[369],"total":369},"Clark":{"v":[370],"total":370},"Coal Creek":{"v":[384],"total":384},"Crawfordsville 01":{"v":[339],"total":339},"Crawfordsville 02":{"v":[310],"total":310},"Crawfordsville 03":{"v":[233],"total":233},"Crawfordsville 04":{"v":[439],"total":439},"Crawfordsville 05":{"v":[194],"total":194},"Crawfordsville 06":{"v":[156],"total":156},"Crawfordsville 07":{"v":[278],"total":278},"Crawfordsville 08":{"v":[242],"total":242},"Crawfordsville 09":{"v":[151],"total":151},"Crawfordsville 10":{"v":[150],"total":150},"Franklin":{"v":[414],"total":414},"Madison":{"v":[229],"total":229},"Ripley":{"v":[215],"total":215},"Scott":{"v":[176],"total":176},"Sugar Creek":{"v":[118],"total":118},"Union 01":{"v":[301],"total":301},"Union 02":{"v":[221],"total":221},"Union 03":{"v":[405],"total":405},"Union 04":{"v":[209],"total":209},"Union 05":{"v":[392],"total":392},"Union 06":{"v":[546],"total":546},"Union 07":{"v":[393],"total":393},"Walnut":{"v":[331],"total":331},"Wayne":{"v":[313],"total":313}},"reporting":27,"total":7878,"margin":false,"demIdx":null,"repIdx":null},{"id":"r17","prior":null,"office":"Montgomery County Council, District 1","cat":"County Council Member","group":"Commissioner & council","seats":1,"cands":[{"name":"Joyce A. Grimble","party":"Republican","bucket":"R","total":2022}],"order":["Joyce A. Grimble"],"precincts":{"Coal Creek":{"v":[381],"total":381},"Crawfordsville 01":{"v":[339],"total":339},"Crawfordsville 02":{"v":[313],"total":313},"Crawfordsville 09":{"v":[147],"total":147},"Union 01":{"v":[297],"total":297},"Union 02":{"v":[225],"total":225},"Wayne":{"v":[320],"total":320}},"reporting":7,"total":2022,"margin":false,"demIdx":null,"repIdx":null},{"id":"r18","prior":null,"office":"Montgomery County Council, District 2","cat":"County Council Member","group":"Commissioner & council","seats":1,"cands":[{"name":"Matt Nelson","party":"Republican","bucket":"R","total":2303}],"order":["Matt Nelson"],"precincts":{"Brown":{"v":[363],"total":363},"Crawfordsville 08":{"v":[241],"total":241},"Ripley":{"v":[206],"total":206},"Scott":{"v":[174],"total":174},"Union 05":{"v":[390],"total":390},"Union 06":{"v":[545],"total":545},"Union 07":{"v":[384],"total":384}},"reporting":7,"total":2303,"margin":false,"demIdx":null,"repIdx":null},{"id":"r19","prior":null,"office":"Montgomery County Council, District 3","cat":"County Council Member","group":"Commissioner & council","seats":1,"cands":[{"name":"Jordan Foland","party":"Republican","bucket":"R","total":1945}],"order":["Jordan Foland"],"precincts":{"Crawfordsville 03":{"v":[223],"total":223},"Crawfordsville 04":{"v":[426],"total":426},"Crawfordsville 10":{"v":[149],"total":149},"Franklin":{"v":[407],"total":407},"Madison":{"v":[228],"total":228},"Sugar Creek":{"v":[117],"total":117},"Union 03":{"v":[395],"total":395}},"reporting":7,"total":1945,"margin":false,"demIdx":null,"repIdx":null},{"id":"r20","prior":null,"office":"Montgomery County Council, District 4","cat":"County Council Member","group":"Commissioner & council","seats":1,"cands":[{"name":"Brett A Cating","party":"Republican","bucket":"R","total":1496}],"order":["Brett A Cating"],"precincts":{"Clark":{"v":[348],"total":348},"Crawfordsville 05":{"v":[193],"total":193},"Crawfordsville 06":{"v":[154],"total":154},"Crawfordsville 07":{"v":[267],"total":267},"Union 04":{"v":[209],"total":209},"Walnut":{"v":[325],"total":325}},"reporting":6,"total":1496,"margin":false,"demIdx":null,"repIdx":null},{"id":"r21","prior":null,"office":"Union Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Aaron Morgan","party":"Republican","bucket":"R","total":4030},{"name":"Kay Whetstone","party":"Democratic","bucket":"D","total":2326}],"order":["Aaron Morgan","Kay Whetstone"],"precincts":{"Crawfordsville 01":{"v":[261,225],"total":486},"Crawfordsville 02":{"v":[249,148],"total":397},"Crawfordsville 03":{"v":[187,130],"total":317},"Crawfordsville 04":{"v":[354,221],"total":575},"Crawfordsville 05":{"v":[149,127],"total":276},"Crawfordsville 06":{"v":[101,112],"total":213},"Crawfordsville 07":{"v":[227,143],"total":370},"Crawfordsville 08":{"v":[188,120],"total":308},"Crawfordsville 09":{"v":[95,131],"total":226},"Crawfordsville 10":{"v":[113,116],"total":229},"Union 01":{"v":[249,124],"total":373},"Union 02":{"v":[190,79],"total":269},"Union 03":{"v":[353,145],"total":498},"Union 04":{"v":[181,86],"total":267},"Union 05":{"v":[345,95],"total":440},"Union 06":{"v":[463,178],"total":641},"Union 07":{"v":[325,146],"total":471}},"reporting":17,"total":6356,"margin":true,"demIdx":1,"repIdx":0},{"id":"r22","prior":null,"office":"Brown Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Kylene Simpson","party":"Republican","bucket":"R","total":375}],"order":["Kylene Simpson"],"precincts":{"Brown":{"v":[375],"total":375}},"reporting":1,"total":375,"margin":false,"demIdx":null,"repIdx":null},{"id":"r23","prior":null,"office":"Clark Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Amy J Cating","party":"Republican","bucket":"R","total":358}],"order":["Amy J Cating"],"precincts":{"Clark":{"v":[358],"total":358}},"reporting":1,"total":358,"margin":false,"demIdx":null,"repIdx":null},{"id":"r24","prior":null,"office":"Coal Creek Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Mike Claycomb","party":"Republican","bucket":"R","total":385}],"order":["Mike Claycomb"],"precincts":{"Coal Creek":{"v":[385],"total":385}},"reporting":1,"total":385,"margin":false,"demIdx":null,"repIdx":null},{"id":"r25","prior":null,"office":"Franklin Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Jayne A Lough","party":"Republican","bucket":"R","total":420}],"order":["Jayne A Lough"],"precincts":{"Franklin":{"v":[420],"total":420}},"reporting":1,"total":420,"margin":false,"demIdx":null,"repIdx":null},{"id":"r26","prior":null,"office":"Madison Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Greg Fuller","party":"Republican","bucket":"R","total":231}],"order":["Greg Fuller"],"precincts":{"Madison":{"v":[231],"total":231}},"reporting":1,"total":231,"margin":false,"demIdx":null,"repIdx":null},{"id":"r27","prior":null,"office":"Sugar Creek Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Carey Dykes Hanna","party":"Republican","bucket":"R","total":123}],"order":["Carey Dykes Hanna"],"precincts":{"Sugar Creek":{"v":[123],"total":123}},"reporting":1,"total":123,"margin":false,"demIdx":null,"repIdx":null},{"id":"r28","prior":null,"office":"Walnut Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Eric Mcclaskey","party":"Republican","bucket":"R","total":356}],"order":["Eric Mcclaskey"],"precincts":{"Walnut":{"v":[356],"total":356}},"reporting":1,"total":356,"margin":false,"demIdx":null,"repIdx":null},{"id":"r29","prior":null,"office":"Wayne Township Trustee, Montgomery County","cat":"Township Trustee","group":"Township","seats":1,"cands":[{"name":"Kathy Ryker","party":"Democratic","bucket":"D","total":224}],"order":["Kathy Ryker"],"precincts":{"Wayne":{"v":[224],"total":224}},"reporting":1,"total":224,"margin":false,"demIdx":null,"repIdx":null},{"id":"r30","prior":null,"office":"Union Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Alan Plunkett","party":"Republican","bucket":"R","total":3670},{"name":"Stacey Guard","party":"Republican","bucket":"R","total":3658},{"name":"Darren J Haas","party":"Republican","bucket":"R","total":3608},{"name":"Courtney Houghton","party":"Democratic","bucket":"D","total":2104},{"name":"Shanna Turpin","party":"Democratic","bucket":"D","total":1993},{"name":"Gi West","party":"Democratic","bucket":"D","total":1690}],"order":["Alan Plunkett","Stacey Guard","Darren J Haas","Courtney Houghton","Shanna Turpin","Gi West"],"precincts":{"Crawfordsville 01":{"v":[241,242,243,205,197,172],"total":1300},"Crawfordsville 02":{"v":[246,226,234,113,119,97],"total":1035},"Crawfordsville 03":{"v":[160,165,161,119,108,100],"total":813},"Crawfordsville 04":{"v":[336,331,318,198,190,158],"total":1531},"Crawfordsville 05":{"v":[127,124,113,112,104,99],"total":679},"Crawfordsville 06":{"v":[96,91,87,92,90,84],"total":540},"Crawfordsville 07":{"v":[201,197,192,137,137,106],"total":970},"Crawfordsville 08":{"v":[177,178,180,114,107,95],"total":851},"Crawfordsville 09":{"v":[86,82,84,123,114,104],"total":593},"Crawfordsville 10":{"v":[105,106,109,112,112,93],"total":637},"Union 01":{"v":[230,251,235,114,103,86],"total":1019},"Union 02":{"v":[175,162,164,83,77,58],"total":719},"Union 03":{"v":[316,321,303,127,117,98],"total":1282},"Union 04":{"v":[161,154,157,78,72,62],"total":684},"Union 05":{"v":[299,312,307,82,81,64],"total":1145},"Union 06":{"v":[412,413,414,162,144,119],"total":1664},"Union 07":{"v":[302,303,307,133,121,95],"total":1261}},"reporting":17,"total":16723,"margin":false,"demIdx":null,"repIdx":null},{"id":"r31","prior":null,"office":"Brown Township Board Member","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Paul Surface","party":"Republican","bucket":"R","total":322},{"name":"Jack Reynolds","party":"Republican","bucket":"R","total":308},{"name":"Richard Graham","party":"Republican","bucket":"R","total":266}],"order":["Paul Surface","Jack Reynolds","Richard Graham"],"precincts":{"Brown":{"v":[322,308,266],"total":896}},"reporting":1,"total":896,"margin":false,"demIdx":null,"repIdx":null},{"id":"r32","prior":null,"office":"Clark Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"David Orwig","party":"Republican","bucket":"R","total":309},{"name":"Elmer Gilbert","party":"Republican","bucket":"R","total":282},{"name":"Seth Pollert","party":"Republican","bucket":"R","total":256}],"order":["David Orwig","Elmer Gilbert","Seth Pollert"],"precincts":{"Clark":{"v":[309,282,256],"total":847}},"reporting":1,"total":847,"margin":false,"demIdx":null,"repIdx":null},{"id":"r33","prior":null,"office":"Coal Creek Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Kevin Mccord","party":"Republican","bucket":"R","total":324},{"name":"Denny Olin","party":"Republican","bucket":"R","total":294},{"name":"Jay Busse","party":"Republican","bucket":"R","total":284}],"order":["Kevin Mccord","Denny Olin","Jay Busse"],"precincts":{"Coal Creek":{"v":[324,294,284],"total":902}},"reporting":1,"total":902,"margin":false,"demIdx":null,"repIdx":null},{"id":"r34","prior":null,"office":"Franklin Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Greg Wilcox","party":"Republican","bucket":"R","total":332},{"name":"Bob Ryker","party":"Independent","bucket":"O","total":255},{"name":"Thomas Knueven","party":"Libertarian","bucket":"O","total":128}],"order":["Greg Wilcox","Bob Ryker","Thomas Knueven"],"precincts":{"Franklin":{"v":[332,255,128],"total":715}},"reporting":1,"total":715,"margin":false,"demIdx":null,"repIdx":null},{"id":"r35","prior":null,"office":"Madison Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Gary Blankenship","party":"Republican","bucket":"R","total":202},{"name":"Rob King","party":"Republican","bucket":"R","total":183},{"name":"William Fugate","party":"Republican","bucket":"R","total":173}],"order":["Gary Blankenship","Rob King","William Fugate"],"precincts":{"Madison":{"v":[202,183,173],"total":558}},"reporting":1,"total":558,"margin":false,"demIdx":null,"repIdx":null},{"id":"r36","prior":null,"office":"Ripley Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Greg Rutledge","party":"Republican","bucket":"R","total":180},{"name":"Dennis Groh","party":"Republican","bucket":"R","total":160},{"name":"Stanton J Mullett","party":"Republican","bucket":"R","total":154}],"order":["Greg Rutledge","Dennis Groh","Stanton J Mullett"],"precincts":{"Ripley":{"v":[180,160,154],"total":494}},"reporting":1,"total":494,"margin":false,"demIdx":null,"repIdx":null},{"id":"r37","prior":null,"office":"Sugar Creek Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"John R. Gable","party":"Republican","bucket":"R","total":111},{"name":"Charles R. Anderson","party":"Republican","bucket":"R","total":102},{"name":"Deborah Lou Lough","party":"Republican","bucket":"R","total":99}],"order":["John R. Gable","Charles R. Anderson","Deborah Lou Lough"],"precincts":{"Sugar Creek":{"v":[111,102,99],"total":312}},"reporting":1,"total":312,"margin":false,"demIdx":null,"repIdx":null},{"id":"r38","prior":null,"office":"Walnut Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Kayleigh B Arthur","party":"Republican","bucket":"R","total":282},{"name":"Taylor N Burkhart","party":"Republican","bucket":"R","total":256},{"name":"Michelle Kinkead","party":"Republican","bucket":"R","total":246}],"order":["Kayleigh B Arthur","Taylor N Burkhart","Michelle Kinkead"],"precincts":{"Walnut":{"v":[282,256,246],"total":784}},"reporting":1,"total":784,"margin":false,"demIdx":null,"repIdx":null},{"id":"r39","prior":null,"office":"Wayne Township Board Member, Montgomery County","cat":"Township Board Member","group":"Township","seats":3,"cands":[{"name":"Eric Runyan","party":"Republican","bucket":"R","total":258},{"name":"Loren Stephens","party":"Republican","bucket":"R","total":252},{"name":"Scott Harris","party":"Republican","bucket":"R","total":239}],"order":["Eric Runyan","Loren Stephens","Scott Harris"],"precincts":{"Wayne":{"v":[258,252,239],"total":749}},"reporting":1,"total":749,"margin":false,"demIdx":null,"repIdx":null},{"id":"r40","prior":null,"office":"Linden Town Council Member","cat":"Town Council Member","group":"Town & school board","seats":3,"cands":[{"name":"Paul E. Buckles","party":"Republican","bucket":"R","total":93},{"name":"Wade Bennett","party":"Republican","bucket":"R","total":92},{"name":"M Tom Lewellen","party":"Republican","bucket":"R","total":80}],"order":["Paul E. Buckles","Wade Bennett","M Tom Lewellen"],"precincts":{"Madison":{"v":[93,92,80],"total":265}},"reporting":1,"total":265,"margin":false,"demIdx":null,"repIdx":null},{"id":"r41","prior":null,"office":"New Richmond Town Council Member","cat":"Town Council Member","group":"Town & school board","seats":3,"cands":[{"name":"Rachelle Cowherd Pebbles","party":"Republican","bucket":"R","total":52},{"name":"Linda Forbes","party":"Republican","bucket":"R","total":47},{"name":"Jebadiah C Lind","party":"Republican","bucket":"R","total":46}],"order":["Rachelle Cowherd Pebbles","Linda Forbes","Jebadiah C Lind"],"precincts":{"Coal Creek":{"v":[52,47,46],"total":145}},"reporting":1,"total":145,"margin":false,"demIdx":null,"repIdx":null},{"id":"r42","prior":null,"office":"New Ross Town Council Member","cat":"Town Council Member","group":"Town & school board","seats":3,"cands":[{"name":"Jason Kelsey","party":"Republican","bucket":"R","total":60},{"name":"Rebecca L Lowe","party":"Republican","bucket":"R","total":42},{"name":"Vicky Rogers","party":"Republican","bucket":"R","total":39}],"order":["Jason Kelsey","Rebecca L Lowe","Vicky Rogers"],"precincts":{"Walnut":{"v":[60,42,39],"total":141}},"reporting":1,"total":141,"margin":false,"demIdx":null,"repIdx":null},{"id":"r43","prior":null,"office":"Waveland Town Council Member","cat":"Town Council Member","group":"Town & school board","seats":5,"cands":[{"name":"Susie Calvert","party":"Republican","bucket":"R","total":60},{"name":"Troy Phillips","party":"Republican","bucket":"R","total":53},{"name":"Christy Ferguson Roark","party":"Republican","bucket":"R","total":49},{"name":"Mike Frazier","party":"Republican","bucket":"R","total":44}],"order":["Susie Calvert","Troy Phillips","Christy Ferguson Roark","Mike Frazier"],"precincts":{"Brown":{"v":[60,53,49,44],"total":206}},"reporting":1,"total":206,"margin":false,"demIdx":null,"repIdx":null},{"id":"r44","prior":null,"office":"New Richmond Town Clerk-Treasurer","cat":"Town Clerk-Treasurer","group":"Town & school board","seats":1,"cands":[{"name":"Sarah Farmer-Forbes","party":"Republican","bucket":"R","total":66}],"order":["Sarah Farmer-Forbes"],"precincts":{"Coal Creek":{"v":[66],"total":66}},"reporting":1,"total":66,"margin":false,"demIdx":null,"repIdx":null},{"id":"r45","prior":null,"office":"New Ross Town Clerk-Treasurer","cat":"Town Clerk-Treasurer","group":"Town & school board","seats":1,"cands":[{"name":"Taylor Norton","party":"Republican","bucket":"R","total":60}],"order":["Taylor Norton"],"precincts":{"Walnut":{"v":[60],"total":60}},"reporting":1,"total":60,"margin":false,"demIdx":null,"repIdx":null},{"id":"r46","prior":null,"office":"Waveland Town Clerk-Treasurer","cat":"Town Clerk-Treasurer","group":"Town & school board","seats":1,"cands":[{"name":"Shawna L Wilson","party":"Republican","bucket":"R","total":54},{"name":"Dylan Hatch","party":"Independent","bucket":"O","total":29}],"order":["Shawna L Wilson","Dylan Hatch"],"precincts":{"Brown":{"v":[54,29],"total":83}},"reporting":1,"total":83,"margin":false,"demIdx":null,"repIdx":null},{"id":"r47","prior":null,"office":"Crawfordsville School Board, At Large","cat":"School Board Member","group":"Town & school board","seats":3,"cands":[{"name":"J. Kent Minnette","party":"Republican","bucket":"R","total":1783},{"name":"James Monte Thompson","party":"Republican","bucket":"R","total":1568},{"name":"Ellen Elaine Ball","party":"Democratic","bucket":"D","total":1515},{"name":"Kathleen Brown","party":"Independent","bucket":"O","total":1269},{"name":"Steven C Tomamichel","party":"Republican","bucket":"R","total":1265},{"name":"Darren M Heeke","party":"Independent","bucket":"O","total":909}],"order":["J. Kent Minnette","James Monte Thompson","Ellen Elaine Ball","Kathleen Brown","Steven C Tomamichel","Darren M Heeke"],"precincts":{"Crawfordsville 01":{"v":[254,209,230,224,160,142],"total":1219},"Crawfordsville 02":{"v":[73,68,55,46,60,34],"total":336},"Crawfordsville 03":{"v":[135,124,101,79,98,54],"total":591},"Crawfordsville 04":{"v":[214,199,184,131,156,86],"total":970},"Crawfordsville 05":{"v":[111,112,115,84,90,74],"total":586},"Crawfordsville 06":{"v":[96,84,110,84,67,67],"total":508},"Crawfordsville 07":{"v":[196,176,162,131,150,106],"total":921},"Crawfordsville 08":{"v":[197,157,147,116,126,74],"total":817},"Crawfordsville 09":{"v":[91,78,137,115,62,84],"total":567},"Crawfordsville 10":{"v":[110,99,121,104,81,82],"total":597},"Union 04":{"v":[2,2,0,0,2,0],"total":6},"Union 05":{"v":[12,12,6,6,8,8],"total":52},"Union 07":{"v":[292,248,147,149,205,98],"total":1139}},"reporting":13,"total":8309,"margin":false,"demIdx":null,"repIdx":null},{"id":"r48","prior":null,"office":"North Montgomery School Board, Coal Creek","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"Brady Rogers","party":"Republican","bucket":"R","total":2680}],"order":["Brady Rogers"],"precincts":{"Coal Creek":{"v":[365],"total":365},"Crawfordsville 02":{"v":[201],"total":201},"Crawfordsville 03":{"v":[45],"total":45},"Crawfordsville 04":{"v":[136],"total":136},"Franklin":{"v":[391],"total":391},"Madison":{"v":[212],"total":212},"Sugar Creek":{"v":[110],"total":110},"Union 01":{"v":[291],"total":291},"Union 02":{"v":[215],"total":215},"Union 03":{"v":[388],"total":388},"Union 04":{"v":[29],"total":29},"Wayne":{"v":[297],"total":297}},"reporting":12,"total":2680,"margin":false,"demIdx":null,"repIdx":null},{"id":"r49","prior":null,"office":"North Montgomery School Board, Franklin","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"Clayton Randolph","party":"Republican","bucket":"R","total":2455},{"name":"Bonnie Kallis","party":"American Solidarity","bucket":"O","total":498}],"order":["Clayton Randolph","Bonnie Kallis"],"precincts":{"Coal Creek":{"v":[314,61],"total":375},"Crawfordsville 02":{"v":[193,32],"total":225},"Crawfordsville 03":{"v":[34,15],"total":49},"Crawfordsville 04":{"v":[124,24],"total":148},"Franklin":{"v":[365,85],"total":450},"Madison":{"v":[204,44],"total":248},"Sugar Creek":{"v":[99,16],"total":115},"Union 01":{"v":[264,54],"total":318},"Union 02":{"v":[195,40],"total":235},"Union 03":{"v":[358,68],"total":426},"Union 04":{"v":[26,7],"total":33},"Wayne":{"v":[279,52],"total":331}},"reporting":12,"total":2953,"margin":false,"demIdx":null,"repIdx":null},{"id":"r50","prior":null,"office":"North Montgomery School Board, Sugar Creek","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"Gary Bohlander","party":"(  )","bucket":"O","total":2571}],"order":["Gary Bohlander"],"precincts":{"Coal Creek":{"v":[323],"total":323},"Crawfordsville 02":{"v":[203],"total":203},"Crawfordsville 03":{"v":[45],"total":45},"Crawfordsville 04":{"v":[125],"total":125},"Franklin":{"v":[387],"total":387},"Madison":{"v":[213],"total":213},"Sugar Creek":{"v":[111],"total":111},"Union 01":{"v":[282],"total":282},"Union 02":{"v":[204],"total":204},"Union 03":{"v":[380],"total":380},"Union 04":{"v":[31],"total":31},"Wayne":{"v":[267],"total":267}},"reporting":12,"total":2571,"margin":false,"demIdx":null,"repIdx":null},{"id":"r51","prior":null,"office":"North Montgomery School Board, Wayne","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"Terresa A Hatke","party":"Republican","bucket":"R","total":2719}],"order":["Terresa A Hatke"],"precincts":{"Coal Creek":{"v":[355],"total":355},"Crawfordsville 02":{"v":[210],"total":210},"Crawfordsville 03":{"v":[46],"total":46},"Crawfordsville 04":{"v":[137],"total":137},"Franklin":{"v":[386],"total":386},"Madison":{"v":[230],"total":230},"Sugar Creek":{"v":[113],"total":113},"Union 01":{"v":[303],"total":303},"Union 02":{"v":[215],"total":215},"Union 03":{"v":[385],"total":385},"Union 04":{"v":[28],"total":28},"Wayne":{"v":[311],"total":311}},"reporting":12,"total":2719,"margin":false,"demIdx":null,"repIdx":null},{"id":"r52","prior":null,"office":"South Montgomery School Board Walnut","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"Cody Leatherman","party":"Republican","bucket":"R","total":2461}],"order":["Cody Leatherman"],"precincts":{"Brown":{"v":[349],"total":349},"Clark":{"v":[350],"total":350},"Crawfordsville 05":{"v":[10],"total":10},"Crawfordsville 08":{"v":[0],"total":0},"Ripley":{"v":[183],"total":183},"Scott":{"v":[150],"total":150},"Union 04":{"v":[170],"total":170},"Union 05":{"v":[360],"total":360},"Union 06":{"v":[519],"total":519},"Union 07":{"v":[30],"total":30},"Walnut":{"v":[340],"total":340}},"reporting":10,"total":2461,"margin":false,"demIdx":null,"repIdx":null},{"id":"r53","prior":null,"office":"South Montgomery School Board, At Large","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"Cody Hargis","party":"Republican","bucket":"R","total":2491}],"order":["Cody Hargis"],"precincts":{"Brown":{"v":[355],"total":355},"Clark":{"v":[348],"total":348},"Crawfordsville 05":{"v":[10],"total":10},"Crawfordsville 08":{"v":[0],"total":0},"Ripley":{"v":[202],"total":202},"Scott":{"v":[152],"total":152},"Union 04":{"v":[174],"total":174},"Union 05":{"v":[366],"total":366},"Union 06":{"v":[522],"total":522},"Union 07":{"v":[30],"total":30},"Walnut":{"v":[332],"total":332}},"reporting":10,"total":2491,"margin":false,"demIdx":null,"repIdx":null},{"id":"r54","prior":null,"office":"South Montgomery School Board, Brown","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"Jacob Watson","party":"Republican","bucket":"R","total":2508}],"order":["Jacob Watson"],"precincts":{"Brown":{"v":[367],"total":367},"Clark":{"v":[348],"total":348},"Crawfordsville 05":{"v":[9],"total":9},"Crawfordsville 08":{"v":[0],"total":0},"Ripley":{"v":[198],"total":198},"Scott":{"v":[162],"total":162},"Union 04":{"v":[169],"total":169},"Union 05":{"v":[366],"total":366},"Union 06":{"v":[530],"total":530},"Union 07":{"v":[30],"total":30},"Walnut":{"v":[329],"total":329}},"reporting":10,"total":2508,"margin":false,"demIdx":null,"repIdx":null},{"id":"r55","prior":null,"office":"South Montgomery School Board, Clark","cat":"School Board Member","group":"Town & school board","seats":1,"cands":[{"name":"David Lee Reeves","party":"Republican","bucket":"R","total":2454}],"order":["David Lee Reeves"],"precincts":{"Brown":{"v":[349],"total":349},"Clark":{"v":[352],"total":352},"Crawfordsville 05":{"v":[10],"total":10},"Crawfordsville 08":{"v":[0],"total":0},"Ripley":{"v":[187],"total":187},"Scott":{"v":[160],"total":160},"Union 04":{"v":[165],"total":165},"Union 05":{"v":[362],"total":362},"Union 06":{"v":[516],"total":516},"Union 07":{"v":[30],"total":30},"Walnut":{"v":[323],"total":323}},"reporting":10,"total":2454,"margin":false,"demIdx":null,"repIdx":null}],"groups":["Federal & state","Countywide","Commissioner & council","Township","Town & school board"],"shapes":[{"name":"Brown","d":"M193.3,435.5L193.4,448.1L193.5,451.8L193.4,455.7L193.4,460.3L196.1,460.3L197.9,460.3L199.1,460.3L202.6,460.3L205.9,460.3L209.8,460.2L213.4,460.3L216.3,460.3L218.3,460.4L223.7,460.3L228.9,460.3L232.0,460.4L234.7,460.4L236.3,460.4L238.3,460.4L241.8,460.4L246.4,460.5L253.1,460.4L255.2,460.4L260.4,460.4L263.2,460.4L266.7,460.4L268.2,460.4L271.3,460.4L274.8,460.4L281.0,460.4L282.3,460.4L283.7,460.4L286.1,460.4L287.6,460.4L290.2,460.3L291.6,460.4L293.1,460.4L293.1,462.2L293.1,464.0L293.1,467.1L293.1,468.4L293.1,472.4L293.1,477.3L293.2,483.7L293.1,487.1L293.1,489.2L293.1,490.9L293.2,495.9L293.1,497.7L293.1,502.1L293.1,506.5L293.1,509.0L293.3,511.2L293.2,523.4L293.1,533.5L293.0,552.0L293.1,558.5L292.8,592.2L293.0,595.9L293.0,608.3L276.1,608.2L273.6,608.4L272.0,608.5L269.0,608.4L260.6,608.3L259.4,608.2L258.1,608.2L255.7,608.2L249.2,608.2L247.9,608.2L243.0,608.1L239.1,608.1L230.5,608.0L228.0,608.0L226.6,607.8L224.5,607.8L222.0,607.8L219.6,607.8L214.7,607.8L211.8,607.7L210.6,607.8L206.7,607.8L204.5,607.7L199.5,607.7L191.6,607.5L189.4,607.5L176.9,607.4L130.8,606.9L120.5,606.9L118.4,606.8L91.5,606.5L77.0,606.4L73.9,606.4L69.6,606.4L68.7,593.0L68.7,590.0L68.7,585.9L68.8,583.1L68.8,581.9L68.8,575.5L68.9,570.3L68.9,556.4L68.9,555.1L68.9,550.3L68.9,544.1L69.0,519.3L69.1,503.1L69.1,494.2L69.1,492.0L69.2,483.1L69.2,472.0L70.9,472.3L73.2,473.3L74.3,474.4L75.2,475.3L76.5,475.9L78.2,476.4L79.4,476.4L81.1,476.2L83.0,476.2L84.1,476.5L85.1,477.0L86.3,477.9L88.2,478.0L89.6,477.4L91.6,477.5L92.6,478.1L93.6,478.9L94.4,479.6L95.3,480.5L96.3,482.4L97.0,483.6L97.6,484.9L98.3,485.7L99.8,486.2L102.0,486.3L103.1,485.7L104.1,484.9L104.7,483.8L106.2,479.6L107.1,476.0L107.7,474.1L108.4,472.2L109.7,471.1L111.0,471.0L113.4,471.4L114.5,471.7L115.6,472.1L119.2,473.4L120.7,472.9L121.4,471.1L121.5,469.7L121.5,463.7L121.6,460.2L122.4,458.0L122.4,456.3L122.9,454.9L124.3,452.8L124.9,451.9L125.8,451.0L126.9,450.4L128.0,450.0L130.3,449.7L133.3,449.8L136.2,449.6L137.3,449.5L138.7,448.9L140.3,448.5L142.1,448.5L143.3,447.5L143.8,446.3L143.8,445.0L143.4,443.5L143.0,442.7L142.6,441.6L142.4,439.5L142.8,438.3L143.7,437.4L145.1,436.9L147.7,437.3L148.7,437.8L149.9,438.5L152.8,438.6L154.7,438.3L155.8,438.0L156.7,437.3L157.9,436.9L159.5,436.8L161.3,437.0L162.5,438.4L163.0,439.3L163.7,440.1L164.5,440.6L166.2,441.0L168.1,440.5L168.9,439.9L170.4,438.5L171.6,437.1L172.5,435.5L174.5,434.8L180.9,435.1L189.4,435.5L193.3,435.5Z","cx":174.2,"cy":496.5,"area":33477.5,"bbox":[68.7,434.8,293.3,608.5],"cong":"004","senate":"023","house":"044","comm":"","council":""},{"name":"Clark","d":"M566.8,459.9L571.5,459.9L576.8,459.8L578.8,459.8L581.5,459.8L585.9,459.8L591.4,459.9L591.6,465.2L591.6,467.3L591.7,473.3L591.7,475.3L591.7,477.3L591.7,483.4L591.7,485.4L591.8,490.3L591.9,504.1L591.9,509.7L591.6,510.6L591.7,512.5L591.8,514.1L591.8,522.7L591.7,534.4L591.7,541.5L591.8,547.3L591.8,549.6L591.9,553.9L591.9,557.3L591.9,559.9L592.2,585.0L592.3,592.3L592.2,609.9L586.7,609.9L584.5,609.9L582.9,609.9L578.5,609.9L573.5,610.0L572.0,609.9L569.5,609.9L568.0,609.9L565.7,609.9L561.5,609.9L556.6,610.0L555.1,610.0L551.3,610.0L548.6,610.0L538.2,610.0L536.0,610.0L528.7,610.0L524.7,610.0L522.8,610.0L519.7,610.0L517.5,610.0L515.5,610.0L513.1,609.9L511.6,609.9L505.6,610.0L500.8,610.0L495.3,609.9L488.1,609.9L486.0,609.9L481.5,609.9L479.4,609.9L475.0,609.9L471.6,609.9L469.8,609.8L467.8,609.8L462.6,609.7L457.1,609.7L455.3,609.7L451.9,609.8L450.3,609.8L447.7,609.7L446.1,609.7L443.2,609.7L441.7,609.7L441.7,587.3L441.7,584.8L441.7,559.8L441.6,553.2L441.7,529.9L441.7,527.3L441.7,525.9L441.8,522.4L441.8,518.8L441.8,515.5L441.8,512.7L441.9,498.7L441.8,473.9L441.8,472.2L441.9,470.1L441.8,468.0L441.9,466.2L441.8,462.6L441.8,460.2L453.9,460.2L468.4,460.2L472.4,460.4L475.4,460.4L483.6,460.4L487.4,460.4L491.2,460.4L492.8,460.4L497.6,460.4L502.0,460.3L509.9,460.3L518.2,460.3L519.6,460.3L521.8,460.3L524.0,460.3L528.7,460.3L533.3,460.2L537.6,460.2L539.8,460.2L541.1,460.2L556.0,460.0L557.7,460.1L563.2,460.1L564.5,460.1L565.7,460.0L566.8,459.9Z","cx":522.3,"cy":535.4,"area":22478.6,"bbox":[441.6,459.8,592.3,610.0],"cong":"004","senate":"007","house":"028","comm":"","council":""},{"name":"Coal Creek","d":"M290.2,10.4L290.1,13.6L290.1,17.6L290.1,19.0L290.1,24.4L290.1,29.7L290.2,34.8L290.2,37.3L290.2,40.2L290.2,45.6L290.2,46.8L290.2,50.9L290.2,59.7L290.3,76.1L290.3,78.1L290.3,81.5L290.3,83.9L290.3,93.0L290.3,97.3L290.4,105.3L290.4,109.7L290.4,115.8L290.4,120.9L290.5,126.2L290.5,128.5L290.5,134.7L290.5,137.3L290.6,139.3L290.6,141.3L290.6,143.4L290.6,147.2L290.6,153.5L290.6,157.9L290.6,159.3L290.2,160.2L283.9,160.3L281.7,159.9L274.1,160.1L241.5,160.5L239.2,159.9L237.4,160.1L222.0,160.0L217.4,160.0L215.7,160.0L213.7,160.0L211.9,160.0L210.1,160.0L207.3,160.0L203.9,160.0L202.4,160.0L200.4,160.0L189.4,160.1L187.1,160.2L182.3,160.0L180.0,160.0L178.3,160.1L175.0,160.1L168.9,160.1L167.0,160.1L160.8,160.1L158.7,160.1L149.4,160.0L146.8,160.0L140.4,160.0L137.4,160.0L134.1,160.1L132.7,160.0L131.5,160.1L98.7,160.2L68.4,160.1L68.4,156.5L68.4,155.1L68.4,150.5L68.4,147.7L68.4,145.7L68.5,144.0L68.5,141.4L68.5,135.2L68.5,132.5L68.5,129.6L68.5,127.2L68.5,123.6L68.5,117.4L68.5,116.1L68.5,111.9L68.5,110.3L68.5,106.6L68.5,101.3L68.4,97.0L68.4,91.7L68.4,89.6L68.5,86.7L68.4,85.5L68.4,83.1L68.4,80.8L68.4,73.8L68.4,72.6L68.4,71.2L68.4,66.0L68.4,63.8L68.4,62.1L68.5,42.7L68.2,27.5L68.2,23.7L68.1,19.4L68.0,15.2L68.0,12.0L67.8,10.8L72.7,10.5L87.7,10.6L92.6,10.6L97.6,10.6L112.6,10.7L117.5,10.7L122.5,10.7L130.5,10.7L137.5,10.7L142.5,10.7L143.6,10.5L148.6,10.6L151.4,10.6L152.7,10.6L154.1,10.6L156.1,10.6L158.1,10.6L159.8,10.6L161.4,10.6L163.3,10.6L165.6,10.6L169.2,10.6L170.5,10.6L171.8,10.6L173.9,10.6L176.6,10.6L178.7,10.6L180.6,10.6L182.5,10.6L183.8,10.6L190.2,10.6L209.8,10.5L216.1,10.5L218.4,10.5L220.6,10.5L222.3,10.5L223.9,10.5L226.3,10.5L227.8,10.5L229.1,10.5L230.8,10.5L232.5,10.5L235.5,10.5L237.3,10.5L239.0,10.4L240.5,10.4L241.9,10.4L257.7,10.4L258.9,10.4L262.8,10.5L264.1,10.5L266.5,10.5L268.0,10.4L270.0,10.4L271.3,10.4L273.2,10.2L275.3,10.2L283.5,10.1L286.4,10.1L290.2,10.1Z","cx":185.1,"cy":76.7,"area":33195.8,"bbox":[67.8,10.1,290.6,160.5],"cong":"004","senate":"023","house":"013","comm":"","council":""},{"name":"Crawfordsville 01","d":"M292.6,296.2L293.8,299.1L294.7,301.3L295.3,302.8L296.0,304.4L296.8,305.2L298.8,305.5L300.5,305.4L302.8,305.4L305.2,305.4L306.4,305.3L307.6,305.3L309.6,305.3L311.4,305.3L311.4,307.4L313.6,307.3L313.6,309.2L313.6,311.2L312.3,311.2L311.1,311.2L309.7,311.2L307.8,311.2L306.2,311.2L303.8,311.2L301.9,311.2L299.6,311.2L297.0,311.2L295.3,311.3L292.7,311.3L290.9,311.3L289.9,311.7L290.2,312.9L288.5,313.4L287.1,313.9L286.0,313.4L285.1,313.1L285.1,316.0L285.1,317.6L279.6,317.3L279.1,313.8L277.6,313.9L276.7,313.3L276.6,311.9L275.9,311.4L272.6,311.3L272.6,309.2L273.2,307.3L274.5,307.1L275.3,306.1L276.3,305.8L277.1,305.4L278.7,305.0L279.4,303.6L280.4,301.1L281.0,299.2L281.5,297.9L282.1,296.8L282.8,296.2L284.2,296.1L285.0,296.4L286.4,296.1L287.4,295.9L288.9,294.9L290.5,293.4L291.4,292.9L291.9,294.2L292.6,296.2Z","cx":291.6,"cy":306.3,"area":423.0,"bbox":[272.6,292.9,313.6,317.6],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 02","d":"M316.0,231.7L316.2,232.9L317.1,235.8L318.1,237.9L320.3,242.0L320.7,242.8L321.5,243.5L332.3,243.0L331.1,244.5L329.7,246.4L329.0,247.3L328.1,248.5L324.9,248.9L324.0,249.7L323.1,251.3L325.0,252.1L326.0,253.8L327.0,255.8L327.2,258.3L327.3,259.8L327.4,261.4L329.4,261.4L330.3,262.7L331.5,263.9L332.0,264.7L334.4,263.4L334.4,265.6L335.8,265.2L337.2,264.1L338.6,263.9L340.6,263.6L342.1,263.6L343.4,264.1L343.6,265.4L343.1,266.1L342.3,267.1L340.7,267.9L343.0,267.8L342.6,269.8L342.0,270.5L342.7,271.4L343.7,270.1L344.9,270.1L346.8,270.9L346.8,272.2L346.3,271.4L345.3,271.0L344.2,270.8L343.3,271.2L344.5,271.2L345.6,271.3L346.4,271.8L346.5,273.0L340.5,273.6L340.5,283.0L337.1,283.3L335.2,283.1L333.0,283.0L331.4,283.0L330.0,283.0L328.0,283.0L328.0,285.1L327.9,286.5L328.0,290.3L327.9,292.5L328.0,294.2L328.0,296.7L326.3,296.7L324.5,296.7L323.8,296.1L323.0,295.7L322.4,298.1L322.5,301.2L322.8,302.9L323.3,303.9L324.7,304.8L323.2,305.2L321.4,305.2L319.3,305.3L317.4,305.3L316.2,305.3L315.4,304.1L315.4,301.4L313.3,301.4L313.3,300.2L312.5,299.5L309.8,298.7L308.0,298.7L306.5,298.7L306.5,300.2L306.5,302.6L306.5,305.3L305.2,305.4L303.9,305.4L300.5,305.4L298.8,305.5L297.5,305.5L296.5,305.0L295.7,303.6L294.7,301.3L294.1,299.8L292.6,296.2L292.2,294.9L291.7,293.7L292.2,292.9L293.5,292.7L294.8,292.9L295.7,293.5L296.5,294.3L297.3,295.2L299.5,297.6L300.9,297.3L301.6,296.8L303.3,296.3L304.8,295.9L305.7,295.4L306.6,294.3L307.2,292.4L307.7,291.6L308.7,290.9L309.8,291.2L310.6,292.0L311.3,292.7L312.1,291.9L311.3,291.4L310.3,290.8L309.4,290.5L308.2,290.6L308.5,289.0L307.6,288.3L307.5,286.9L307.6,285.4L308.4,284.9L309.3,285.5L310.1,286.1L310.7,286.8L311.6,287.8L312.3,287.1L313.4,286.8L314.0,287.6L313.4,285.9L312.7,285.2L312.1,284.4L311.5,283.4L311.0,282.6L310.6,281.7L310.3,280.7L309.8,279.0L309.6,277.5L309.6,276.2L309.8,273.9L310.0,272.0L308.7,272.0L307.8,272.9L300.3,273.7L300.1,266.5L302.7,266.5L304.3,266.6L306.0,267.8L308.5,267.8L305.7,263.9L304.2,262.2L303.5,261.3L304.8,261.3L306.2,261.4L307.5,261.4L309.2,261.4L309.2,259.8L309.2,258.1L309.2,256.7L309.2,255.3L309.2,253.7L309.2,251.9L309.2,250.3L309.3,249.1L306.5,248.9L305.0,248.9L305.0,247.6L305.0,245.1L305.0,242.9L305.0,240.3L308.1,240.7L309.3,241.1L310.3,241.6L311.1,242.3L311.7,243.0L312.7,244.5L313.8,244.9L314.9,245.0L315.1,243.9L315.4,242.5L316.1,241.0L316.3,239.3L316.3,236.5L315.9,231.9Z","cx":317.3,"cy":275.0,"area":1602.4,"bbox":[291.7,231.7,346.8,305.5],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 03","d":"M345.4,279.1L344.4,280.4L346.8,280.3L351.8,280.4L352.1,281.4L352.5,282.4L353.2,283.1L353.0,284.2L352.9,286.0L355.8,286.0L360.4,286.0L365.3,286.0L365.4,298.4L364.1,298.4L362.3,298.4L360.8,298.4L359.5,298.4L358.2,298.4L356.5,298.4L355.3,298.4L352.9,298.4L351.6,298.4L350.0,298.5L348.1,298.5L346.9,298.6L345.4,299.2L343.9,300.1L342.6,300.9L341.5,301.6L340.4,302.3L338.5,303.5L337.5,304.1L336.3,304.8L335.1,305.2L333.1,305.2L331.3,305.2L329.6,305.2L328.1,305.2L326.8,305.2L325.4,305.2L323.3,303.9L322.8,302.9L322.5,301.2L322.4,298.1L322.9,294.8L323.1,296.0L324.5,296.0L325.4,296.7L328.0,296.7L328.0,295.0L328.0,293.2L328.0,291.4L327.9,287.7L327.9,286.2L328.0,283.0L330.0,283.0L331.4,283.0L333.0,283.0L334.3,283.0L337.1,283.3L340.3,283.8L341.6,283.4L342.1,282.4L343.8,280.1L344.8,279.0L348.3,275.3L346.9,277.6L345.4,279.1Z","cx":341.2,"cy":292.7,"area":699.9,"bbox":[322.4,275.3,365.4,305.2],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 04","d":"M365.4,298.4L365.4,299.7L366.2,298.5L366.5,299.7L367.2,300.5L367.2,302.1L370.0,302.1L370.9,302.6L376.5,302.7L376.5,305.7L376.5,306.9L376.5,308.4L374.7,308.4L374.7,310.8L373.0,310.8L371.6,310.8L370.1,310.9L368.8,310.9L367.2,310.9L365.5,310.9L364.2,310.9L362.8,310.9L359.2,310.9L357.7,310.9L355.8,310.9L354.5,311.0L353.0,310.6L351.1,311.0L349.8,311.0L348.3,311.0L346.8,311.0L345.3,311.0L343.9,311.0L342.4,311.0L341.1,311.0L338.7,311.0L336.9,311.1L334.7,311.1L331.6,309.3L330.1,308.7L329.8,307.2L329.6,306.1L331.3,305.2L333.1,305.2L334.8,305.2L336.3,304.8L337.5,304.1L338.5,303.5L339.7,302.7L341.5,301.6L342.6,300.9L343.9,300.1L344.8,299.5L346.1,298.9L347.2,298.5L350.0,298.5L351.4,298.4L352.9,298.4L355.3,298.4L356.5,298.4L358.0,298.4L359.5,298.4L360.8,298.4L362.3,298.4L364.1,298.4L365.4,298.4Z","cx":354.1,"cy":305.4,"area":456.5,"bbox":[329.6,298.4,376.5,311.1],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 05","d":"M353.9,311.0L355.8,310.9L357.7,310.9L359.2,310.9L362.1,310.9L364.2,310.9L365.5,310.9L367.2,310.9L368.4,310.9L368.7,316.0L370.1,315.9L370.1,314.2L371.7,314.2L371.7,315.4L371.7,317.2L373.6,317.2L375.1,317.2L375.1,319.7L377.1,319.7L377.8,322.3L376.7,322.6L376.2,323.5L370.8,323.5L370.8,320.3L368.7,319.2L368.3,318.3L367.4,319.1L366.6,319.7L365.5,319.9L365.6,322.0L365.5,323.5L365.6,324.8L365.6,329.2L365.6,331.9L358.3,328.5L357.3,327.8L357.2,326.6L359.1,326.6L359.3,325.1L359.9,323.5L358.6,323.5L357.1,323.5L356.4,324.2L356.4,325.9L356.1,327.0L353.1,325.7L351.4,324.8L349.1,323.4L348.4,322.7L347.6,322.3L347.6,320.7L346.9,319.4L346.9,316.2L346.8,314.9L346.8,313.0L346.8,311.0L348.3,311.0L349.8,311.0L351.1,311.0L352.4,311.0L353.9,311.0Z","cx":361.3,"cy":318.9,"area":365.4,"bbox":[346.8,310.9,377.8,331.9],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 06","d":"M346.8,311.0L346.8,313.0L346.8,314.4L346.9,316.2L346.9,318.3L346.9,320.7L347.6,321.4L348.4,322.7L349.2,323.4L351.4,324.8L352.9,325.6L353.2,333.1L353.2,335.9L349.9,335.9L346.9,331.1L347.0,335.7L347.1,347.1L347.1,348.3L344.9,348.3L343.7,348.3L341.1,348.3L340.1,346.5L339.5,345.3L338.8,344.0L337.9,342.3L337.0,340.6L336.6,339.7L335.7,337.9L335.2,336.9L334.7,335.8L334.6,334.7L333.8,334.1L333.0,332.6L331.9,330.5L331.2,329.0L330.5,327.5L329.9,326.4L329.5,325.4L329.0,324.1L328.6,322.7L328.2,321.6L327.6,320.8L329.3,320.8L330.5,320.8L330.5,318.8L332.4,318.8L334.3,318.8L334.3,317.1L334.3,315.2L334.4,313.0L334.1,311.9L334.7,311.1L336.6,311.1L338.7,311.0L340.0,311.0L341.7,311.0L343.2,311.0L344.6,311.0L346.0,311.0Z","cx":339.5,"cy":326.5,"area":551.7,"bbox":[327.6,311.0,353.2,348.3],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 07","d":"M324.5,320.8L327.2,320.8L328.0,321.3L328.6,322.7L328.9,323.7L329.4,325.0L329.9,326.4L330.5,327.5L330.9,328.3L331.8,330.1L333.0,332.6L333.8,334.1L334.4,334.7L334.7,335.8L335.2,336.9L335.7,337.9L336.6,339.7L337.0,340.6L337.9,342.3L338.4,343.3L339.2,344.9L340.0,346.4L341.0,348.1L339.2,348.2L337.3,348.3L335.3,348.3L333.8,348.3L330.0,348.3L328.8,348.3L328.7,359.8L322.4,360.8L322.5,367.0L322.6,373.3L316.5,373.3L316.3,371.6L316.3,369.4L316.3,367.2L316.3,364.2L316.3,362.0L316.3,360.8L316.3,359.3L316.2,357.8L316.1,355.1L316.1,353.7L316.0,352.6L316.0,351.2L316.0,350.0L316.0,348.4L316.0,346.7L316.0,345.4L315.9,343.4L315.9,341.6L316.1,340.2L316.5,339.4L317.8,337.2L318.5,335.9L319.0,334.7L319.3,332.6L319.3,331.2L319.3,328.4L319.3,326.5L319.3,325.1L319.3,322.9L319.3,320.8L321.3,320.8L323.2,320.8L324.5,320.8ZM317.7,349.5L321.5,349.5L320.5,348.4L320.5,346.1L319.9,345.0L319.0,345.6L319.1,348.4L317.7,348.4ZM321.8,348.3L322.4,349.5L324.6,349.9L326.6,349.9L328.4,351.0L328.4,348.4L325.3,348.3L324.1,348.3L322.0,348.3Z","cx":324.9,"cy":342.2,"area":674.9,"bbox":[315.9,320.8,341.0,373.3],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 08","d":"M308.7,311.2L309.7,312.3L309.7,314.0L310.6,317.6L309.8,318.1L310.6,318.5L311.9,318.5L313.6,318.5L315.6,318.5L317.1,318.5L319.3,318.4L319.3,317.1L321.4,317.1L321.3,320.8L319.3,320.8L319.3,322.9L319.3,324.1L319.3,326.5L319.3,328.4L319.3,330.2L319.3,331.6L319.1,334.0L318.5,335.9L318.1,336.9L316.7,339.0L316.2,340.0L316.0,340.9L315.9,342.3L315.9,345.1L316.0,346.7L316.0,348.4L316.0,350.0L316.0,351.2L316.0,352.6L316.1,353.7L316.1,355.0L316.1,356.7L316.2,358.5L316.3,360.0L316.0,362.5L316.0,363.9L316.1,366.0L316.2,369.1L316.0,365.4L315.9,363.6L315.9,362.1L315.8,360.8L313.9,360.9L310.4,360.8L307.3,360.8L306.3,358.0L306.2,354.1L309.9,354.1L309.9,349.4L311.2,349.4L315.0,349.4L314.9,347.3L313.5,347.3L312.5,348.4L312.2,347.3L308.8,347.2L308.4,348.3L307.4,347.3L306.5,348.3L304.2,348.3L304.5,347.5L305.0,346.4L305.8,344.7L306.4,343.6L307.0,342.7L305.6,342.7L306.8,340.7L308.0,338.6L308.1,337.3L309.7,337.4L310.9,337.2L311.9,336.6L312.5,335.9L312.4,333.9L312.4,330.1L312.5,327.7L312.3,326.6L311.8,325.6L310.7,326.4L308.7,326.4L307.3,326.5L306.8,329.6L305.3,329.6L303.5,329.6L303.5,333.9L302.1,333.9L301.0,335.7L298.3,335.9L297.4,340.3L297.4,342.7L291.8,342.7L291.7,335.8L290.4,335.8L288.3,335.8L285.6,335.9L285.5,329.5L285.5,326.8L285.4,323.4L282.2,323.4L280.5,323.5L278.9,323.5L273.6,323.6L271.0,323.6L268.9,323.7L267.0,323.7L264.8,323.8L264.8,322.5L264.7,316.7L265.8,316.4L267.1,316.5L269.0,316.6L270.9,316.7L272.7,316.9L274.2,316.9L275.9,317.0L277.4,317.1L279.0,317.2L284.0,317.6L285.8,317.7L287.5,317.8L289.4,318.0L289.5,320.4L291.3,320.3L291.2,318.4L291.1,316.8L290.8,315.8L290.5,314.4L290.2,313.3L289.9,311.7L290.9,311.3L292.2,311.3L294.2,311.3L296.0,311.3L299.6,311.2L301.0,311.2L302.7,311.2L305.2,311.2L307.8,311.2Z","cx":302.6,"cy":333.0,"area":1039.7,"bbox":[264.7,311.2,321.4,369.1],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 09","d":"M312.5,299.5L313.3,300.0L313.3,301.4L315.4,301.4L315.4,303.3L315.4,305.3L316.7,305.3L318.1,305.3L321.4,305.2L321.3,307.2L321.3,309.2L321.3,311.1L321.3,313.1L322.2,314.2L323.3,315.2L323.3,316.9L323.3,319.0L323.2,320.8L321.3,320.8L321.4,317.1L319.3,317.1L319.3,318.4L317.6,318.4L315.6,318.5L313.6,318.5L311.9,318.5L310.6,318.5L309.7,318.1L310.6,317.6L309.7,314.8L309.7,313.2L309.7,311.2L311.1,311.2L312.3,311.2L313.6,311.2L313.6,309.2L313.6,307.3L311.4,307.4L311.4,305.3L309.6,305.3L307.6,305.3L306.5,303.7L306.5,300.8L306.5,298.7L308.0,298.7L309.8,298.7L312.3,298.6Z","cx":314.8,"cy":309.9,"area":194.8,"bbox":[306.5,298.6,323.3,320.8],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Crawfordsville 10","d":"M325.4,305.2L326.8,305.2L328.1,305.2L329.6,305.2L329.6,307.2L329.8,308.5L331.1,309.1L333.9,310.9L334.1,311.9L334.4,313.0L334.3,315.2L334.3,316.5L334.3,318.1L332.4,318.8L330.5,318.8L330.5,320.3L329.3,320.8L327.6,320.8L325.4,320.8L323.2,320.8L323.3,319.0L323.3,317.1L323.3,315.2L322.2,314.7L322.2,313.1L321.3,311.1L321.3,309.2L321.3,307.2L321.4,305.2L322.6,305.2L324.7,305.2Z","cx":327.5,"cy":312.7,"area":158.4,"bbox":[321.3,305.2,334.4,320.8],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Franklin","d":"M582.7,131.7L587.0,132.3L589.8,132.1L589.8,133.9L589.8,135.5L589.8,139.1L589.8,140.9L589.8,142.2L589.8,143.5L589.8,145.0L589.8,146.5L589.8,148.3L589.8,150.7L589.8,152.0L589.8,154.3L589.8,155.9L589.8,158.4L589.8,160.1L589.8,161.6L589.8,163.2L589.9,164.6L589.8,165.8L589.9,167.8L589.9,169.6L589.9,172.1L589.9,173.9L589.9,180.2L589.9,182.0L589.9,184.5L589.9,186.6L589.9,188.9L589.9,191.4L590.0,194.2L590.0,197.0L590.0,199.5L590.0,201.9L590.0,203.9L590.0,207.0L590.0,209.5L590.1,212.0L590.0,214.0L590.1,215.4L590.1,217.0L590.0,218.4L590.1,220.5L590.0,222.2L590.0,225.1L590.0,226.8L590.0,228.0L590.1,230.1L590.1,232.2L590.1,234.0L590.1,235.7L590.1,237.2L590.1,238.9L590.2,245.7L590.3,263.1L590.3,268.9L590.3,270.7L590.3,276.1L590.3,277.6L590.2,278.7L590.2,280.3L590.2,282.1L590.2,283.5L590.2,286.9L590.2,290.4L590.2,294.7L590.2,297.2L590.2,299.6L590.2,306.5L590.2,308.8L586.0,309.6L583.9,309.6L579.1,309.6L571.8,309.6L565.1,309.7L558.9,309.7L540.3,309.9L527.9,309.9L519.0,310.2L509.3,310.3L496.6,310.4L484.5,310.6L478.5,310.3L469.0,310.5L465.7,310.6L449.0,310.1L446.4,310.3L440.9,310.1L440.1,302.0L440.0,300.1L440.0,297.9L439.9,290.1L439.8,275.7L439.9,274.3L440.0,273.2L440.0,270.1L440.0,268.1L440.0,266.2L439.9,263.7L439.9,261.5L439.9,257.1L439.9,250.0L439.9,248.1L439.8,245.0L439.8,241.0L439.8,235.8L439.8,233.2L439.8,228.8L439.8,226.3L439.8,224.8L439.8,223.2L439.7,217.2L439.7,214.8L439.7,210.2L439.7,208.7L439.7,207.1L439.8,205.6L439.7,204.4L439.7,194.1L439.7,185.8L439.7,183.0L439.7,179.1L439.7,176.1L439.7,173.4L439.9,164.0L439.8,159.4L441.3,159.4L442.8,159.4L444.4,159.4L451.1,159.5L458.3,159.5L464.9,159.5L488.5,159.7L490.0,159.7L497.9,159.6L498.9,158.1L501.4,156.3L503.3,155.7L507.2,154.7L508.7,154.8L511.1,156.7L513.3,158.2L514.2,159.0L515.3,159.8L516.0,160.3L517.8,159.7L518.4,158.4L519.1,157.1L519.8,155.6L521.0,154.4L522.5,154.3L524.7,154.5L526.7,154.3L527.6,153.5L527.8,152.4L526.9,151.2L526.4,150.2L528.0,148.6L528.6,147.7L529.2,147.1L530.8,146.4L532.3,145.8L534.0,146.1L535.5,146.8L539.1,146.5L543.0,145.3L544.7,144.6L546.5,143.7L547.6,142.9L549.1,141.1L551.6,138.6L552.3,138.0L553.5,137.0L554.3,136.3L555.4,135.1L556.8,134.9L559.1,135.4L560.7,135.9L563.5,136.4L566.6,136.3L568.7,135.8L570.0,135.3L571.2,134.3L571.7,133.3L572.1,131.9L573.1,131.0L574.4,130.7L577.6,131.0L582.7,131.7Z","cx":532.6,"cy":202.2,"area":24039.5,"bbox":[439.7,130.7,590.3,310.6],"cong":"004","senate":"007","house":"028","comm":"","council":""},{"name":"Madison","d":"M316.7,10.3L318.8,10.3L321.1,10.3L323.1,10.3L325.4,10.3L328.9,10.3L337.4,10.3L339.5,10.3L340.9,10.3L343.1,10.3L348.1,10.3L349.6,10.2L351.8,10.3L353.7,10.2L355.5,10.2L356.9,10.3L359.6,10.3L361.6,10.3L363.2,10.2L364.7,10.3L366.9,10.3L368.3,10.3L369.7,10.3L371.4,10.3L374.7,10.3L376.8,10.3L379.4,10.3L387.4,10.3L390.0,10.3L391.2,10.3L392.8,10.3L395.3,10.3L396.6,10.3L398.7,10.3L400.9,10.3L402.3,10.3L403.8,10.3L405.2,10.3L408.3,10.3L411.6,10.2L417.5,10.2L419.9,10.2L421.7,10.2L423.0,10.0L424.2,10.1L425.2,10.2L426.9,10.2L428.3,10.2L429.7,10.2L431.8,10.2L436.4,10.2L438.1,10.2L439.8,10.2L439.8,12.6L439.9,34.6L440.0,59.6L439.6,77.1L439.8,78.2L439.8,80.3L439.8,82.4L439.8,84.9L439.9,109.5L440.0,115.9L440.0,118.0L439.9,134.4L439.9,147.0L439.8,158.2L439.8,159.4L433.6,159.5L431.8,159.5L427.3,159.5L402.4,159.9L390.5,160.1L387.0,159.4L371.3,159.8L357.9,159.9L354.2,159.7L343.6,159.9L331.4,160.0L323.9,160.1L315.4,160.1L302.9,160.0L295.1,160.2L290.6,160.1L290.6,157.9L290.6,153.5L290.6,147.9L290.6,143.4L290.6,141.3L290.6,139.9L290.5,137.8L290.5,134.8L290.5,128.5L290.5,126.2L290.4,121.2L290.4,115.8L290.4,109.7L290.4,106.4L290.3,97.3L290.3,93.0L290.3,83.9L290.3,81.5L290.3,78.1L290.3,76.1L290.2,59.7L290.2,50.9L290.2,47.2L290.2,45.6L290.2,40.2L290.2,37.3L290.2,35.0L290.1,29.7L290.1,24.4L290.1,19.0L290.1,17.6L290.1,13.6L290.1,11.4L290.2,10.1L291.4,10.1L295.1,10.1L305.3,10.2L308.8,10.2L310.8,10.2L313.0,10.3L314.3,10.3L316.7,10.3Z","cx":356.3,"cy":59.1,"area":22370.2,"bbox":[290.1,10.0,440.0,160.2],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Ripley","d":"M231.5,311.6L233.7,312.0L235.1,312.6L237.3,313.6L237.9,314.6L237.7,316.0L234.5,316.8L232.9,317.1L227.7,317.9L226.8,318.3L225.5,319.8L225.2,320.7L225.2,322.4L225.4,323.4L226.0,324.9L226.6,327.2L227.3,327.9L228.3,328.3L228.7,329.7L228.3,332.0L228.1,333.1L227.5,334.8L226.6,336.3L225.7,337.7L225.0,339.1L224.6,340.2L224.3,341.3L223.9,343.1L223.5,345.4L223.0,347.1L222.7,348.4L222.5,349.8L222.3,352.7L222.6,354.1L223.1,355.6L223.4,356.7L223.8,357.7L224.5,359.3L225.4,361.0L225.6,362.8L225.2,363.9L223.8,364.6L222.0,364.4L219.7,363.5L218.2,363.3L216.5,363.7L214.5,364.3L212.6,364.7L211.4,365.2L210.4,366.1L209.3,367.7L208.5,369.2L207.7,370.5L206.5,371.6L206.3,372.9L205.7,373.8L203.5,375.7L202.8,376.7L202.2,377.5L201.5,378.8L200.6,381.4L201.7,385.2L201.4,386.4L200.4,389.6L199.5,391.3L199.5,392.5L200.9,395.6L201.0,396.7L200.7,397.6L199.8,398.7L195.2,399.4L193.2,400.1L190.4,401.5L189.4,402.0L188.8,402.8L188.6,404.0L188.1,404.7L187.7,406.4L187.0,408.0L186.3,409.1L184.5,411.5L183.5,412.5L182.4,413.3L180.8,414.8L179.9,415.4L178.7,416.3L177.4,417.4L176.6,419.2L176.3,420.2L176.4,422.1L177.0,424.7L177.4,425.7L177.7,426.8L178.0,427.7L178.7,429.7L178.5,431.5L177.2,433.2L175.9,434.1L174.7,434.8L172.5,435.5L171.7,436.7L170.4,438.5L168.9,439.9L168.1,440.5L166.4,441.0L164.7,440.8L163.7,440.1L163.0,439.3L162.5,438.4L161.7,437.3L159.5,436.8L157.9,436.9L156.7,437.3L155.8,438.0L154.7,438.3L152.8,438.6L150.6,438.7L148.7,437.8L147.7,437.3L146.1,436.9L144.4,437.0L142.8,438.3L142.4,439.5L142.6,441.6L143.0,442.7L143.4,443.5L143.8,445.0L143.8,446.3L143.3,447.5L142.1,448.5L140.3,448.5L138.7,448.9L137.3,449.5L136.2,449.6L133.3,449.8L130.3,449.7L128.0,450.0L126.9,450.4L125.8,451.0L125.0,451.8L124.3,452.8L123.2,454.2L122.4,456.3L122.5,457.4L121.7,459.5L121.5,463.7L121.6,469.2L121.4,471.1L120.7,472.9L119.2,473.4L116.0,472.4L115.0,471.9L113.4,471.4L111.9,471.1L110.3,470.9L108.9,471.5L107.9,473.5L107.1,476.0L106.3,478.9L104.7,483.8L104.1,484.9L103.1,485.7L102.0,486.3L100.5,486.4L98.9,486.0L98.2,485.5L97.0,483.6L96.5,482.8L95.5,481.0L94.9,480.2L93.6,478.9L92.6,478.1L91.6,477.5L90.7,477.3L88.2,478.0L86.8,478.0L85.8,477.6L84.1,476.5L83.0,476.2L81.1,476.2L79.4,476.4L78.2,476.4L76.5,475.9L75.2,475.3L74.3,474.4L73.2,473.3L71.6,472.4L69.2,472.0L69.3,459.4L70.6,459.4L70.5,447.1L70.2,441.9L70.1,437.3L70.1,434.6L70.1,431.9L70.0,424.9L70.0,420.5L69.9,416.2L69.8,411.2L69.8,409.8L69.8,402.3L69.7,397.3L69.6,392.9L69.6,391.3L69.5,387.7L69.5,385.0L69.5,376.9L69.4,369.8L69.4,367.7L69.4,365.3L69.4,360.3L69.3,357.7L69.3,354.4L69.3,351.3L69.3,347.9L69.2,338.1L69.1,328.5L69.1,324.2L69.0,319.4L69.0,317.3L68.9,315.5L68.8,311.9L70.4,311.6L74.0,311.6L79.1,311.7L82.9,311.7L86.8,311.7L88.3,311.7L93.6,311.7L102.8,311.8L111.0,311.8L112.6,311.8L118.0,311.8L120.2,311.8L127.3,311.8L130.3,311.8L134.2,311.8L135.4,311.8L138.8,311.8L140.5,311.8L143.2,311.8L144.4,311.8L151.3,311.8L154.0,311.8L157.5,311.8L159.3,311.8L164.0,311.8L166.0,311.8L167.7,311.8L175.5,311.8L182.0,311.7L184.9,311.7L188.9,311.8L192.0,311.7L194.5,311.8L200.3,311.7L207.2,311.7L208.5,311.6L216.4,311.6L217.5,311.8L220.0,311.5L224.0,311.5L231.5,311.6Z","cx":152.4,"cy":393.5,"area":19516.1,"bbox":[68.8,311.5,237.9,486.4],"cong":"004","senate":"023","house":"044","comm":"","council":""},{"name":"Scott","d":"M416.8,460.3L420.2,460.2L427.7,460.2L441.7,460.2L441.8,462.6L441.9,466.2L441.8,468.0L441.9,470.1L441.8,472.2L441.8,473.9L441.9,497.9L441.8,512.7L441.8,515.5L441.8,518.8L441.8,522.1L441.7,525.9L441.7,527.2L441.7,529.9L441.6,553.2L441.7,559.8L441.7,584.8L441.7,587.3L441.7,609.7L440.4,609.7L438.8,609.7L434.8,609.6L433.3,609.6L429.4,609.6L424.5,609.6L418.2,609.5L414.6,609.5L412.9,609.5L407.0,609.5L403.9,609.4L401.8,609.4L397.0,609.4L393.8,609.3L390.9,609.3L387.1,609.2L383.4,609.2L381.5,609.2L380.0,609.2L378.7,609.2L375.4,609.2L374.2,609.2L364.8,609.2L359.6,609.2L354.5,608.7L323.1,608.5L321.0,608.6L317.5,608.7L314.4,608.6L311.2,608.5L293.0,608.3L293.0,595.9L292.8,593.1L293.1,558.5L293.0,552.0L293.1,533.5L293.2,523.4L293.3,511.2L293.1,509.0L293.1,506.5L293.1,502.1L293.1,497.7L293.2,495.9L293.1,490.9L293.1,489.2L293.1,487.1L293.2,483.9L293.1,478.5L293.1,472.4L293.1,469.1L293.1,467.6L293.1,464.0L293.1,462.2L293.1,460.4L295.0,460.4L296.8,460.4L298.7,460.3L300.4,460.4L301.8,460.4L304.9,460.4L307.9,460.4L310.3,460.4L312.9,460.4L314.3,460.4L317.1,460.4L322.5,460.4L327.6,460.4L332.6,460.4L334.4,460.3L335.6,460.3L338.1,460.5L341.8,460.3L344.1,460.3L348.6,460.4L351.6,460.4L354.0,460.4L357.4,460.4L364.6,460.4L367.0,460.4L371.0,460.4L375.3,460.4L378.2,460.4L380.9,460.4L386.2,460.4L391.1,460.4L395.3,460.4L404.9,460.7L406.7,460.5L416.8,460.1Z","cx":364.2,"cy":520.6,"area":22102.0,"bbox":[292.8,460.1,441.9,609.7],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Sugar Creek","d":"M443.0,10.2L444.9,10.2L449.0,10.3L450.2,10.3L453.1,10.3L455.8,10.3L457.7,10.3L459.1,10.3L460.4,10.3L463.5,10.4L465.4,10.4L467.2,10.4L469.7,10.4L471.0,10.4L472.5,10.4L474.0,10.4L475.3,10.4L476.9,10.4L478.6,10.4L479.8,10.4L481.2,10.4L483.3,10.5L484.6,10.5L486.6,10.5L488.0,10.5L489.8,10.5L491.7,10.5L493.6,10.5L497.1,10.5L500.2,10.5L501.8,10.5L504.1,10.6L505.9,10.6L507.5,10.6L509.9,10.6L511.8,10.6L514.0,10.6L516.0,10.6L518.6,10.6L520.0,10.6L524.7,10.6L526.2,10.6L527.4,10.6L528.7,10.6L531.0,10.6L532.4,10.6L533.6,10.6L535.5,10.6L537.1,10.6L538.4,10.6L541.2,10.6L542.5,10.6L543.9,10.6L545.5,10.6L547.9,10.6L549.9,10.6L552.7,10.6L554.3,10.6L555.7,10.6L557.3,10.6L559.7,10.5L561.6,10.5L562.9,10.5L564.7,10.5L567.1,10.6L568.9,10.6L570.9,10.6L572.1,10.6L574.4,10.6L575.9,10.6L578.4,10.6L580.8,10.6L582.0,10.6L583.4,10.6L585.4,10.6L586.9,10.6L588.8,10.6L589.4,40.9L589.4,47.1L589.4,49.6L589.4,57.1L589.4,59.6L589.4,62.0L589.4,69.4L589.5,71.9L589.5,74.4L589.5,82.0L589.5,84.5L589.5,87.1L589.5,94.9L589.5,97.5L589.5,99.8L589.6,107.0L589.6,109.4L589.6,111.9L589.7,117.2L589.7,119.3L589.7,121.8L589.7,125.2L589.6,127.1L589.7,129.0L589.8,131.0L587.0,132.3L582.7,131.7L577.6,131.0L574.4,130.7L573.1,131.0L572.1,131.9L571.7,133.3L571.2,134.3L570.0,135.3L568.7,135.8L566.6,136.3L563.5,136.4L560.7,135.9L559.1,135.4L556.8,134.9L555.4,135.1L554.3,136.3L553.5,137.0L552.3,138.0L551.6,138.6L549.1,141.1L547.6,142.9L546.5,143.7L544.7,144.6L543.0,145.3L539.1,146.5L535.5,146.8L534.6,146.5L533.2,145.8L530.8,146.4L529.2,147.1L528.6,147.7L528.0,148.6L526.7,149.5L526.6,150.7L527.4,151.7L527.8,153.0L527.3,153.9L524.7,154.5L522.5,154.3L521.0,154.4L520.2,154.9L519.1,157.1L518.4,158.4L517.8,159.4L516.8,160.3L515.3,159.8L514.2,159.0L513.3,158.2L511.1,156.7L508.7,154.8L507.2,154.7L503.3,155.7L501.4,156.3L499.5,157.5L498.2,158.9L490.0,159.7L488.5,159.7L464.9,159.9L458.3,159.5L451.1,159.5L445.0,159.4L443.1,159.4L441.3,159.4L439.8,159.4L439.8,158.2L439.9,147.0L439.9,134.4L440.0,118.0L440.0,115.9L439.9,109.5L439.8,84.9L439.8,82.4L439.8,80.3L439.8,78.2L439.6,77.1L440.0,59.6L439.9,34.6L439.8,12.6L439.8,10.2L441.7,10.2L443.0,10.2Z","cx":523.7,"cy":76.2,"area":20877.1,"bbox":[439.6,10.2,589.8,160.3],"cong":"004","senate":"007","house":"041","comm":"","council":""},{"name":"Union 01","d":"M287.4,295.9L286.4,296.1L285.0,296.4L284.2,296.1L282.8,296.2L282.1,296.8L281.5,297.9L281.0,299.2L280.5,300.7L279.6,303.0L278.9,304.7L278.3,305.3L276.9,305.3L275.2,304.0L273.4,302.4L271.8,301.6L269.9,303.2L268.8,304.4L268.4,305.3L268.7,306.7L269.7,307.6L269.2,308.8L266.5,308.5L263.4,308.1L260.1,308.7L259.2,309.0L258.4,309.4L256.1,310.1L251.8,311.0L250.5,311.6L248.6,312.9L247.2,313.3L246.2,313.0L244.7,311.6L243.4,310.2L242.4,308.7L241.6,308.0L240.2,306.9L239.3,306.4L236.6,306.4L235.1,306.6L234.0,307.0L233.0,307.7L231.7,309.5L231.3,311.1L224.0,311.5L220.0,311.5L217.5,311.5L216.4,311.6L216.4,304.8L216.4,302.8L216.4,301.5L216.4,299.4L216.4,296.2L216.4,292.6L216.4,291.3L216.4,289.2L216.4,287.6L216.4,286.1L216.4,283.5L216.5,280.4L216.5,277.6L216.5,275.5L216.4,273.4L216.5,271.4L216.4,267.1L216.4,265.4L216.4,263.9L216.5,262.6L216.4,261.0L216.4,259.5L216.4,252.9L216.4,250.6L216.4,248.8L216.5,245.0L216.4,240.6L216.4,237.6L216.5,234.4L216.4,232.5L216.4,224.0L216.4,221.9L216.4,219.6L216.9,221.0L217.7,222.0L220.5,223.9L221.3,224.5L222.9,225.8L224.2,226.8L228.6,230.3L230.5,231.9L235.7,236.0L237.0,237.1L238.4,238.1L239.2,238.8L239.9,239.4L240.7,240.1L241.5,240.9L243.2,242.6L244.0,243.4L247.0,246.5L248.0,247.4L249.8,249.2L250.4,249.8L250.8,250.6L252.0,253.4L252.5,254.4L253.2,255.1L254.6,256.0L255.8,256.4L257.0,256.9L257.7,257.4L260.7,260.4L262.5,262.4L263.0,263.1L263.5,264.5L264.0,265.9L264.3,266.8L265.1,267.6L266.6,268.6L267.9,269.5L268.8,270.4L269.6,271.5L270.1,272.4L270.7,273.1L270.9,274.1L271.8,274.8L272.7,275.5L274.7,277.3L275.9,278.5L276.9,279.5L279.2,281.7L280.5,282.9L281.9,284.2L283.3,285.3L284.2,286.0L285.1,286.6L287.3,288.1L288.6,289.0L289.8,290.0L290.6,291.2L291.3,292.7L290.5,293.4L288.9,294.9L287.4,295.9Z","cx":249.0,"cy":277.6,"area":3872.4,"bbox":[216.4,219.6,291.3,313.3],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Union 02","d":"M283.9,160.2L290.2,160.2L295.1,160.2L302.8,160.2L314.9,160.1L315.4,162.5L315.5,164.4L315.8,174.2L316.0,182.0L316.0,184.6L316.0,189.1L316.0,193.8L316.0,204.4L316.1,208.1L316.1,209.9L316.1,211.6L316.0,213.7L316.2,225.7L316.2,229.1L316.1,231.6L316.2,232.9L316.0,231.7L316.3,236.5L316.3,239.1L316.1,241.0L315.9,242.2L315.2,243.8L314.9,244.9L313.5,244.8L311.9,243.3L311.4,242.6L310.5,241.8L309.5,241.2L308.1,240.7L305.1,239.5L305.0,242.9L305.0,245.1L305.0,246.5L305.0,248.2L305.7,248.9L309.3,248.9L309.2,250.3L309.2,251.9L309.2,253.2L309.2,254.7L309.2,256.2L309.2,257.6L309.2,259.4L309.2,261.4L307.9,261.4L306.6,261.4L305.2,261.3L303.9,261.3L305.5,263.7L308.3,267.1L308.9,267.8L306.0,267.8L304.3,267.8L302.7,266.5L300.1,266.5L300.3,273.7L307.8,273.8L308.7,272.9L309.5,272.0L309.8,273.0L309.7,275.3L309.6,277.5L309.8,279.0L310.1,280.0L310.4,281.1L311.0,282.6L311.5,283.4L312.1,284.4L312.7,285.2L313.4,285.9L314.1,286.6L312.5,286.5L312.1,287.5L311.1,287.2L310.5,286.5L309.7,285.9L308.4,284.9L307.6,285.4L307.5,286.6L307.5,288.0L308.3,288.9L308.4,290.3L310.0,290.6L311.3,291.4L312.1,291.9L311.6,292.9L310.8,292.3L310.0,291.5L309.2,290.9L308.1,291.3L307.3,292.3L306.9,293.8L305.7,295.4L304.8,295.9L303.3,296.3L301.7,296.8L300.9,297.3L300.0,297.8L297.3,295.2L296.5,294.3L295.7,293.5L294.8,292.9L293.5,292.6L292.2,292.9L291.0,291.9L290.2,290.6L289.1,289.4L287.3,288.1L285.4,286.8L284.6,286.3L283.3,285.3L282.2,284.4L281.0,283.4L279.4,281.9L277.4,279.9L275.9,278.5L275.2,277.9L273.3,276.0L272.3,275.1L271.3,274.6L270.9,273.8L270.2,272.5L269.7,271.7L269.2,270.9L268.4,269.9L266.6,268.6L265.7,267.9L264.7,267.3L264.2,266.5L263.6,264.9L263.2,263.5L262.8,262.7L260.7,260.4L258.3,257.9L257.4,257.2L255.8,256.4L254.6,256.0L253.8,255.6L252.6,254.5L252.0,253.4L250.8,250.6L250.4,249.8L249.8,249.2L248.0,247.4L247.0,246.5L244.0,243.4L243.2,242.6L242.1,241.5L241.0,240.4L239.9,239.4L239.2,238.8L238.4,238.1L237.1,237.1L235.7,236.0L230.5,231.9L228.6,230.3L224.2,226.8L222.9,225.8L221.3,224.5L220.5,223.9L218.2,222.5L217.4,221.7L216.6,220.4L216.4,218.8L216.4,217.2L216.4,214.9L216.4,213.2L216.5,209.2L216.5,206.3L216.4,203.0L216.4,197.3L216.5,195.9L216.6,164.1L216.7,160.0L222.0,160.0L237.4,160.1L238.5,159.9L241.0,159.9L274.1,160.1L281.5,159.8L283.5,159.9Z","cx":284.7,"cy":249.8,"area":9993.6,"bbox":[216.4,159.8,316.3,297.8],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Union 03","d":"M390.4,159.4L402.4,159.9L427.3,159.5L431.8,159.5L433.6,159.5L439.2,159.4L439.9,164.0L439.9,173.1L439.7,176.1L439.7,178.3L439.7,183.0L439.7,185.8L439.7,194.1L439.5,204.2L439.7,205.5L439.7,207.1L439.7,208.3L439.7,210.2L439.7,214.8L439.7,217.2L439.8,223.2L439.8,224.8L439.8,226.3L439.8,228.8L439.8,232.3L439.8,235.3L439.8,241.0L439.8,245.0L439.9,248.1L439.9,249.3L439.9,257.1L439.9,260.4L439.9,263.7L440.0,266.2L440.0,268.1L440.0,270.1L440.0,272.7L439.9,274.3L439.8,275.7L439.9,290.1L440.0,297.9L437.3,298.0L433.8,298.0L431.6,298.0L427.8,298.0L420.3,298.1L417.7,298.1L416.5,298.0L415.3,301.3L415.3,303.5L415.3,307.0L415.3,309.2L415.3,310.5L414.0,310.6L411.0,310.6L406.5,310.6L403.3,310.7L397.2,310.7L395.7,310.7L394.3,310.7L392.6,310.7L391.0,310.7L388.4,310.7L383.9,310.8L381.5,310.8L380.9,309.3L381.5,307.2L382.5,305.6L383.3,304.7L382.3,303.7L381.2,303.7L380.0,302.1L378.5,302.8L377.4,302.0L376.1,302.3L375.5,301.3L375.1,299.5L374.5,298.5L371.8,298.3L369.2,298.4L367.9,298.4L366.4,298.4L365.3,286.0L360.4,286.0L355.8,286.0L352.9,286.0L353.0,284.3L353.2,283.1L352.5,282.4L352.1,281.4L351.8,280.4L347.2,280.4L345.0,280.3L345.4,279.1L346.4,278.1L348.6,275.7L345.3,278.4L343.8,280.1L342.1,282.4L341.6,283.4L340.5,283.5L340.5,274.5L346.5,273.6L346.5,272.2L345.9,271.5L344.9,271.2L343.8,271.3L344.9,270.9L346.3,271.3L346.8,272.0L344.9,270.1L343.7,270.1L342.7,271.4L342.0,270.5L342.6,269.8L342.9,268.5L340.7,267.9L341.6,267.4L342.9,266.3L343.6,265.4L343.4,264.1L342.4,263.6L340.6,263.6L339.4,263.7L337.2,264.1L335.8,265.2L334.4,265.6L334.4,263.4L332.8,264.8L331.8,264.4L330.3,262.7L329.6,261.6L327.4,261.4L327.3,259.8L327.2,258.3L327.0,255.8L326.0,253.8L325.3,252.3L322.9,252.1L323.7,250.1L324.2,249.4L327.4,248.8L329.0,247.3L329.7,246.4L330.9,244.7L331.9,243.5L321.8,243.0L320.7,242.8L320.3,242.0L318.1,237.9L317.1,235.8L316.2,232.9L316.1,231.6L316.2,229.1L316.2,225.7L316.0,213.7L316.1,211.6L316.1,209.9L316.1,208.1L316.0,204.4L316.0,193.8L316.0,189.1L316.0,184.6L316.0,182.9L315.8,174.2L315.5,164.4L315.4,162.5L315.4,160.1L323.9,160.1L331.4,160.0L343.4,159.9L353.1,159.7L357.9,159.9L371.3,159.8L386.5,159.4L390.2,159.4Z","cx":373.6,"cy":253.1,"area":16081.3,"bbox":[315.4,159.4,440.0,310.8],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Union 04","d":"M431.6,298.0L433.2,298.0L436.9,298.0L439.2,297.9L440.0,300.1L440.1,302.0L440.2,310.1L440.6,336.0L440.7,347.2L440.9,354.2L441.0,372.9L441.2,378.5L441.3,385.5L441.4,400.0L441.5,410.5L441.5,416.1L441.5,420.9L441.6,424.6L441.6,426.5L441.6,430.2L441.7,434.8L441.7,441.5L441.7,446.3L441.8,448.3L441.8,458.2L441.8,460.2L427.7,460.2L420.2,460.2L416.9,460.4L406.7,460.5L405.0,460.7L395.8,460.4L394.9,458.3L394.3,456.8L393.9,455.9L392.7,452.9L392.3,452.0L391.9,450.9L391.8,449.0L391.6,446.9L391.1,445.7L390.6,444.8L390.4,443.5L389.8,439.6L389.2,436.0L388.4,433.6L386.6,428.8L381.5,424.2L380.8,423.5L379.7,421.8L378.8,421.0L377.3,420.0L376.5,419.2L373.1,414.7L371.1,412.1L370.2,410.9L369.7,407.8L369.5,405.4L369.4,404.0L368.8,402.9L367.6,400.8L366.8,399.6L365.5,397.6L364.8,396.6L364.3,395.8L363.3,394.4L362.8,393.6L361.6,391.3L360.8,389.7L360.3,388.7L359.9,387.4L359.3,385.8L359.0,384.6L358.4,383.0L357.5,381.4L357.1,379.9L356.8,378.2L356.5,376.6L356.3,375.5L356.0,373.6L355.7,371.3L355.3,370.3L354.8,369.5L353.8,368.1L352.9,367.2L351.9,366.1L351.3,365.4L350.6,364.6L349.7,362.8L348.9,361.2L348.2,359.8L347.5,358.5L346.5,356.8L345.6,355.1L344.8,353.9L343.0,351.3L341.8,349.5L341.2,348.6L343.7,348.3L344.9,348.3L347.1,348.3L347.1,347.1L347.0,335.7L346.9,331.6L349.5,335.7L353.2,335.9L353.2,333.1L353.1,325.7L355.4,327.0L356.4,326.6L356.4,325.0L356.4,323.7L357.9,323.5L359.7,323.5L360.0,325.1L359.3,326.6L357.9,326.6L357.2,327.7L358.3,328.4L365.6,332.4L365.6,329.2L365.6,325.2L365.5,323.5L365.6,322.0L365.5,320.2L366.6,319.7L367.3,319.2L367.4,318.0L368.3,319.2L370.5,320.2L370.8,323.5L376.2,323.5L376.7,322.6L377.7,322.9L377.8,319.7L376.2,319.7L375.1,318.4L373.6,317.2L371.7,317.2L371.7,315.4L371.7,314.2L370.3,314.2L370.1,315.9L368.7,316.0L368.7,310.9L370.1,310.9L371.6,310.8L373.0,310.8L374.7,310.8L374.7,308.4L376.5,308.4L376.5,306.9L376.5,305.7L376.5,302.7L371.0,302.8L370.0,302.1L367.2,302.1L367.2,300.5L366.5,299.7L366.3,298.5L366.2,299.7L365.4,298.4L367.9,298.4L369.2,298.4L371.4,298.3L373.6,298.3L375.1,299.5L375.4,300.5L375.6,301.9L377.1,302.0L378.2,302.7L379.0,302.3L381.2,303.7L382.3,303.7L383.4,304.3L382.5,305.6L381.5,307.2L381.0,308.3L381.3,310.0L383.9,310.8L387.5,310.7L390.4,310.7L392.6,310.7L393.8,310.7L395.7,310.7L397.2,310.7L403.3,310.7L406.5,310.6L411.0,310.6L413.5,310.6L414.9,310.6L415.3,309.2L415.3,307.0L415.3,304.1L415.3,301.3L415.3,298.1L416.6,298.0L419.5,298.1L426.7,298.0L431.3,297.9Z","cx":382.5,"cy":355.3,"area":11467.4,"bbox":[341.2,297.9,441.8,460.7],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Union 05","d":"M307.1,347.2L307.4,348.4L308.8,348.3L312.2,347.3L312.3,348.4L312.5,347.3L314.0,347.3L314.9,348.4L311.2,349.4L309.9,349.4L309.9,354.1L306.2,354.1L306.3,358.0L306.2,360.8L310.4,360.8L313.9,360.9L315.8,360.8L315.9,362.1L315.9,363.6L316.0,364.9L316.0,368.2L316.1,366.0L316.0,363.9L316.0,362.5L316.0,360.8L316.3,362.0L316.3,363.7L316.3,367.2L316.3,369.4L316.3,371.6L316.3,373.3L322.6,373.3L322.5,367.0L322.4,360.8L328.7,360.7L328.6,349.1L329.4,348.3L333.8,348.3L335.3,348.3L337.3,348.3L339.2,348.2L340.5,348.2L341.8,349.5L343.0,351.3L344.8,353.9L345.6,355.1L346.5,356.8L347.5,358.5L348.2,359.8L348.9,361.2L349.7,362.8L350.4,364.2L351.3,365.4L351.9,366.1L352.9,367.2L353.8,368.1L354.8,369.5L355.3,370.3L355.7,371.3L356.0,373.6L356.3,375.5L356.5,376.6L356.7,377.7L357.1,379.9L357.4,381.2L358.4,383.0L359.0,384.6L359.3,385.8L359.9,387.4L360.3,388.7L360.8,389.7L361.6,391.3L362.4,392.9L363.3,394.4L364.3,395.8L364.8,396.6L365.5,397.6L366.4,399.0L367.6,400.8L368.8,402.9L369.3,403.7L369.5,405.4L369.7,407.8L369.9,410.1L370.6,411.5L373.1,414.7L376.0,418.5L377.1,419.9L378.1,420.5L379.2,421.3L380.6,423.1L381.2,423.9L386.2,428.1L388.4,433.6L389.1,435.3L389.8,439.6L390.4,443.5L390.6,444.8L391.1,445.7L391.6,446.7L391.7,448.0L391.9,450.7L392.3,452.0L392.7,452.9L393.9,455.9L394.3,456.8L394.9,458.3L395.8,460.4L391.1,460.4L386.2,460.4L380.9,460.4L378.2,460.4L376.2,460.4L371.0,460.4L367.0,460.4L364.6,460.4L357.4,460.4L354.0,460.4L351.6,460.4L349.3,460.4L344.1,460.3L341.8,460.3L338.8,460.5L336.7,460.4L335.2,460.3L332.6,460.4L327.6,460.4L322.5,460.4L317.9,460.4L314.3,460.4L312.9,460.4L311.0,460.4L309.0,460.4L305.8,460.4L302.5,460.4L301.2,460.4L299.7,460.3L296.8,460.4L295.0,460.4L293.1,460.4L291.8,460.4L290.5,460.3L287.6,460.4L286.1,460.4L284.6,460.4L282.9,460.4L281.6,460.4L274.8,460.4L271.3,460.4L268.2,460.4L266.7,460.4L263.2,460.4L261.5,460.4L256.2,460.4L253.1,460.4L253.8,459.5L254.3,458.7L254.9,457.5L256.7,454.7L258.1,452.3L258.9,450.9L259.5,450.0L260.1,449.1L260.7,448.2L261.6,446.6L262.3,445.5L263.8,443.1L264.7,441.5L266.9,438.1L267.7,437.0L268.3,436.0L269.0,435.1L269.8,434.2L270.7,433.4L272.0,432.3L272.6,431.6L273.2,430.7L273.6,429.9L273.9,428.8L274.1,427.4L274.2,426.1L274.2,423.7L274.2,420.4L274.3,419.2L274.6,417.7L275.1,416.4L275.5,415.5L276.0,414.8L276.6,414.0L277.5,412.8L278.2,411.8L278.6,410.9L279.4,409.2L279.8,408.1L283.9,398.1L284.4,396.9L284.9,395.9L285.5,394.5L286.2,392.7L286.8,391.2L287.3,389.8L287.6,388.8L288.1,387.6L288.9,385.8L289.5,384.7L290.0,383.3L290.9,381.2L292.0,378.5L292.9,376.4L294.0,373.6L294.9,371.3L295.8,369.3L296.4,367.7L297.1,366.1L297.6,364.8L298.6,362.3L299.0,361.4L299.4,360.5L301.7,354.7L303.0,351.3L303.7,349.8L304.2,348.3L305.9,348.3L306.5,347.4ZM328.4,348.4L328.4,351.0L326.6,351.0L324.6,349.9L322.4,350.0L321.8,348.5L324.0,348.3L325.3,348.3L328.4,348.3ZM319.6,345.0L320.5,346.1L320.5,348.4L321.5,349.5L317.7,349.5L319.1,348.4L319.0,345.6L319.6,345.0Z","cx":320.6,"cy":407.1,"area":9663.0,"bbox":[253.1,345.0,395.8,460.5],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Union 06","d":"M232.0,336.5L234.3,336.5L236.2,336.5L241.7,336.5L243.3,336.5L245.8,336.5L248.8,336.5L251.2,336.5L252.8,336.4L255.6,336.4L259.2,336.3L261.5,336.3L266.1,336.2L267.3,336.2L267.3,340.3L267.4,346.9L267.4,348.2L268.8,348.6L274.2,348.5L276.1,348.5L279.1,348.4L281.1,348.4L284.8,348.3L290.4,348.2L291.8,348.2L294.1,348.3L295.9,348.3L298.7,348.3L303.8,348.3L303.7,349.8L303.0,351.3L301.7,354.7L299.6,359.8L299.2,360.9L298.6,362.3L297.9,364.0L297.1,366.1L296.4,367.7L295.8,369.3L295.1,370.8L294.0,373.6L293.1,375.8L292.3,377.7L291.2,380.4L290.3,382.6L289.8,383.8L289.3,385.0L288.3,387.2L287.7,388.5L287.3,389.8L286.8,391.1L286.2,392.7L285.6,394.2L285.1,395.3L284.6,396.5L284.2,397.6L279.8,408.1L279.4,409.2L278.7,410.6L278.2,411.8L277.5,412.8L276.6,414.0L276.0,414.8L275.5,415.5L275.1,416.4L274.6,417.7L274.3,419.2L274.2,420.4L274.2,423.7L274.2,424.9L274.2,426.8L274.0,428.2L273.7,429.4L273.4,430.3L272.8,431.3L272.0,432.3L271.3,432.9L269.8,434.2L269.0,435.1L268.3,436.0L267.7,437.0L266.9,438.1L264.7,441.5L263.8,443.1L262.4,445.2L261.9,446.0L260.8,447.9L260.3,448.8L259.8,449.6L258.9,450.9L258.4,451.9L256.7,454.7L254.9,457.5L254.3,458.7L253.8,459.5L253.1,460.4L246.4,460.5L241.8,460.4L238.3,460.4L236.3,460.4L234.7,460.4L232.0,460.4L229.2,460.3L223.7,460.3L218.3,460.4L216.3,460.3L214.5,460.3L209.8,460.2L205.9,460.3L202.6,460.3L199.1,460.3L197.9,460.3L196.1,460.3L194.5,460.3L193.4,455.7L193.5,451.8L193.4,449.0L193.3,435.5L189.4,435.5L180.9,435.1L174.7,434.8L175.9,434.1L177.2,433.2L178.2,432.0L178.8,430.6L178.0,427.7L177.7,426.8L177.4,425.7L177.0,424.7L176.4,422.1L176.3,420.2L176.6,419.2L177.4,417.4L178.7,416.3L179.9,415.4L180.8,414.8L182.4,413.3L183.5,412.5L184.5,411.5L186.3,409.1L187.0,408.0L187.6,407.0L187.7,405.3L188.4,404.6L188.7,403.3L189.4,402.0L190.4,401.5L193.2,400.1L195.2,399.4L199.3,398.9L200.7,397.6L201.0,396.7L200.9,395.6L199.5,392.5L199.5,391.3L200.4,389.6L201.4,386.4L201.7,385.2L200.6,382.5L201.5,378.8L202.2,377.5L202.8,376.7L203.5,375.7L205.1,374.4L206.3,372.9L206.5,371.6L207.7,370.5L208.3,369.6L209.3,367.7L210.4,366.1L211.4,365.2L212.6,364.7L214.5,364.3L216.5,363.7L218.2,363.3L219.7,363.5L222.0,364.4L223.8,364.6L225.0,364.3L225.4,363.3L225.6,361.9L224.9,359.8L224.0,358.4L223.6,356.9L223.1,355.6L222.6,354.1L222.3,352.7L222.3,350.4L222.7,348.4L223.0,347.1L223.5,345.4L223.9,343.1L224.3,341.4L224.6,340.2L225.0,339.2L225.7,337.7L226.6,336.3L227.2,335.3L230.5,336.3L231.5,336.5Z","cx":238.5,"cy":395.2,"area":9912.6,"bbox":[174.7,335.3,303.8,460.5],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Union 07","d":"M276.3,305.0L275.6,305.8L274.5,307.1L273.2,307.1L273.2,308.8L272.6,311.3L274.9,311.3L276.9,311.3L276.5,312.5L277.1,313.3L278.3,313.9L279.1,317.2L277.7,317.1L275.9,317.0L274.2,316.9L272.7,316.9L270.9,316.7L269.0,316.6L267.1,316.5L265.8,316.4L264.7,316.7L264.8,322.5L264.8,323.8L267.0,323.7L268.9,323.7L271.0,323.6L273.6,323.6L277.9,323.5L280.5,323.5L282.2,323.4L284.9,323.4L285.5,326.8L285.5,329.5L285.6,335.9L288.3,335.8L289.7,335.8L291.7,335.8L291.8,342.7L296.6,342.7L297.4,340.3L297.3,335.9L300.4,335.9L301.3,333.9L303.5,333.9L303.5,329.6L304.8,329.6L306.8,329.6L306.8,326.5L308.7,326.5L310.7,326.4L311.8,325.6L312.1,326.6L312.3,327.5L312.4,329.7L312.4,333.5L312.5,334.8L312.4,336.3L311.1,337.1L310.4,337.8L308.5,337.0L308.1,338.2L306.8,340.7L305.6,342.7L307.0,342.7L306.4,343.6L305.8,344.7L305.3,345.7L304.5,347.5L304.2,348.3L298.7,348.3L295.9,348.3L294.1,348.3L292.6,348.3L290.4,348.2L284.8,348.3L281.5,348.4L279.1,348.4L276.9,348.4L274.2,348.5L268.8,348.6L267.4,348.6L267.4,346.9L267.3,340.3L267.3,336.8L266.1,336.2L261.5,336.3L259.2,336.3L255.6,336.4L252.8,336.4L251.2,336.5L248.8,336.5L246.8,336.5L243.3,336.5L241.7,336.5L236.2,336.5L234.3,336.5L232.0,336.5L230.5,336.3L227.9,335.5L228.1,333.1L228.3,332.0L228.7,329.7L228.3,328.3L227.3,327.9L226.6,327.2L226.0,324.9L225.5,323.5L225.2,322.4L225.2,320.7L225.5,319.8L226.8,318.3L227.7,317.9L232.9,317.1L234.5,316.8L237.0,316.4L237.9,315.7L237.7,314.0L235.6,312.9L233.7,312.0L232.0,311.9L231.3,311.1L231.7,309.5L233.0,307.7L234.0,307.0L235.1,306.6L236.6,306.4L238.2,306.4L240.2,306.9L241.6,308.0L242.4,308.7L243.4,310.2L244.7,311.6L246.2,313.0L247.2,313.3L248.6,312.9L250.5,311.6L251.8,311.0L256.1,310.1L258.4,309.4L259.2,309.0L260.1,308.7L263.4,308.1L266.5,308.5L268.1,308.9L269.7,308.5L268.7,306.7L268.4,305.3L268.8,304.4L269.9,303.2L270.9,301.7L273.4,302.4L274.9,303.7L276.3,305.0ZM290.2,313.3L290.5,314.4L290.8,315.8L291.1,316.8L291.2,318.4L291.3,320.3L289.5,320.4L289.4,318.2L287.5,317.8L285.8,317.7L285.1,317.0L285.1,313.1L286.0,313.4L287.1,313.8L288.5,313.9L289.4,313.4Z","cx":268.6,"cy":325.0,"area":1880.1,"bbox":[225.2,301.7,312.5,348.6],"cong":"004","senate":"007","house":"044","comm":"","council":""},{"name":"Walnut","d":"M586.0,309.6L590.2,309.7L590.3,314.8L590.3,323.7L590.3,330.1L590.4,335.1L590.4,338.7L590.4,349.4L590.4,353.0L590.4,354.4L590.5,358.6L590.5,360.0L590.6,365.1L591.1,378.2L591.0,380.2L590.8,385.3L590.9,388.6L591.1,398.6L591.2,401.9L591.2,403.9L591.3,408.7L591.3,410.3L591.3,412.8L591.4,420.3L591.4,422.8L591.6,431.9L591.6,435.1L591.6,438.2L591.4,453.9L591.4,455.1L591.6,459.8L585.9,459.8L581.5,459.8L578.8,459.8L576.8,459.8L571.5,459.9L566.8,459.9L565.7,460.0L564.5,460.1L563.2,460.1L558.5,460.1L556.0,460.0L541.1,460.2L539.8,460.2L538.6,460.2L533.3,460.2L528.7,460.3L524.0,460.3L521.8,460.3L519.6,460.3L518.2,460.3L510.9,460.3L502.0,460.3L497.6,460.4L492.8,460.4L491.2,460.4L487.4,460.4L483.6,460.4L475.4,460.4L472.4,460.4L468.4,460.2L453.9,460.2L441.8,460.2L441.8,458.2L441.8,448.3L441.7,446.3L441.7,441.5L441.7,435.4L441.6,430.2L441.6,426.5L441.6,424.6L441.5,421.3L441.5,416.1L441.5,411.2L441.4,400.0L441.3,385.5L441.2,378.5L441.1,373.5L440.9,354.2L440.7,347.2L440.6,336.0L440.2,310.1L445.6,310.5L448.5,310.2L465.7,310.6L469.0,310.5L478.3,310.3L484.5,310.6L496.6,310.4L509.3,310.3L519.0,310.2L527.9,309.9L540.3,309.9L558.0,309.7L565.1,309.7L571.8,309.6L577.9,309.6L583.9,309.6L585.6,309.6Z","cx":528.7,"cy":399.3,"area":22479.0,"bbox":[440.2,309.6,591.6,460.4],"cong":"004","senate":"007","house":"028","comm":"","council":""},{"name":"Wayne","d":"M182.3,160.0L187.1,160.2L189.4,160.1L200.2,160.6L202.4,160.0L203.9,160.0L207.3,160.0L210.1,160.0L211.9,160.0L213.7,160.0L215.7,160.0L216.6,164.1L216.5,195.9L216.4,197.3L216.4,203.0L216.4,205.4L216.5,209.2L216.4,212.4L216.4,214.9L216.4,216.3L216.4,218.8L216.4,220.9L216.4,224.0L216.4,232.5L216.5,234.4L216.4,236.9L216.4,239.6L216.5,245.0L216.4,248.8L216.4,250.6L216.4,252.1L216.4,259.5L216.4,260.7L216.5,262.1L216.4,263.9L216.4,265.4L216.4,267.1L216.5,271.4L216.4,273.0L216.5,275.5L216.5,277.4L216.5,280.4L216.4,283.5L216.4,285.0L216.4,286.8L216.4,288.1L216.4,290.6L216.4,292.6L216.4,295.1L216.4,298.2L216.4,301.5L216.4,302.8L216.4,304.8L216.4,311.6L208.5,311.6L207.2,311.7L201.1,311.7L194.9,311.7L192.9,311.8L190.0,311.8L185.0,311.7L182.5,311.7L175.5,311.8L167.7,311.8L166.5,311.8L164.0,311.8L160.4,311.8L157.5,311.8L155.0,311.8L151.3,311.8L144.4,311.8L143.2,311.8L141.1,311.8L139.3,311.8L135.4,311.8L134.2,311.8L131.3,311.8L127.3,311.8L120.2,311.8L118.9,311.8L112.6,311.8L111.0,311.8L102.8,311.8L93.6,311.7L88.3,311.7L86.8,311.7L82.9,311.7L79.1,311.7L74.0,311.6L70.4,311.6L69.2,311.6L68.0,311.9L68.0,308.7L68.2,276.8L68.1,274.2L68.1,272.5L68.2,267.8L68.1,265.3L68.2,261.8L68.2,257.1L68.2,251.6L68.3,246.4L68.3,242.2L68.3,236.9L68.3,229.6L68.3,226.4L68.4,224.2L68.3,222.3L68.3,214.4L68.4,203.7L68.3,200.9L68.3,199.7L68.3,198.3L68.3,194.2L68.3,193.0L68.4,191.0L68.4,188.8L68.4,187.2L68.4,185.9L68.4,182.9L68.4,175.5L68.4,172.9L68.4,167.0L68.4,164.4L68.4,162.9L68.4,160.1L98.7,160.2L130.4,160.1L132.7,160.0L134.1,160.1L137.4,160.0L140.4,160.0L145.7,160.0L149.4,160.0L157.9,160.0L160.0,160.1L165.9,160.1L168.4,160.1L175.0,160.1L178.3,160.1L179.7,160.0L182.3,160.0Z","cx":151.6,"cy":242.9,"area":22469.1,"bbox":[68.0,160.0,216.6,311.9],"cong":"004","senate":"023","house":"044","comm":"","council":""}],"precincts":["Brown","Clark","Coal Creek","Crawfordsville 01","Crawfordsville 02","Crawfordsville 03","Crawfordsville 04","Crawfordsville 05","Crawfordsville 06","Crawfordsville 07","Crawfordsville 08","Crawfordsville 09","Crawfordsville 10","Franklin","Madison","Ripley","Scott","Sugar Creek","Union 01","Union 02","Union 03","Union 04","Union 05","Union 06","Union 07","Walnut","Wayne"],"ramps":{"light":{"mid":"#f0efec","blue":["#cde2fb","#9ec5f4","#6da7ec","#3987e5","#256abf","#104281"],"red":["#fad6d2","#f1aea8","#e4857d","#d75852","#b13f3c","#762221"],"orange":["#f9d7cb","#efb19b","#e28969","#d45e2f","#af4517","#752601"],"violet":["#dbddfb","#babbf4","#9a99eb","#7d75e3","#625bbd","#3e377f"]},"dark":{"mid":"#383835","blue":["#184f95","#256abf","#2a78d6","#3987e5","#6da7ec","#b7d3f6"],"red":["#892c2a","#b13f3c","#c74844","#d75852","#e4857d","#f4c2bd"],"orange":["#883008","#af4517","#c54e1c","#d45e2f","#e28969","#f2c4b4"],"violet":["#4a4393","#625bbd","#6f67d4","#7d75e3","#9a99eb","#cbccf6"]}},"viewBox":"0 0 660 620"};
+
+/* ---------- color ---------- */
+function hex2rgb(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function s2l(c){c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+function l2s(c){c=Math.max(0,Math.min(1,c));const v=c<=0.0031308?12.92*c:1.055*Math.pow(c,1/2.4)-0.055;return Math.round(v*255);}
+function toOklab(h){const [R,G,B]=hex2rgb(h).map(s2l);
+  const l=Math.cbrt(0.4122214708*R+0.5363325363*G+0.0514459929*B),
+        m=Math.cbrt(0.2119034982*R+0.6806995451*G+0.1073969566*B),
+        s=Math.cbrt(0.0883024619*R+0.2817188376*G+0.6299787005*B);
+  return [0.2104542553*l+0.7936177850*m-0.0040720468*s,
+          1.9779984951*l-2.4285922050*m+0.4505937099*s,
+          0.0259040371*l+0.7827717662*m-0.8086757660*s];}
+function fromOklab(L,a,b){const l=Math.pow(L+0.3963377774*a+0.2158037573*b,3),
+        m=Math.pow(L-0.1055613458*a-0.0638541728*b,3),
+        s=Math.pow(L-0.0894841775*a-1.2914855480*b,3);
+  return 'rgb('+l2s(4.0767416621*l-3.3077115913*m+0.2309699292*s)+','
+              +l2s(-1.2684380046*l+2.6097574011*m-0.3413193965*s)+','
+              +l2s(-0.0041960863*l-0.7034186147*m+1.7076147010*s)+')';}
+
+let MODE = 'light';
+const ramp = () => DATA.ramps[MODE];
+function lerpStops(stops, t){
+  const ok = stops.map(toOklab);
+  const x = Math.max(0, Math.min(1, t)) * (ok.length - 1);
+  const i = Math.min(ok.length - 2, Math.floor(x)), f = x - i;
+  const A = ok[i], B = ok[i+1];
+  return fromOklab(A[0]+(B[0]-A[0])*f, A[1]+(B[1]-A[1])*f, A[2]+(B[2]-A[2])*f);
+}
+/** Diverging: t in [-1,1], blue positive, red negative, gray at zero. */
+function diverging(t){
+  const r = ramp();
+  return lerpStops([r.mid].concat(t >= 0 ? r.blue : r.red), Math.abs(t));
+}
+/** Sequential in one hue: t in [0,1]. */
+function sequential(hue, t){ const r = ramp(); return lerpStops([r.mid].concat(r[hue]), t); }
+const HUE_OF = { D: 'blue', R: 'red', O: 'violet' };
+const swatch = b => ramp()[HUE_OF[b]][3];
+
+/* ---------- state ---------- */
+const $ = id => document.getElementById(id);
+const nf = n => n.toLocaleString('en-US');
+const pct = (n, d=1) => n === null ? '—' : n.toFixed(d) + '%';
+const signed = (n, d=1) => (n >= 0 ? '+' : '−') + Math.abs(n).toFixed(d);
+
+let RACE = DATA.races[0];
+let VIEW = 'county';
+
+/* The city precincts are the tightly packed small ones; find them by area
+   rather than by name so the view survives a boundary redraw. */
+const AREAS = DATA.shapes.map(s => s.area).sort((a,b) => a-b);
+const MEDIAN_AREA = AREAS[Math.floor(AREAS.length/2)];
+const CITY = DATA.cityLabel ? DATA.shapes.filter(s => s.area < MEDIAN_AREA * 0.15) : [];
+const CITY_BOX = (() => {
+  if(!CITY.length) return null;
+  const b = CITY.reduce((a,s) => [Math.min(a[0],s.bbox[0]), Math.min(a[1],s.bbox[1]),
+                                  Math.max(a[2],s.bbox[2]), Math.max(a[3],s.bbox[3])],
+                        [1e9,1e9,-1e9,-1e9]);
+  const w = b[2]-b[0], h = b[3]-b[1], pad = Math.max(w,h) * 0.18;
+  return [b[0]-pad, b[1]-pad, w+2*pad, h+2*pad];
+})();
+let METRIC = null;      // {kind:'margin'|'cand'|'turnout', idx?}
+let PINNED = null;
+
+const poss = n => n + (/s$/i.test(n) ? "'" : "'s");
+
+/** Last real name word: drops "(W/I)" and Jr/Sr/II style suffixes. */
+function surname(name){
+  const w = name.replace(/\(.*?\)/g, '').replace(/,/g, ' ').trim().split(/\s+/);
+  while(w.length > 1 && /^(jr|sr|i{1,3}|iv|v)\.?$/i.test(w[w.length-1])) w.pop();
+  return w[w.length-1] || name;
+}
+
+const partyShort = p =>
+  p === 'Democratic' ? 'D' : p === 'Republican' ? 'R' :
+  p === 'Libertarian' ? 'L' : p === 'Independent' ? 'I' :
+  p === 'Non Partisan' ? 'NP' : p;
+
+/* ---------- map ---------- */
+const svg = $('map');
+svg.setAttribute('viewBox', DATA.viewBox);
+const NS = 'http://www.w3.org/2000/svg';
+const gShapes = document.createElementNS(NS,'g');
+const gLabels = document.createElementNS(NS,'g');
+svg.append(gShapes, gLabels);
+const paths = {}, labels = {}, SHAPE = {};
+
+for(const s of DATA.shapes){
+  SHAPE[s.name] = s;
+  const p = document.createElementNS(NS,'path');
+  p.setAttribute('d', s.d);
+  p.setAttribute('class','prec');
+  p.setAttribute('fill-rule','evenodd');
+  p.setAttribute('tabindex','0');
+  p.setAttribute('role','img');
+  p.addEventListener('pointerenter', e => hover(s.name, e));
+  p.addEventListener('pointermove', moveTip);
+  p.addEventListener('pointerleave', unhover);
+  p.addEventListener('focus', () => { const b = p.getBoundingClientRect();
+    hover(s.name, {clientX: b.left + b.width/2, clientY: b.top}); });
+  p.addEventListener('blur', unhover);
+  p.addEventListener('click', () => { PINNED = PINNED === s.name ? null : s.name; paint(); });
+  gShapes.appendChild(p);
+  paths[s.name] = p;
+
+  const t = document.createElementNS(NS,'text');
+  t.setAttribute('class','lbl');
+  t.setAttribute('x', s.cx); t.setAttribute('y', s.cy + 3);
+  t.textContent = s.name;
+  gLabels.appendChild(t);
+  labels[s.name] = t;
+}
+
+/* ---------- metric plumbing ---------- */
+function metricsFor(r){
+  const out = [];
+  if(r.prior)
+    out.push({kind:'shift', label:`Shift from ${r.prior.year} — Democratic two-party share`});
+  if(r.margin){
+    const d = r.cands[r.demIdx], p = r.cands[r.repIdx];
+    out.push({kind:'margin', label:`Margin: ${d.name} (D) − ${p.name} (R)`});
+  }
+  r.cands.forEach((c, i) => out.push({kind:'cand', idx:i, label:`${c.name} — share of vote`}));
+  out.push({kind:'turnout', label:'Ballots cast in this race'});
+  return out;
+}
+/** The value the map and table rank on, or null where the race is not on the ballot. */
+function dTwo(d, rr){ return (d + rr) ? 100 * d / (d + rr) : null; }
+
+function valueAt(r, prec){
+  const row = r.precincts[prec];
+  if(!row) return null;
+  if(METRIC.kind === 'shift'){
+    const p = r.prior.precincts[prec];
+    if(!p || row.total === 0) return null;
+    const a = dTwo(p.d, p.r), b = dTwo(row.v[r.demIdx], row.v[r.repIdx]);
+    return (a === null || b === null) ? null : b - a;
+  }
+  if(METRIC.kind === 'turnout') return row.total;
+  if(row.total === 0) return null;
+  if(METRIC.kind === 'margin')
+    return 100 * (row.v[r.demIdx] - row.v[r.repIdx]) / row.total;
+  return 100 * row.v[METRIC.idx] / row.total;
+}
+function fmtValue(v){
+  if(v === null) return '—';
+  if(METRIC.kind === 'turnout') return nf(v);
+  if(METRIC.kind === 'margin' || METRIC.kind === 'shift') return signed(v) + ' pp';
+  return pct(v);
+}
+
+/* ---------- tooltip ---------- */
+const tip = $('tip');
+function tipHTML(name){
+  const r = RACE, s = SHAPE[name], row = r.precincts[name];
+  if(!row || row.total === 0) return `<div class="tname">${name}</div>
+    <div class="trace">${r.office}</div>
+    <div style="color:var(--muted)">${row
+      ? 'On the ballot here, but no ballots were cast in this race.'
+      : 'Not on the ballot in this precinct.'}</div>
+    ${ctxHTML(s)}`;
+  const lead = row.total ? row.v.indexOf(Math.max(...row.v)) : -1;
+  const tie = row.total && row.v.filter(x => x === row.v[lead]).length > 1;
+  const rows = r.cands.map((c,i) => `
+    <tr${i === lead && !tie ? ' class="lead"' : ''}>
+      <td class="c"><span class="dot" style="background:${swatch(c.bucket)}"></span>${c.name} (${partyShort(c.party)})</td>
+      <td class="v">${nf(row.v[i])} &middot; ${row.total ? pct(100*row.v[i]/row.total) : '—'}</td></tr>`).join('');
+  const marg = r.margin && row.total
+    ? `<tr><td class="c">Margin</td><td class="v" style="color:${
+        row.v[r.demIdx] >= row.v[r.repIdx] ? ramp().blue[4] : ramp().red[4]}">${
+        signed(100*(row.v[r.demIdx]-row.v[r.repIdx])/row.total)} pp</td></tr>` : '';
+  // With a 2022 baseline, lead with the two years side by side.
+  let prior = '';
+  if(r.prior && r.prior.precincts[name]){
+    const p = r.prior.precincts[name];
+    const a = dTwo(p.d, p.r), b = row.total ? dTwo(row.v[r.demIdx], row.v[r.repIdx]) : null;
+    const sh = (a === null || b === null) ? null : b - a;
+    prior = `<div class="rule"></div>
+      <table>
+        <tr><td class="c yr" colspan="2">${r.prior.year}</td></tr>
+        <tr><td class="c"><span class="dot" style="background:${ramp().blue[3]}"></span>${r.prior.dem} (D)</td>
+            <td class="v">${nf(p.d)} &middot; ${p.total ? pct(100*p.d/p.total) : '—'}</td></tr>
+        <tr><td class="c"><span class="dot" style="background:${ramp().red[3]}"></span>${r.prior.rep} (R)</td>
+            <td class="v">${nf(p.r)} &middot; ${p.total ? pct(100*p.r/p.total) : '—'}</td></tr>
+        ${p.o > 0 ? `<tr><td class="c" style="color:var(--text-secondary)">Other / write-in</td>
+            <td class="v" style="color:var(--text-secondary)">${nf(p.o)} &middot; ${pct(100*p.o/p.total)}</td></tr>` : ''}
+        <tr><td class="c" style="color:var(--text-secondary)">Ballots cast</td>
+            <td class="v" style="color:var(--text-secondary)">${nf(p.total)}</td></tr>
+      </table>
+      <div class="rule"></div>
+      <table>
+        <tr><td class="c">D two-party share</td><td class="v">${pct(a)} &rarr; ${pct(b)}</td></tr>
+        <tr><td class="c lead">Shift since ${r.prior.year}</td>
+            <td class="v lead" style="color:${sh === null ? 'inherit' : (sh >= 0 ? ramp().blue[4] : ramp().red[4])}">${
+              sh === null ? '—' : signed(sh) + ' pp'}</td></tr>
+      </table>`;
+  }
+  return `<div class="tname">${name}</div>
+    <div class="trace">${r.office}</div>
+    ${r.prior ? '<div class="yr" style="margin:-4px 0 4px">2026</div>' : ''}
+    <table>${rows}</table>
+    <div class="rule"></div>
+    <table>
+      <tr><td class="c">Ballots cast in this race</td><td class="v">${nf(row.total)}</td></tr>
+      ${marg}
+    </table>${prior}${ctxHTML(s)}`;
+}
+function ctxHTML(s){
+  const bits = [];
+  if(s.comm) bits.push('Commissioner ' + s.comm.replace('District ','Dist. '));
+  if(s.council) bits.push('Council ' + s.council.replace('District ','Dist. '));
+  if(s.cong) bits.push('US House ' + s.cong);
+  if(s.senate) bits.push('State Sen. ' + s.senate);
+  if(s.house) bits.push('State House ' + s.house);
+  return bits.length ? `<div class="ctx">${bits.join(' · ')}</div>` : '';
+}
+function hover(name, e){ tip.innerHTML = tipHTML(name); tip.classList.add('on'); moveTip(e); highlight(name); }
+function moveTip(e){
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.clientX + 16, y = e.clientY + 16;
+  if(x + w > innerWidth - 8) x = e.clientX - w - 16;
+  if(y + h > innerHeight - 8) y = Math.max(8, e.clientY - h - 16);
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+function unhover(){ tip.classList.remove('on'); highlight(PINNED); }
+function highlight(name){
+  for(const k in paths) paths[k].classList.toggle('hot', k === name);
+  for(const tr of $('rows').children) tr.classList.toggle('hot', tr.dataset.name === name);
+}
+
+/* ---------- render ---------- */
+function paint(){
+  const r = RACE;
+  const onBallot = DATA.precincts.filter(p => r.precincts[p]);
+  const vals = onBallot.map(p => valueAt(r, p)).filter(v => v !== null);
+  const maxAbs = vals.length ? Math.max(...vals.map(Math.abs)) : 1;
+
+  let domain, fill, lo = 0, hi = 1;
+  if(METRIC.kind === 'margin' || METRIC.kind === 'shift'){
+    domain = Math.max(5, Math.ceil(maxAbs / 5) * 5);
+    lo = -domain; hi = domain;
+    fill = v => diverging(v / domain);
+  } else {
+    const hue = METRIC.kind === 'turnout' ? 'orange' : HUE_OF[r.cands[METRIC.idx].bucket];
+    lo = vals.length ? Math.min(...vals) : 0;
+    hi = vals.length ? Math.max(...vals) : 1;
+    if(hi - lo < 1e-9){ lo = Math.min(0, lo); hi = hi + 1; }
+    domain = hi;
+    fill = v => sequential(hue, (v - lo) / (hi - lo));
+  }
+
+  for(const name in paths){
+    const v = valueAt(r, name), p = paths[name];
+    p.setAttribute('fill', v === null ? 'var(--grid)' : fill(v));
+    p.classList.toggle('off', v === null);
+    labels[name].classList.toggle('off', v === null);
+    p.querySelector('title')?.remove();
+    const t = document.createElementNS(NS,'title');
+    t.textContent = `${name}: ` + (!r.precincts[name] ? 'not on the ballot'
+      : r.precincts[name].total === 0 ? 'no ballots cast' : fmtValue(v));
+    p.appendChild(t);
+  }
+  svg.querySelector('title').textContent =
+    `Map of ${DATA.county} County's ${DATA.precincts.length} voting precincts shaded by `
+    + `${METRIC.label} in the ${r.office} race.`;
+
+  /* legend */
+  const stops = [];
+  for(let i = 0; i <= 40; i++){
+    const f = i / 40;
+    stops.push(fill(lo + (hi - lo) * f) + ' ' + (f*100).toFixed(1) + '%');
+  }
+  $('legramp').style.background = 'linear-gradient(90deg,' + stops.join(',') + ')';
+  if(METRIC.kind === 'margin' || METRIC.kind === 'shift'){
+    $('legticks').innerHTML = [-domain,-domain/2,0,domain/2,domain]
+      .map(v => `<span>${v === 0 ? '0' : signed(v,0)}</span>`).join('');
+    $('legends').innerHTML = METRIC.kind === 'shift'
+      ? '<span>&#9664; Shift to Republican</span><span>Shift to Democrat &#9654;</span>'
+      : `<span>&#9664; ${r.cands[r.repIdx].name} (R)</span>`
+        + `<span>${r.cands[r.demIdx].name} (D) &#9654;</span>`;
+  } else {
+    const fmt = v => METRIC.kind === 'turnout' ? nf(Math.round(v)) : v.toFixed(1) + '%';
+    $('legticks').innerHTML = [lo, (lo+hi)/2, hi].map(v => `<span>${fmt(v)}</span>`).join('');
+    $('legends').innerHTML =
+      `<span>${METRIC.kind === 'turnout' ? 'Fewest ballots' : 'Weakest precinct'}</span>`
+      + `<span>${METRIC.kind === 'turnout' ? 'Most ballots' : 'Strongest precinct'}</span>`;
+  }
+  const offCount = DATA.precincts.length - onBallot.length;
+  const emptyCount = onBallot.filter(p => r.precincts[p].total === 0).length;
+  const bits = [];
+  if(offCount) bits.push(`${offCount} of ${DATA.precincts.length} precincts are outside this race`);
+  if(emptyCount) bits.push(`${emptyCount} on the ballot recorded no ballots cast`);
+  if(METRIC.kind === 'shift')
+    bits.unshift(`${r.prior.dem} (D) v ${r.prior.rep} (R) in ${r.prior.year}, `
+      + `${r.cands[r.demIdx].name} (D) v ${r.cands[r.repIdx].name} (R) in 2026`);
+  else if(METRIC.kind !== 'margin')
+    bits.unshift('the ramp spans the range actually observed, not 0 to the maximum possible');
+  const note = bits.length
+    ? bits.join('; ') + '.'
+    : `All ${DATA.precincts.length} precincts vote in this race.`;
+  $('legnote').textContent = note.charAt(0).toUpperCase() + note.slice(1);
+
+  /* table */
+  const ranked = onBallot.slice().sort((a,b) => {
+    const x = valueAt(r,b), y = valueAt(r,a);
+    const d = (x === null ? -1e12 : x) - (y === null ? -1e12 : y);
+    return d !== 0 ? d : a.localeCompare(b);
+  }).concat(DATA.precincts.filter(p => !r.precincts[p]).sort());
+
+  const shiftView = METRIC.kind === 'shift';
+  $('thead').innerHTML = shiftView
+    ? `<th>#</th><th>Precinct</th><th>Shift</th><th>D ${r.prior.year}</th><th>D 2026</th>`
+      + `<th>Cast ${r.prior.year}</th><th>Cast 2026</th>`
+    : `<th>#</th><th>Precinct</th><th>${
+        METRIC.kind === 'margin' ? 'Margin' : METRIC.kind === 'turnout' ? 'Ballots' : 'Share'}</th>`
+      + r.cands.map(c => `<th>${surname(c.name)}</th>`).join('')
+      + '<th>Ballots</th>';
+
+  $('rows').innerHTML = ranked.map((name,i) => {
+    const row = r.precincts[name], v = valueAt(r, name), out = !row;
+    const p22 = shiftView && row ? r.prior.precincts[name] : null;
+    const cells = shiftView
+      ? `<td>${p22 ? pct(dTwo(p22.d, p22.r)) : '—'}</td>`
+        + `<td>${out || !row.total ? '—' : pct(dTwo(row.v[r.demIdx], row.v[r.repIdx]))}</td>`
+        + `<td>${p22 ? nf(p22.total) : '—'}</td>`
+        + `<td>${out ? '—' : nf(row.total)}</td>`
+      : r.cands.map((c,ci) => `<td>${out ? '—' : nf(row.v[ci])}</td>`).join('')
+        + `<td>${out ? '—' : nf(row.total)}</td>`;
+    return `<tr data-name="${name}"${out ? ' class="off"' : ''}>
+      <td>${out ? '—' : i+1}</td>
+      <td><span class="chip" style="background:${v === null ? 'var(--grid)' : fill(v)}"></span>${name}</td>
+      <td class="val">${out ? 'not on ballot' : row.total === 0 ? 'no ballots' : fmtValue(v)}</td>
+      ${cells}
+    </tr>`;
+  }).join('');
+  for(const tr of $('rows').children){
+    const name = tr.dataset.name;
+    tr.addEventListener('pointerenter', e => hover(name, e));
+    tr.addEventListener('pointermove', moveTip);
+    tr.addEventListener('pointerleave', unhover);
+    tr.addEventListener('click', () => { PINNED = PINNED === name ? null : name; paint(); });
+  }
+  $('tabletitle').textContent = METRIC.kind === 'shift'
+    ? `Precincts ranked by shift toward ${r.cands[r.demIdx].name}`
+    : METRIC.kind === 'turnout'
+    ? 'Precincts ranked by ballots cast'
+    : METRIC.kind === 'margin'
+      ? `Precincts ranked by ${poss(r.cands[r.demIdx].name)} margin`
+      : `Precincts ranked by ${poss(r.cands[METRIC.idx].name)} share`;
+  $('tablenote').textContent = `${onBallot.length} precinct${onBallot.length === 1 ? '' : 's'} · `
+    + `${nf(r.total)} ballots cast`;
+
+  /* race header */
+  const lead = Math.max(...r.cands.map(c => c.total));
+  const winners = r.cands.slice().sort((a,b) => b.total - a.total).slice(0, r.seats).map(c => c.name);
+  $('rhead').innerHTML = `
+    <h2>${r.office}</h2>
+    <div class="meta">${r.cat} &middot; ${r.seats > 1 ? r.seats + ' seats' : '1 seat'}
+      &middot; ${onBallot.length} precinct${onBallot.length === 1 ? '' : 's'}
+      &middot; ${nf(r.total)} ballots cast
+      ${r.cands.length === 1 ? '&middot; unopposed' : ''}</div>
+    ${r.total === 0 ? '<div class="meta" style="color:#b07400;font-weight:600">'
+      + '&#9888; No votes are recorded for this race in any precinct.</div>' : ''}
+    <div class="bar">${r.cands.map(c =>
+      `<span style="width:${r.total ? 100*c.total/r.total : 0}%;background:${swatch(c.bucket)}"></span>`).join('')}</div>
+    <div class="clist">${r.cands.map(c => `
+      <div class="cand${r.cands.length > 1 && winners.includes(c.name) ? ' win' : ''}">
+        <span class="sw" style="background:${swatch(c.bucket)}"></span>
+        <span class="nm">${c.name}</span>
+        <span class="pa">${c.party}</span>
+        <span class="vt">${nf(c.total)} &middot; ${r.total ? pct(100*c.total/r.total) : '—'}</span>
+      </div>`).join('')}</div>`;
+
+  $('foot').innerHTML =
+    `Source: Indiana Secretary of State 2026 general election results, precinct level, `
+    + `${DATA.county} County. `
+    + 'Precinct boundaries: Indiana Voting District Boundaries 2023 (<code>p23</code>). '
+    + 'Percentages are of all ballots cast in that race in that precinct. '
+    + (r.prior ? `${r.prior.year} precinct results come from the ${DATA.county} County clerk's `
+        + `election workbook (the state's ${r.prior.year} export reports ${DATA.county} at county level only); `
+        + `its countywide totals differ from the state's certified figures by about 3 votes. `
+        + `Shift = (2026 D share of D+R) &minus; (${r.prior.year} D share of D+R), in percentage points, `
+        + `and assumes precinct boundaries did not change between the two elections &mdash; the same `
+        + `${DATA.precincts.length} precinct names appear in both. ` : '')
+    + (r.seats > 1 ? `This race elects ${r.seats}, so voters could pick up to ${r.seats} and shares sum above 100%. ` : '')
+    + 'Click a precinct or row to pin it; Esc clears.';
+
+  highlight(PINNED);
+  declutter();
+}
+
+/* ---------- controls ---------- */
+const raceSel = $('race'), metricSel = $('metric');
+for(const g of DATA.groups){
+  const rs = DATA.races.filter(r => r.group === g);
+  if(!rs.length) continue;
+  const og = document.createElement('optgroup');
+  og.label = g;
+  for(const r of rs){
+    const o = document.createElement('option');
+    o.value = r.id; o.textContent = r.office;
+    og.appendChild(o);
+  }
+  raceSel.appendChild(og);
+}
+function loadMetrics(keepKind){
+  const opts = metricsFor(RACE);
+  metricSel.innerHTML = opts.map((m,i) => `<option value="${i}">${m.label}</option>`).join('');
+  let pick = 0;
+  if(keepKind === 'turnout') pick = opts.length - 1;
+  METRIC = opts[pick];
+  metricSel.value = String(pick);
+}
+raceSel.addEventListener('change', () => {
+  RACE = DATA.races.find(r => r.id === raceSel.value);
+  loadMetrics(METRIC && METRIC.kind === 'turnout' ? 'turnout' : null);
+  paint();
+});
+metricSel.addEventListener('change', () => {
+  METRIC = metricsFor(RACE)[+metricSel.value];
+  paint();
+});
+$('view').addEventListener('change', () => { VIEW = $('view').value; applyView(); });
+$('labels').addEventListener('click', () => {
+  const on = $('labels').getAttribute('aria-pressed') === 'true';
+  $('labels').setAttribute('aria-pressed', String(!on));
+  gLabels.style.display = on ? 'none' : '';
+});
+function applyView(){
+  const vb = DATA.viewBox.split(' ').map(Number);
+  const box = (VIEW === 'city' && CITY_BOX) ? CITY_BOX : vb;
+  svg.setAttribute('viewBox', box.join(' '));
+  svg.style.setProperty('--zoom', (box[2] / vb[2]).toFixed(4));
+  declutter();
+}
+
+/* Greedy label placement, biggest precinct first: a label is dropped if its box
+   would overlap one already placed. Dropped names stay in the table and tooltip. */
+function declutter(){
+  const order = DATA.shapes.slice().sort((a,b) => b.area - a.area);
+  const placed = [];
+  const vb = svg.getAttribute('viewBox').split(' ').map(Number);
+  const unit = vb[2] / 1000;                     // viewBox units per 0.1% of width
+  for(const s of order){
+    const el = labels[s.name];
+    const w = s.name.length * 4.6 * unit * 1.15, h = 10 * unit;
+    const box = [s.cx - w/2, s.cy - h/2, s.cx + w/2, s.cy + h/2];
+    const off = s.cx < vb[0] || s.cx > vb[0]+vb[2] || s.cy < vb[1] || s.cy > vb[1]+vb[3];
+    const clash = placed.some(b => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]));
+    const hide = off || clash;
+    el.classList.toggle('hidden', hide);
+    if(!hide) placed.push(box);
+  }
+  // the pinned or hovered precinct always shows its name
+  if(PINNED && labels[PINNED]) labels[PINNED].classList.remove('hidden');
+}
+
+function applyMode(){
+  MODE = document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme
+    : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  paint();
+}
+$('theme').addEventListener('click', () => {
+  document.documentElement.dataset.theme = (MODE === 'dark') ? 'light' : 'dark';
+  applyMode();
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  if(!document.documentElement.dataset.theme) applyMode();
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ PINNED = null; paint(); } });
+
+document.title = `${DATA.county} County Precinct Results 2026`;
+$('h1').innerHTML = `${DATA.county} County, 2026 general election &mdash; results by precinct`;
+$('sub').textContent =
+  `Every race on the ${DATA.county} County ballot, precinct by precinct. Pick a race, then pick `
+  + `what the map should shade: the head-to-head margin, one candidate's share of the vote, or `
+  + `ballots cast. Hover a precinct or a table row for the full result there.`;
+if(CITY_BOX) $('viewCity').textContent = DATA.cityLabel;
+else $('view').closest('.field').style.display = 'none';
+
+raceSel.value = RACE.id;
+loadMetrics();
+applyMode();
+applyView();
+</script>
+</body>
+</html>
