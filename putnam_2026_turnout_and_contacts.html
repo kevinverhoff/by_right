@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The turnout score and the ground game</title>
+<meta name="description" content="How well VAN's turnout score predicted who voted in Putnam County's 2026 general election, and what the field programme's contact activity looked like.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ede7d9;
+    --paper-line: #d9cfb4;
+    --ink: #23291f;
+    --ink-soft: #4d5443;
+    --ink-mute: #6f7564;
+    --green: #33482f;
+    --rust: #a6431f;
+    --card-bg: #f6f2e6;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--paper); color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  body {
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  .titleblock {
+    position: relative; border: 1.5px solid var(--ink);
+    background: var(--card-bg); padding: 28px 28px 22px; margin-bottom: 44px;
+  }
+  .titleblock::before, .titleblock::after { content: ""; position: absolute; width: 14px; height: 14px; }
+  .titleblock::before { top: -1.5px; left: -1.5px; border-top: 2px solid var(--rust); border-left: 2px solid var(--rust); }
+  .titleblock::after { bottom: -1.5px; right: -1.5px; border-bottom: 2px solid var(--rust); border-right: 2px solid var(--rust); }
+
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .03em; color: var(--ink-soft); margin: 0 0 10px; }
+  h1 { font-family: 'IBM Plex Serif', serif; font-weight: 600; font-size: 38px; line-height: 1.08; margin: 0 0 12px; letter-spacing: -.01em; }
+  .tagline { font-size: 17px; color: var(--ink-soft); margin: 0; max-width: 56ch; line-height: 1.5; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 22px; margin-top: 22px; padding-top: 16px;
+    border-top: 1px solid var(--paper-line);
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-soft);
+  }
+  .meta-row b { color: var(--ink); font-weight: 500; }
+
+  section { margin-top: 48px; }
+  section > h2 {
+    font-family: 'IBM Plex Serif', serif; font-weight: 500; font-size: 15px;
+    margin: 0 0 18px; display: flex; align-items: baseline; gap: 10px;
+  }
+  section > h2::after { content: ""; flex: 1; border-bottom: 1px solid var(--paper-line); }
+  .index-num { font-family: 'IBM Plex Mono', monospace; color: var(--rust); font-size: 14px; }
+  h3 { font-family: 'IBM Plex Serif', serif; font-size: 22px; font-weight: 600; margin: 0 0 10px; line-height: 1.25; }
+  h4 { font-family: 'IBM Plex Serif', serif; font-size: 16px; font-weight: 600; margin: 28px 0 8px; }
+  p { font-size: 15px; line-height: 1.6; color: var(--ink-soft); max-width: 68ch; margin: 0 0 14px; }
+  p.lead { font-size: 16px; color: var(--ink); }
+  strong { color: var(--ink); font-weight: 600; }
+
+  .card { background: var(--card-bg); border: 1px solid var(--ink); padding: 20px 20px 12px; margin: 18px 0 22px; }
+  .card-cap { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-soft); margin: 10px 0 0; line-height: 1.5; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--paper-line); border: 1px solid var(--ink); margin: 18px 0 24px; }
+  .fig { background: var(--card-bg); padding: 14px 16px; }
+  .fig .v { font-family: 'IBM Plex Serif', serif; font-size: 27px; font-weight: 600; line-height: 1.1; color: var(--ink); }
+  .fig .v.rust { color: var(--rust); }
+  .fig .l { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-soft); margin-top: 5px; line-height: 1.4; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; margin: 6px 0 4px; }
+  th, td { padding: 6px 9px; text-align: right; border-bottom: 1px solid var(--paper-line); font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-soft); font-weight: 500; border-bottom: 1px solid var(--ink); }
+  tbody tr:hover { background: rgba(166,67,31,.05); }
+  td.flag { color: var(--rust); font-family: 'IBM Plex Mono', monospace; }
+
+  details { margin: 14px 0 0; }
+  summary { cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--rust); }
+  .note { border-left: 2px solid var(--rust); padding: 2px 0 2px 14px; margin: 20px 0; }
+  .note p { margin: 0 0 8px; }
+  .note p:last-child { margin: 0; }
+
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-soft); line-height: 1.7; }
+  footer a { color: var(--rust); }
+
+  .tick { font-size: 10.5px; fill: var(--ink-mute); font-family: 'IBM Plex Mono', monospace; }
+  .axis-title { font-size: 10.5px; fill: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; letter-spacing: .03em; }
+  .gridline { stroke: var(--paper-line); stroke-width: 1; }
+  .refline { stroke: var(--ink-mute); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+  .reflabel { font-size: 10.5px; fill: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; }
+  .whisker { stroke: var(--ink); stroke-width: 1.2; opacity: .5; }
+  .barlabel { font-size: 11px; fill: var(--ink); font-family: 'IBM Plex Mono', monospace; }
+  .hit { fill: transparent; cursor: pointer; }
+  .bar.on { fill: var(--rust) !important; }
+
+  .tip {
+    position: fixed; pointer-events: none; z-index: 9; opacity: 0; transition: opacity .1s;
+    background: var(--card-bg); color: var(--ink); border: 1px solid var(--ink);
+    padding: 9px 11px; font-size: 12.5px; line-height: 1.45; max-width: 250px;
+    box-shadow: 3px 3px 0 rgba(35,41,31,.15);
+  }
+  .tip.on { opacity: 1; }
+  .tip b { font-family: 'IBM Plex Serif', serif; }
+  .tip .row { display: flex; justify-content: space-between; gap: 14px; color: var(--ink-soft); font-size: 12px; }
+  .tip .row span:last-child { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 620px) {
+    h1 { font-size: 30px; }
+    .wrap { padding: 32px 16px 64px; }
+    .titleblock { padding: 20px 18px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="titleblock">
+    <p class="eyebrow">PUTNAM COUNTY, INDIANA &middot; 2026 GENERAL ELECTION</p>
+    <h1>The turnout score and the ground game</h1>
+    <p class="tagline">Checking a prediction against the result, and a look at the contact programme behind it.</p>
+    <div class="meta-row"><span>FILE &middot; <b>23,570</b> registered</span><span>TURNOUT &middot; <b>34.1%</b></span><span>CONTACTS &middot; <b>31,392</b></span><span>BUILT &middot; <b>5 Nov 2026</b></span></div>
+  </div>
+
+  <section>
+    <h2><span class="index-num">01</span> Did the turnout score predict who voted?</h2>
+    
+<h3>A good sorter, a poor forecaster</h3>
+<p class="lead">VAN assigns every registered voter a turnout score from 0 to 100,
+fixed early in the cycle, meant to read as their probability of voting. This
+checks it against what 23,570 people on the Putnam County file actually did
+on 3 November 2026, when 34.1% of them voted.</p>
+<p>Those are two separate questions. Does a higher score mean a likelier voter?
+And when the score says 70, do 70% of them turn out? The answer here is yes to
+the first and no to the second.</p>
+<div class="figs"><div class="fig"><div class="v ">0.868</div><div class="l">AUC &mdash; how well the score<br>ranks voters above non-voters</div></div><div class="fig"><div class="v rust">0.75&times;</div><div class="l">Actual turnout as a share of<br>what the score predicted</div></div><div class="fig"><div class="v rust">11 pts</div><div class="l">Average gap between a band's<br>score and its real turnout</div></div><div class="fig"><div class="v ">+0.31</div><div class="l">Brier skill versus guessing<br>the overall turnout rate</div></div></div>
+<div class="card">
+  <svg id="c-turnout" viewBox="0 0 880 348" role="img"
+       aria-label="Share of each turnout score band who voted, against the score itself"></svg>
+  <p class="card-cap">Each bar is a 5-point band of the turnout score. Whiskers are
+  95% Wilson intervals. The dashed diagonal is where bars would sit if the score
+  read directly as a turnout percentage. Every band falls below it.</p>
+</div>
+<h4>The ranking works</h4>
+<p>Pick a voter and a non-voter at random and the voter holds the higher score
+86.8% of the time, counting a tied pair as half &mdash; an AUC
+of 0.868
+(95% CI 0.863&ndash;0.873). Turnout climbs almost
+perfectly in step with the score: a linear trend accounts for
+96.9% of the association between the two
+(Cochran&ndash;Armitage &chi;&sup2; = 8,921 on 1 df).
+For sorting a universe into who is worth a knock, the score does its job.</p>
+<h4>The number is too high, everywhere</h4>
+<p>Taken at face value the score expected 10,735 voters out of this
+universe. 8,037 turned out &mdash; it over-predicted by
+34%. This is not noise in one or two bands:
+<strong>every band came in under its own score</strong>, and 18 of
+20 do so beyond a 5% false-discovery rate. The gap is widest in the
+middle of the scale, where the 70–75 band scored
+72 and turned out 51.6%.</p>
+<p>Fitting the observed rates against the score on a log-odds scale gives a
+calibration slope of 0.83 (perfect is 1.00) and an intercept of
+-0.81 (perfect is 0.00) &mdash; a scale that is both shifted down and
+flattened. A two-parameter correction of that form tracks the real rates within
+a few points across most of the range, so the information is there; it is the
+labelling that is off.</p>
+<details>
+  <summary>Band-by-band detail</summary>
+  <table>
+    <thead><tr><th>Score band</th><th>People</th><th>Voted</th><th>Score says</th>
+    <th>Actually voted</th><th>Gap (pts)</th><th>95% CI</th></tr></thead>
+    <tbody><tr><td>0–5</td><td>3,728</td><td>63</td><td>2%</td><td>1.7%</td><td class='flag'>-0.3</td><td>1.3&ndash;2.2%</td></tr><tr><td>5–10</td><td>2,188</td><td>147</td><td>7%</td><td>6.7%</td><td class='flag'>-0.3</td><td>5.7&ndash;7.8%</td></tr><tr><td>10–15</td><td>698</td><td>31</td><td>12%</td><td>4.4%</td><td class='flag'>-7.6</td><td>3.1&ndash;6.2%</td></tr><tr><td>15–20</td><td>576</td><td>56</td><td>17%</td><td>9.7%</td><td class='flag'>-7.3</td><td>7.6&ndash;12.4%</td></tr><tr><td>20–25</td><td>984</td><td>107</td><td>22%</td><td>10.9%</td><td class='flag'>-11.1</td><td>9.1&ndash;13.0%</td></tr><tr><td>25–30</td><td>1,340</td><td>166</td><td>27%</td><td>12.4%</td><td class='flag'>-14.6</td><td>10.7&ndash;14.3%</td></tr><tr><td>30–35</td><td>1,183</td><td>206</td><td>32%</td><td>17.4%</td><td class='flag'>-14.6</td><td>15.4&ndash;19.7%</td></tr><tr><td>35–40</td><td>870</td><td>175</td><td>37%</td><td>20.1%</td><td class='flag'>-16.9</td><td>17.6&ndash;22.9%</td></tr><tr><td>40–45</td><td>683</td><td>149</td><td>42%</td><td>21.8%</td><td class='flag'>-20.2</td><td>18.9&ndash;25.1%</td></tr><tr><td>45–50</td><td>821</td><td>253</td><td>47%</td><td>30.8%</td><td class='flag'>-16.2</td><td>27.8&ndash;34.1%</td></tr><tr><td>50–55</td><td>759</td><td>267</td><td>52%</td><td>35.2%</td><td class='flag'>-16.8</td><td>31.9&ndash;38.6%</td></tr><tr><td>55–60</td><td>656</td><td>254</td><td>57%</td><td>38.7%</td><td class='flag'>-18.3</td><td>35.1&ndash;42.5%</td></tr><tr><td>60–65</td><td>616</td><td>268</td><td>62%</td><td>43.5%</td><td class='flag'>-18.5</td><td>39.6&ndash;47.4%</td></tr><tr><td>65–70</td><td>683</td><td>320</td><td>67%</td><td>46.9%</td><td class='flag'>-20.1</td><td>43.1&ndash;50.6%</td></tr><tr><td>70–75</td><td>1,085</td><td>560</td><td>72%</td><td>51.6%</td><td class='flag'>-20.4</td><td>48.6&ndash;54.6%</td></tr><tr><td>75–80</td><td>1,124</td><td>660</td><td>77%</td><td>58.7%</td><td class='flag'>-18.3</td><td>55.8&ndash;61.6%</td></tr><tr><td>80–85</td><td>1,099</td><td>714</td><td>82%</td><td>65.0%</td><td class='flag'>-17.0</td><td>62.1&ndash;67.7%</td></tr><tr><td>85–90</td><td>792</td><td>560</td><td>87%</td><td>70.7%</td><td class='flag'>-16.3</td><td>67.4&ndash;73.8%</td></tr><tr><td>90–95</td><td>910</td><td>698</td><td>92%</td><td>76.7%</td><td class='flag'>-15.3</td><td>73.8&ndash;79.3%</td></tr><tr><td>95–100</td><td>2,775</td><td>2,383</td><td>97%</td><td>85.9%</td><td class='flag'>-11.1</td><td>84.5&ndash;87.1%</td></tr></tbody>
+  </table>
+</details>
+
+  </section>
+
+  <section>
+    <h2><span class="index-num">02</span> Contact activity</h2>
+    
+<h3>What the field programme did</h3>
+<p class="lead">31,392 contact attempts between 1 August and
+3 November 2026, reaching 15,454 distinct people across
+59 active days.</p>
+<div class="figs"><div class="fig"><div class="v ">31,392</div><div class="l">Contact attempts</div></div><div class="fig"><div class="v ">15,454</div><div class="l">Distinct people reached<br>at least once</div></div><div class="fig"><div class="v ">59</div><div class="l">Active days<br>1 Aug &ndash; 3 Nov</div></div><div class="fig"><div class="v ">2.0</div><div class="l">Attempts per person</div></div></div>
+<h4>How attempts landed</h4>
+<div class="card">
+  <svg id="c-results" viewBox="0 0 880 300" role="img"
+       aria-label="Contact attempts by result"></svg>
+  <p class="card-cap">Disposition recorded for each attempt.
+  &ldquo;Canvassed&rdquo; is the most common at 37.7%.
+  Results under 1% are grouped.</p>
+</div>
+<h4>Which channel</h4>
+<div class="card">
+  <svg id="c-types" viewBox="0 0 880 300" role="img"
+       aria-label="Contact attempts by channel"></svg>
+  <p class="card-cap">Phone, paid calls and texting carry most of the volume;
+  in-person work &mdash; walks and events &mdash; accounts for 10,149 attempts
+  (32.3%). Channels under 1% are grouped.</p>
+</div>
+<h4>Activity over time</h4>
+<div class="card">
+  <svg id="c-daily" viewBox="0 0 880 210" role="img"
+       aria-label="Contact attempts per day"></svg>
+  <p class="card-cap">One bar per active day. The programme runs in bursts rather
+  than evenly, with the heaviest single day on
+  14 October (5,928 attempts).</p>
+</div>
+
+  </section>
+
+  <section>
+    <h2><span class="index-num">03</span> Methods and limits</h2>
+    
+<h4>Where the numbers come from</h4>
+<p>Turnout scores and vote history are a VAN export for the Putnam County
+universe, cross-tabulated at 5-point score thresholds. The export is cumulative
+&mdash; each row counts everyone at that score <em>or higher</em> &mdash; so the
+bands here are built by differencing adjacent rows. Contact records are a
+combined export of the programme's VAN contact history.</p>
+<h4>What is aggregated, and why</h4>
+<p>The contact figures on this page are counts only. Individual voter
+identifiers and canvasser names exist in the underlying export and are
+deliberately not published here, nor carried in this file's data. There is
+nothing on this page that resolves to a person.</p>
+<h4>Limits worth stating</h4>
+<p>Placing each band at its midpoint assumes scores are spread evenly inside the
+band; pinning them to the floor or the ceiling instead moves the headline ratio
+only from 0.78 to 0.72, against 0.75 as
+reported, so that assumption is not driving the result. This is one election in
+one county: a
+score built to predict a presidential year will look miscalibrated against a
+midterm even when it is working as designed, and nothing here separates those
+two explanations. The contact data describes a universe that was itself being
+worked, so these are not an untouched control group.</p>
+
+  </section>
+
+  <footer>Built from VAN exports for the 2026 Putnam County general election. Contact data is aggregated; no individual records are published. <a href="index.html">&larr; By Right</a></footer>
+</div>
+<div class="tip" id="tip"></div>
+<script>
+const DATA = {"bands":[{"label":"0\u20135","lo":0,"hi":5,"score":2.0,"voters":63,"n":3728,"pct":1.69,"lo95":1.32,"hi95":2.16,"fill":"#5a8b72"},{"label":"5\u201310","lo":5,"hi":10,"score":7.0,"voters":147,"n":2188,"pct":6.72,"lo95":5.74,"hi95":7.85,"fill":"#56876e"},{"label":"10\u201315","lo":10,"hi":15,"score":12.0,"voters":31,"n":698,"pct":4.44,"lo95":3.15,"hi95":6.23,"fill":"#52846a"},{"label":"15\u201320","lo":15,"hi":20,"score":17.0,"voters":56,"n":576,"pct":9.72,"lo95":7.56,"hi95":12.42,"fill":"#4e8066"},{"label":"20\u201325","lo":20,"hi":25,"score":22.0,"voters":107,"n":984,"pct":10.87,"lo95":9.08,"hi95":12.97,"fill":"#4a7c62"},{"label":"25\u201330","lo":25,"hi":30,"score":27.0,"voters":166,"n":1340,"pct":12.39,"lo95":10.73,"hi95":14.26,"fill":"#45785e"},{"label":"30\u201335","lo":30,"hi":35,"score":32.0,"voters":206,"n":1183,"pct":17.41,"lo95":15.36,"hi95":19.68,"fill":"#41745a"},{"label":"35\u201340","lo":35,"hi":40,"score":37.0,"voters":175,"n":870,"pct":20.11,"lo95":17.59,"hi95":22.91,"fill":"#3d7056"},{"label":"40\u201345","lo":40,"hi":45,"score":42.0,"voters":149,"n":683,"pct":21.82,"lo95":18.88,"hi95":25.07,"fill":"#396c52"},{"label":"45\u201350","lo":45,"hi":50,"score":47.0,"voters":253,"n":821,"pct":30.82,"lo95":27.75,"hi95":34.06,"fill":"#35694e"},{"label":"50\u201355","lo":50,"hi":55,"score":52.0,"voters":267,"n":759,"pct":35.18,"lo95":31.86,"hi95":38.64,"fill":"#30654b"},{"label":"55\u201360","lo":55,"hi":60,"score":57.0,"voters":254,"n":656,"pct":38.72,"lo95":35.07,"hi95":42.5,"fill":"#2c6147"},{"label":"60\u201365","lo":60,"hi":65,"score":62.0,"voters":268,"n":616,"pct":43.51,"lo95":39.64,"hi95":47.45,"fill":"#285d43"},{"label":"65\u201370","lo":65,"hi":70,"score":67.0,"voters":320,"n":683,"pct":46.85,"lo95":43.14,"hi95":50.6,"fill":"#235a3f"},{"label":"70\u201375","lo":70,"hi":75,"score":72.0,"voters":560,"n":1085,"pct":51.61,"lo95":48.64,"hi95":54.58,"fill":"#1f563b"},{"label":"75\u201380","lo":75,"hi":80,"score":77.0,"voters":660,"n":1124,"pct":58.72,"lo95":55.82,"hi95":61.56,"fill":"#1a5238"},{"label":"80\u201385","lo":80,"hi":85,"score":82.0,"voters":714,"n":1099,"pct":64.97,"lo95":62.1,"hi95":67.73,"fill":"#154f34"},{"label":"85\u201390","lo":85,"hi":90,"score":87.0,"voters":560,"n":792,"pct":70.71,"lo95":67.44,"hi95":73.77,"fill":"#104b30"},{"label":"90\u201395","lo":90,"hi":95,"score":92.0,"voters":698,"n":910,"pct":76.7,"lo95":73.85,"hi95":79.33,"fill":"#0a482d"},{"label":"95\u2013100","lo":95,"hi":100,"score":97.0,"voters":2383,"n":2775,"pct":85.87,"lo95":84.53,"hi95":87.12,"fill":"#034429"}],"results":[{"k":"Canvassed","v":11850,"pct":37.74847094801223,"fill":"#175035"},{"k":"Left Message","v":6315,"pct":20.11659021406728,"fill":"#1d553a"},{"k":"Texted","v":5444,"pct":17.341997961264017,"fill":"#23593f"},{"k":"Refused","v":2049,"pct":6.527140672782875,"fill":"#285e43"},{"k":"No Contact","v":1553,"pct":4.947120285423038,"fill":"#2d6248"},{"k":"Not Home","v":1250,"pct":3.98190621814475,"fill":"#33674c"},{"k":"Lit Dropped","v":1087,"pct":3.462665647298675,"fill":"#386b51"},{"k":"Inaccessible","v":812,"pct":2.5866462793068297,"fill":"#3d7056"},{"k":"Busy","v":536,"pct":1.707441386340469,"fill":"#42755b"},{"k":"All others","v":496,"pct":1.5800203873598369,"fill":"#477960"}],"types":[{"k":"Phone","v":9248,"pct":29.45973496432212,"fill":"#175035"},{"k":"Event","v":7836,"pct":24.96177370030581,"fill":"#22583e"},{"k":"Paid Call","v":6370,"pct":20.291794087665647,"fill":"#2b6046"},{"k":"SMS Text","v":5522,"pct":17.59046890927625,"fill":"#35694e"},{"k":"Walk","v":2313,"pct":7.368119266055046,"fill":"#3e7157"},{"k":"All others","v":103,"pct":0.32810907237512743,"fill":"#477960"}],"daily":[{"d":"2026-08-01","v":2,"label":"Aug 1, 2026"},{"d":"2026-08-06","v":264,"label":"Aug 6, 2026"},{"d":"2026-08-13","v":16,"label":"Aug 13, 2026"},{"d":"2026-08-14","v":4,"label":"Aug 14, 2026"},{"d":"2026-08-17","v":128,"label":"Aug 17, 2026"},{"d":"2026-08-20","v":1224,"label":"Aug 20, 2026"},{"d":"2026-08-22","v":1,"label":"Aug 22, 2026"},{"d":"2026-08-23","v":18,"label":"Aug 23, 2026"},{"d":"2026-08-26","v":46,"label":"Aug 26, 2026"},{"d":"2026-08-27","v":511,"label":"Aug 27, 2026"},{"d":"2026-08-28","v":33,"label":"Aug 28, 2026"},{"d":"2026-08-29","v":4,"label":"Aug 29, 2026"},{"d":"2026-08-30","v":20,"label":"Aug 30, 2026"},{"d":"2026-08-31","v":34,"label":"Aug 31, 2026"},{"d":"2026-09-01","v":11,"label":"Sep 1, 2026"},{"d":"2026-09-03","v":2726,"label":"Sep 3, 2026"},{"d":"2026-09-05","v":278,"label":"Sep 5, 2026"},{"d":"2026-09-06","v":25,"label":"Sep 6, 2026"},{"d":"2026-09-08","v":21,"label":"Sep 8, 2026"},{"d":"2026-09-09","v":41,"label":"Sep 9, 2026"},{"d":"2026-09-10","v":689,"label":"Sep 10, 2026"},{"d":"2026-09-11","v":11,"label":"Sep 11, 2026"},{"d":"2026-09-12","v":11,"label":"Sep 12, 2026"},{"d":"2026-09-14","v":25,"label":"Sep 14, 2026"},{"d":"2026-09-15","v":14,"label":"Sep 15, 2026"},{"d":"2026-09-17","v":21,"label":"Sep 17, 2026"},{"d":"2026-09-22","v":1150,"label":"Sep 22, 2026"},{"d":"2026-09-23","v":3,"label":"Sep 23, 2026"},{"d":"2026-09-25","v":30,"label":"Sep 25, 2026"},{"d":"2026-09-28","v":13,"label":"Sep 28, 2026"},{"d":"2026-09-30","v":1,"label":"Sep 30, 2026"},{"d":"2026-10-01","v":191,"label":"Oct 1, 2026"},{"d":"2026-10-03","v":19,"label":"Oct 3, 2026"},{"d":"2026-10-06","v":266,"label":"Oct 6, 2026"},{"d":"2026-10-07","v":115,"label":"Oct 7, 2026"},{"d":"2026-10-08","v":131,"label":"Oct 8, 2026"},{"d":"2026-10-09","v":98,"label":"Oct 9, 2026"},{"d":"2026-10-10","v":20,"label":"Oct 10, 2026"},{"d":"2026-10-13","v":166,"label":"Oct 13, 2026"},{"d":"2026-10-14","v":5928,"label":"Oct 14, 2026"},{"d":"2026-10-15","v":629,"label":"Oct 15, 2026"},{"d":"2026-10-16","v":196,"label":"Oct 16, 2026"},{"d":"2026-10-17","v":61,"label":"Oct 17, 2026"},{"d":"2026-10-19","v":158,"label":"Oct 19, 2026"},{"d":"2026-10-20","v":148,"label":"Oct 20, 2026"},{"d":"2026-10-21","v":23,"label":"Oct 21, 2026"},{"d":"2026-10-22","v":2710,"label":"Oct 22, 2026"},{"d":"2026-10-23","v":200,"label":"Oct 23, 2026"},{"d":"2026-10-24","v":561,"label":"Oct 24, 2026"},{"d":"2026-10-25","v":1,"label":"Oct 25, 2026"},{"d":"2026-10-26","v":262,"label":"Oct 26, 2026"},{"d":"2026-10-27","v":224,"label":"Oct 27, 2026"},{"d":"2026-10-28","v":241,"label":"Oct 28, 2026"},{"d":"2026-10-29","v":2355,"label":"Oct 29, 2026"},{"d":"2026-10-30","v":336,"label":"Oct 30, 2026"},{"d":"2026-10-31","v":1047,"label":"Oct 31, 2026"},{"d":"2026-11-01","v":75,"label":"Nov 1, 2026"},{"d":"2026-11-02","v":2419,"label":"Nov 2, 2026"},{"d":"2026-11-03","v":5437,"label":"Nov 3, 2026"}],"months":[{"k":"Aug","d":"2026-08-01"},{"k":"Sep","d":"2026-09-01"},{"k":"Oct","d":"2026-10-01"},{"k":"Nov","d":"2026-11-01"}],"dayFill":"#2e6348"};
+
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const fmt = n => n.toLocaleString('en-US');
+const el = (t, a, inner) =>
+  `<${t} ${Object.entries(a).map(([k, v]) => `${k}="${v}"`).join(' ')}` +
+  (inner === undefined ? '/>' : `>${inner}</${t}>`);
+
+const tip = document.getElementById('tip');
+let lit = null;
+function wireHover(svgId, rows, render) {
+  const host = document.getElementById(svgId);
+  host.addEventListener('mousemove', ev => {
+    const hit = ev.target.closest('.hit');
+    if (lit) { lit.classList.remove('on'); lit = null; }
+    if (!hit) { tip.classList.remove('on'); return; }
+    const bar = document.getElementById(hit.dataset.bar);
+    if (bar) { bar.classList.add('on'); lit = bar; }
+    tip.innerHTML = render(rows[+hit.dataset.i]);
+    tip.classList.add('on');
+    const pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(ev.clientX + pad, innerWidth - w - 8) + 'px';
+    tip.style.top = Math.max(ev.clientY - h - pad, 8) + 'px';
+  });
+  host.addEventListener('mouseleave', () => {
+    if (lit) { lit.classList.remove('on'); lit = null; }
+    tip.classList.remove('on');
+  });
+}
+
+// ---------------------------------------------------- 1. turnout by band ----
+(function () {
+  const W = 880, L = 54, R = 20, TOP = 22, BOT = 300;
+  const x = s => L + (s / 100) * (W - L - R);
+  const y = p => BOT - (p / 100) * (BOT - TOP);
+  let g = '';
+  for (let p = 0; p <= 100; p += 25) {
+    g += el('line', {class: 'gridline', x1: L, x2: W - R, y1: y(p), y2: y(p)});
+    g += el('text', {class: 'tick', x: L - 8, y: y(p) + 4, 'text-anchor': 'end'}, p + '%');
+  }
+  g += el('line', {class: 'refline', x1: x(0), x2: x(100), y1: y(0), y2: y(100)});
+  g += el('text', {class: 'reflabel', x: x(58), y: y(58) - 10, 'text-anchor': 'end'},
+          'if score = turnout %');
+  DATA.bands.forEach((b, i) => {
+    const x0 = x(b.lo) + 1, x1 = x(b.hi) - 1, w = Math.max(x1 - x0, 2);
+    const top = y(b.pct), h = Math.max(BOT - top, 2), r = Math.min(3, w / 2, h);
+    g += el('path', {class: 'bar', id: 'tb' + i, fill: b.fill,
+      d: `M${x0},${BOT} V${top + r} a${r},${r} 0 0 1 ${r},${-r} H${x1 - r} a${r},${r} 0 0 1 ${r},${r} V${BOT} Z`});
+    const yl = y(b.lo95), yh = y(b.hi95), xm = (x0 + x1) / 2, cap = Math.min(4, w / 3);
+    g += el('line', {class: 'whisker', x1: xm, x2: xm, y1: yl, y2: yh});
+    g += el('line', {class: 'whisker', x1: xm - cap, x2: xm + cap, y1: yl, y2: yl});
+    g += el('line', {class: 'whisker', x1: xm - cap, x2: xm + cap, y1: yh, y2: yh});
+  });
+  for (let s = 0; s <= 100; s += 10)
+    g += el('text', {class: 'tick', x: x(s), y: BOT + 17, 'text-anchor': 'middle'}, s);
+  g += el('text', {class: 'axis-title', x: (L + W - R) / 2, y: BOT + 38, 'text-anchor': 'middle'},
+          'TURNOUT SCORE');
+  g += el('text', {class: 'axis-title', x: L, y: TOP - 8}, 'SHARE OF THE BAND WHO VOTED');
+  DATA.bands.forEach((b, i) => {
+    g += el('rect', {class: 'hit', 'data-i': i, 'data-bar': 'tb' + i,
+      x: x(b.lo), y: TOP - 12, width: Math.max(x(b.hi) - x(b.lo), 3), height: BOT - TOP + 12});
+  });
+  document.getElementById('c-turnout').innerHTML = g;
+  wireHover('c-turnout', DATA.bands, b =>
+    `<b>Score ${esc(b.label)}</b>` +
+    `<div class="row"><span>Voted</span><span>${fmt(b.voters)} of ${fmt(b.n)}</span></div>` +
+    `<div class="row"><span>Observed</span><span>${b.pct.toFixed(1)}%</span></div>` +
+    `<div class="row"><span>Score says</span><span>${b.score.toFixed(0)}%</span></div>` +
+    `<div class="row"><span>95% CI</span><span>${b.lo95.toFixed(1)}–${b.hi95.toFixed(1)}%</span></div>`);
+})();
+
+// ------------------------------------------- 2. horizontal category bars ----
+function catChart(id, rows, unit) {
+  const W = 880, L = 150, R = 56, TOP = 8, ROW = 23;
+  const max = Math.max(...rows.map(r => r.v));
+  const x = v => L + (v / max) * (W - L - R);
+  let g = '';
+  rows.forEach((r, i) => {
+    const yy = TOP + i * ROW, h = ROW - 7, rad = 3;
+    const x1 = Math.max(x(r.v), L + 2);
+    g += el('text', {class: 'tick', x: L - 9, y: yy + h - 2, 'text-anchor': 'end'}, esc(r.k));
+    g += el('path', {class: 'bar', id: id + i, fill: r.fill,
+      d: `M${L},${yy} H${x1 - rad} a${rad},${rad} 0 0 1 ${rad},${rad} V${yy + h - rad} a${rad},${rad} 0 0 1 ${-rad},${rad} H${L} Z`});
+    g += el('text', {class: 'barlabel', x: x1 + 7, y: yy + h - 2}, fmt(r.v));
+    g += el('rect', {class: 'hit', 'data-i': i, 'data-bar': id + i,
+      x: L, y: yy - 3, width: W - L - R, height: ROW});
+  });
+  const host = document.getElementById(id);
+  host.setAttribute('viewBox', `0 0 ${W} ${TOP * 2 + rows.length * ROW}`);
+  host.innerHTML = g;
+  wireHover(id, rows, r =>
+    `<b>${esc(r.k)}</b>` +
+    `<div class="row"><span>${unit}</span><span>${fmt(r.v)}</span></div>` +
+    `<div class="row"><span>Share</span><span>${r.pct.toFixed(1)}%</span></div>`);
+}
+catChart('c-results', DATA.results, 'Attempts');
+catChart('c-types', DATA.types, 'Attempts');
+
+// ------------------------------------------------------ 3. daily volume ----
+(function () {
+  const W = 880, L = 54, R = 20, TOP = 18, BOT = 180;
+  const days = DATA.daily, max = Math.max(...days.map(d => d.v));
+  const t0 = Date.parse(days[0].d), t1 = Date.parse(days[days.length - 1].d);
+  const x = t => L + ((Date.parse(t) - t0) / (t1 - t0)) * (W - L - R);
+  const y = v => BOT - (v / max) * (BOT - TOP);
+  let g = '';
+  [0, max / 2, max].forEach(v => {
+    g += el('line', {class: 'gridline', x1: L, x2: W - R, y1: y(v), y2: y(v)});
+    g += el('text', {class: 'tick', x: L - 8, y: y(v) + 4, 'text-anchor': 'end'}, fmt(Math.round(v)));
+  });
+  days.forEach((d, i) => {
+    const w = 4.5, xm = x(d.d), top = y(d.v);
+    g += el('rect', {class: 'bar', id: 'dv' + i, fill: DATA.dayFill,
+      x: xm - w / 2, y: top, width: w, height: Math.max(BOT - top, 1), rx: 1.5});
+    g += el('rect', {class: 'hit', 'data-i': i, 'data-bar': 'dv' + i,
+      x: xm - 5, y: TOP - 8, width: 10, height: BOT - TOP + 8});
+  });
+  DATA.months.forEach(mo => {
+    g += el('text', {class: 'tick', x: x(mo.d), y: BOT + 17, 'text-anchor': 'middle'}, mo.k);
+  });
+  g += el('text', {class: 'axis-title', x: L, y: TOP - 6}, 'CONTACT ATTEMPTS PER DAY');
+  document.getElementById('c-daily').innerHTML = g;
+  wireHover('c-daily', days, d =>
+    `<b>${esc(d.label)}</b>` +
+    `<div class="row"><span>Attempts</span><span>${fmt(d.v)}</span></div>`);
+})();
+</script>
+</body>
+</html>
